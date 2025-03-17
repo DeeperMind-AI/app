@@ -1,0 +1,537 @@
+<div class="container-fluid">
+    <app-page-title title="Files management"></app-page-title>
+    <div class="d-xl-flex">
+        <div class="w-100">
+                    
+            <div class="d-md-flex">
+                
+                <div class="card filemanager-sidebar me-md-2">
+                    <div class="card-body">
+
+                        <div class="d-flex flex-column h-100">
+                            <div class="mb-4">
+                                <div class="mb-3">
+                                    <div class="dropdown" dropdown>
+                                        <button class="btn btn-light w-100 "  data-toggle="dropdown" dropdownToggle
+                                        aria-haspopup="true" aria-expanded="false"
+                                            type="button" >
+                                            <i class="mdi mdi-plus me-1"></i> ADD
+                                        </button>
+                                        
+                                        <div class="dropdown-menu" *dropdownMenu>
+                                            <a class="dropdown-item" href="javascript: void(0);" data-bs-toggle="modal" data-bs-target="#myModal" (click)="openModal(contentNuDr)"><i
+                                                    class="bx bx-folder me-1"></i> Category</a>
+                                            <ng-template #contentNuDr role="document" let-modal>
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="myModalLabel">Add/edit category</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="modalRef?.hide()"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <form>
+                                                        <div class="mb-3">
+                                                            <label for="formrow-firstname-input">Category name</label>
+                                                            <input type="text" class="form-control" name="nuDirName" [(ngModel)]="nuDirName">
+                                                        </div>
+                                
+                                                    </form>
+                                                    
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button"  class="btn btn-secondary waves-effect" data-bs-dismiss="modal" (click)="modalRef?.hide()">Close</button>
+                                                    <button type="button" class="btn btn-primary waves-effect waves-light">Save dir</button>
+                                                </div>
+                                                </ng-template><!-- /.modal -->
+                                                    
+                                            
+                                            
+                                            <a class="dropdown-item" href="javascript: void(0);" data-bs-toggle="modal" data-bs-target="#myModal" (click)="openModal(contentNuFile)"><i
+                                            class="bx bx-file me-1"></i> Data</a>
+                                            <ng-template #contentNuFile role="document" let-modal>
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="myModalLabel">Add/edit data</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="modalRef?.hide()"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <form>
+                                                        <div class="mb-3">
+                                                            <label for="chunkMode">Chunk mode
+                                                                <i class="bx bx-info-circle" title="..."></i>
+                                                            </label>
+                                                            <select [disabled]="disablePops" class="form-select"  name="chunkMode" >
+                                                                <option value="adap">Adaptative</option>
+                                                                <option value="sem" >Semantic</option>
+                                                                <option value="rec" selected>Recursive</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label for="fsAutoCat">Auto. categorization
+                                                                <i class="bx bx-info-circle" title="..."></i>
+                                                            </label>
+                                                            <input  [disabled]="disablePops" type="checkbox" id="fsAutoCat" class="form-control form-check-input">
+                                                        </div>
+
+
+                                                        <div class="mb-3">
+                                                            <label for="chunkMode">Data type
+                                                                <i class="bx bx-info-circle" title="..."></i>
+                                                            </label>
+                                                            <select [disabled]="disablePops" class="form-select"  name="newSourcePop.sourceType" [(ngModel)]="newSourcePop.sourceType" >
+                                                                <option value="file" selected>File</option>
+                                                                <option value="free" >Free content</option>
+                                                            </select>
+                                                        </div>
+
+                                                        <div class="mb-3" *ngIf="newSourcePop.sourceType=='file'">
+                                                            <label for="fileinp">File
+                                                                <i class="bx bx-info-circle" title="..."></i>
+                                                            </label>
+                                                            <input  [disabled]="disablePops" type="file" class="form-control" accept=".pdf,.zip"  name="fileinp" (change)="onFileSelected($event)"/>
+                                                        </div>
+                                                        <div class="mb-3" *ngIf="newSourcePop.sourceType=='free'">
+                                                            <label for="fileinp">Title
+                                                                <i class="bx bx-info-circle" title="..."></i>
+                                                            </label>
+                                                            <input type="text" class="form-control" formControlName="message" >
+                                                        </div>
+                                                        <div class="mb-3" *ngIf="newSourcePop.sourceType=='free'">
+                                                            <label for="fileinp">Content
+                                                                <i class="bx bx-info-circle" title="..."></i>
+                                                            </label>
+                                                            <textarea  name="params.customPrompt"  formControlName="textarea" class="form-control" rows="5"></textarea>
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label for="fileinp">Metadatas
+                                                                <i class="bx bx-info-circle" title="..."></i>
+                                                            </label>
+                                                            <div  class="hstack gap-2" *ngFor="let mm of tmpMetas">
+                                                                <input  [disabled]="disablePops" class="form-control" type="input" value="{{mm.lib}}"/>
+                                                                <input  [disabled]="disablePops" class="form-control" type="input" value="{{mm.val}}"/>
+                                                            </div>
+                                                        </div>
+                                                    
+                                                    </form>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <span style="float:left;">{{uploadStatus}}</span>
+                                                    <button type="button"  [disabled]="disablePops" class="btn btn-secondary waves-effect" data-bs-dismiss="modal" (click)="modalRef?.hide()">Close</button>
+                                                    <button type="button"  [disabled]="disablePops" (click)="saveFile()" class="btn btn-primary waves-effect waves-light">Save changes</button>
+                                                </div>
+                                            </ng-template><!-- /.modal -->
+
+                                            
+                                            
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <ul class="list-unstyled categories-list" style="overflow: hidden;">
+                                    <li>
+                                        <div class="custom-accordion">
+                                            <a class="text-body fw-medium py-1 d-flex align-items-center"
+                                                (click)="isColapseFilesAll = !isColapseFilesAll" [attr.aria-expanded]="isColapseFilesAll"
+                                                data-toggle="collapse" href="javascript:void(0);" role="button"
+                                                aria-expanded="false" aria-controls="categories-collapse" title="Toutes vos ressources">
+                                                <i style="color:#F8D775" class="mdi mdi-folder-table font-size-16"></i> Yours datas {{!loadingDocs?"("+filesList.length+")":""}}
+                                                <i *ngIf="loadingDocs" style="color:#4682ad;margin-left:3px;" class="bx bx-hourglass bx-spin font-size-14 align-middle"></i>
+                                                <i
+                                                    class="mdi mdi-chevron-up accor-down-icon ms-auto"></i>
+                                            </a>                                            
+                                            <div class="collapse" id="categories-collapse"
+                                                [collapse]="isColapseFilesAll">
+                                                <div class="card border-0 shadow-none ps-2 mb-0">
+                                                    <ul class="list-unstyled mb-0">
+                                                        <div *ngFor="let ff of filesList">
+                                                            <li *ngIf="ff.file" title="{{ff.file.name}}"  >
+                                                                <a href="javascript:void(0)" (click)="showPreview(ff.file.name,ff)" class="d-flex align-items-center">
+                                                                    <i style="color:#da3c33" class="mdi mdi-file-pdf-box font-size-16 me-2"></i>
+                                                                    <span class="me-auto">{{ff.file.name}}</span>
+                                                            </a>
+                                                            </li>
+                                                            <li *ngIf="ff.original_fname" title="{{ff.original_fname}}"  >
+                                                                <a href="javascript:void(0)" (click)="showPreview(ff.fname + '.pdf',ff)" class="d-flex align-items-center">
+                                                                    <i style="color:#da3c33" class="mdi mdi-file-pdf-box font-size-16 me-2"></i>
+                                                                    <span class="me-auto">{{ff.original_fname}}</span>
+                                                            </a>
+                                                            </li>
+                                                        </div>
+                                                    </ul>
+                                                </div>
+                                            </div>   
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="custom-accordion">
+                                            <a class="text-body fw-medium py-1 d-flex align-items-center"
+                                                (click)="isColapseFilesIa = !isColapseFilesIa" [attr.aria-expanded]="isColapseFilesIa"
+                                                data-toggle="collapse" href="javascript:void(0);" role="button"
+                                                aria-expanded="false" aria-controls="categories-collapse-filesAll">
+                                                <i style="color:#F8D775" class="mdi mdi-folder-search font-size-16 me-2"></i> AI preset ({{aiResponseContexts.length}}) <i
+                                                    class="mdi mdi-chevron-up accor-down-icon accor-down-icon ms-auto"></i>
+                                            </a>                                            
+                                            <div class="collapse" id="categories-collapse-filesAll"
+                                                [collapse]="isColapseFilesIa">
+                                                <div class="card border-0 shadow-none ps-2 mb-0">
+                                                    <ul class="list-unstyled mb-0">
+                                                        <div *ngFor="let rr of aiResponseContexts">
+                                                            <li *ngIf="(rr.metadata.source_type == 'file/pdf')" title="{{rr.metadata.original_fname}}"  >
+                                                                <a href="javascript:void(0)" (click)="showPreview(rr.metadata.original_fname,rr)" class="d-flex align-items-center">
+                                                                    <i style="color:#da3c33" class="mdi mdi-file-pdf-box font-size-16 me-2"></i>
+                                                                    <span class="me-auto">{{rr.metadata.original_fname}} {{rr.occurs}}</span></a></li>
+                                                        </div>
+                                                    </ul>
+                                                </div>
+                                            </div>   
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="custom-accordion">
+                                            <a class="text-body fw-medium py-1 d-flex align-items-center"
+                                                (click)="isColapseFilesClass = !isColapseFilesClass" [attr.aria-expanded]="isColapseFilesClass"
+                                                data-toggle="collapse" href="javascript:void(0);" role="button"
+                                                aria-expanded="false" aria-controls="categories-collapse-filesAll">
+                                                <i style="color:#F8D775" class="mdi mdi-folder-pound font-size-16 me-2"></i> Auto. classification (0) <i
+                                                    class="mdi mdi-chevron-up accor-down-icon accor-down-icon ms-auto"></i>
+                                            </a>                                            
+                                            <div class="collapse" id="categories-collapse-filesAll"
+                                                [collapse]="isColapseFilesClass">
+                                                <div class="card border-0 shadow-none ps-2 mb-0">
+                                                    <ul class="list-unstyled mb-0">
+                                                        <!--<div *ngFor="let rr of aiResponseContexts">
+                                                            <li *ngIf="(rr.metadata.source_type == 'file/pdf')" title="{{rr.metadata.original_fname}}"  ><a href="javascript:void(0)" (click)="showPreview(rr.metadata.original_fname,rr)" class="d-flex align-items-center"><span
+                                                                class="me-auto">{{rr.metadata.original_fname}} {{rr.occurs}}</span></a></li>
+                                                        </div>-->
+                                                    </ul>
+                                                </div>
+                                            </div>   
+                                        </div>
+                                    </li>
+
+                                    
+                                    
+                                    <li>
+                                        <a href="javascript: void(0);" class="text-body d-flex align-items-center">
+                                            <i class="mdi mdi-google-drive font-size-16 text-muted me-2"></i> <span
+                                                class="me-auto">Google Drive</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript: void(0);" class="text-body d-flex align-items-center">
+                                            <i class="mdi mdi-dropbox font-size-16 me-2 text-primary"></i> <span
+                                                class="me-auto">Dropbox</span>
+                                        </a>
+                                    </li>
+                                    <!--<li>
+                                        <a href="javascript: void(0);" class="text-body d-flex align-items-center">
+                                            <i class="mdi mdi-share-variant font-size-16 me-2"></i> <span
+                                                class="me-auto">Shared</span> <i
+                                                class="mdi mdi-circle-medium text-danger ms-2"></i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript: void(0);" class="text-body d-flex align-items-center">
+                                            <i class="mdi mdi-star-outline text-muted font-size-16 me-2"></i> <span
+                                                class="me-auto">Starred</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript: void(0);" class="text-body d-flex align-items-center">
+                                            <i class="mdi mdi-trash-can text-danger font-size-16 me-2"></i> <span
+                                                class="me-auto">Trash</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript: void(0);" class="text-body d-flex align-items-center">
+                                            <i class="mdi mdi-cog text-muted font-size-16 me-2"></i> <span
+                                                class="me-auto">Setting</span><span
+                                                class="badge bg-success rounded-pill ms-2">01</span>
+                                        </a>
+                                    </li>-->
+                                </ul>
+                            </div>
+<!--
+                            <div class="mt-auto">
+                                <div class="alert alert-success alert-dismissible fade show px-3 mb-0" role="alert">
+                                    <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
+
+                                    </button>
+                                    <div class="mb-3">
+                                        <i class="bx bxs-folder-open h1 text-success"></i>
+                                    </div>
+
+                                    <div>
+                                        <h5 class="text-success">Upgrade Features</h5>
+                                        <p>Cum sociis natoque penatibus et</p>
+                                        <div class="text-center">
+                                            <button type="button"
+                                                class="btn btn-link text-decoration-none text-success">Upgrade <i
+                                                    class="mdi mdi-arrow-right"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                            -->
+                        </div>
+
+                    </div>
+                </div>
+                <!-- filemanager-leftsidebar -->
+
+
+                    <div class="w-100 user-chat card">
+                        
+                          <tabset class="nav-tabs nav-tabs-custom tab-container">
+                            <tab heading="Full DB AI search">
+                                <div>
+                                    <div class="chat-conversation p-3">
+                                      <ngx-simplebar style="height: 470px;" #scrollRef>
+                                        <ul class="list-unstyled">
+                                          <li *ngFor="let data of chatMessagesData" [ngClass]="
+                                        {
+                                          'right': data.align === 'right'
+                                        }">
+                                            <div class="conversation-list">
+                                              <div class="dropdown" dropdown>
+                          
+                                                <a class="dropdown-toggle" href="javascript: void(0);" role="button" dropdownToggle>
+                                                  <i class="bx bx-dots-vertical-rounded"></i>
+                                                </a>
+                                                <div class="dropdown-menu" *dropdownMenu>
+                                                  <a class="dropdown-item" href="javascript: void(0);" (click)="copyMessage($event)">Copy</a>
+                                                  <a class="dropdown-item" href="javascript: void(0);">Save</a>
+                                                  <a class="dropdown-item" href="javascript: void(0);">Forward</a>
+                                                  <a class="dropdown-item" href="javascript: void(0);" (click)="deleteMessage($event)">Delete</a>
+                                                </div>
+                                              </div>
+                                              <div class="ctext-wrap">
+                                                <div class="conversation-name">{{ data.name }}</div>
+                                                <p style="white-space: pre-wrap;">
+                                                  {{ data.message }}
+                                                </p>
+                                                <p class="chat-time mb-0"><i class="bx bx-time-five align-middle me-1"></i> {{ data.time }}</p>
+                                                <div class="actions" style="float:right;">
+                                                    <i class="mdi mdi-thumb-up-outline"></i>
+                                                    <i class="mdi mdi-thumb-down-outline"></i>
+                                                    <i class="mdi mdi-refresh"></i>
+                                                </div>
+                                                
+                                              </div>
+                          
+                                            </div>
+                                          </li>
+                                        </ul>
+                                      </ngx-simplebar>
+                                    </div>
+                                    <div class="p-3 chat-input-section">
+                          
+                                      <form (ngSubmit)="messageSave()" [formGroup]="formData" class="row">
+                                        <div class="col">
+                                          <div class="position-relative">
+                                            <input type="text" class="form-control chat-input" placeholder="Question..."
+                                              formControlName="message" [ngClass]="{'is-invalid': chatSubmit && form.message.errors}"
+                                              >
+                                            <div *ngIf="chatSubmit && form.message.errors" class="invalid-feedback">
+                                              <span *ngIf="form.message.errors.required">This value is required.</span>
+                                            </div>
+                                            <div class="chat-input-links">
+                                              <ul class="list-inline mb-0">
+                                                <li class="list-inline-item"><a href="javascript: void(0);" class="emoji-btn"
+                                                    data-toggle="tooltip" placement="top" tooltip="Emoji" id="emoji-btn"
+                                                    ><i class="mdi mdi-emoticon-happy-outline"></i></a>
+                                                </li>
+                                                <!--
+                                                (click)="toggleEmojiPicker()"
+                                                (emojiSelect)="addEmoji($event)"
+                                                *ngIf="showEmojiPicker"
+                                                <emoji-mart class="emoji-mart"  
+                                                  title="Pick your emoji…"></emoji-mart>-->
+                                                <li class="list-inline-item"><a href="javascript: void(0);" data-toggle="tooltip" placement="top"
+                                                    tooltip="Images"><i class="mdi mdi-file-image-outline"></i></a></li>
+                                                <li class="list-inline-item"><a href="javascript: void(0);" data-toggle="tooltip" placement="top"
+                                                    tooltip="Add Files"><i class="mdi mdi-file-document-outline"></i></a>
+                                                </li>
+                                              </ul>
+                                            </div>
+                                          </div>
+                                        </div>
+                                        <div class="col-auto">
+                                          <button type="submit" class="btn btn-primary btn-rounded chat-send w-md"><span
+                                              class="d-none d-sm-inline-block me-2">Go</span> <i class="mdi mdi-send"></i></button>
+                                        </div>
+                                      </form>
+                                    </div>
+                                  </div>
+                                
+                            </tab>
+                            <tab *ngIf="pdfPreviewURL" heading="Document" class="disabled">
+                                <div class="card">
+                                    <div class="card-body overflow-hidden">
+                                        <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
+                                            <button type="button" class="btn btn-secondary" (click)="docTabSelected=1" [ngClass]="{'active':docTabSelected==1}">Preview</button>
+                                            <button type="button" class="btn btn-secondary" (click)="docTabSelected=2" [ngClass]="{'active':docTabSelected==2}">Métadatas</button>
+                                            <button type="button" class="btn btn-secondary" (click)="docTabSelected=3" [ngClass]="{'active':docTabSelected==3}">Chat</button>
+                                        </div>
+                                        <iframe [src]="sanitizer.bypassSecurityTrustResourceUrl(pdfPreviewURL)" *ngIf="(docTabSelected==1) && pdfPreviewURL"
+                                            width="100%"
+                                            height="500px"
+                                            webkitallowfullscreen
+                                            mozallowfullscreen
+                                            allowfullscreen></iframe>
+                                        <div class="row">
+                                            <code *ngIf="(docTabSelected==2) && pdfPreviewURL">
+                                                {{pdfMetas}}
+                                            </code>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                
+                            </tab>
+                            
+                        </tabset>
+                          
+                        </div>
+                      
+                    <!-- end w-100 -->
+            </div>
+            
+        </div>
+<!--
+        <div class="card filemanager-sidebar ms-lg-2">
+            <div class="card-body">
+                <div class="text-center">
+                    <h5 class="font-size-15 mb-4">Storage</h5>
+                    
+                    <apx-chart dir="ltr" class="apex-charts" [chart]="radialoptions.chart"
+                    [series]="radialoptions.series" [labels]="radialoptions.labels"
+                    [colors]="radialoptions.colors" [grid]="radialoptions.grid"
+                    [plotOptions]="radialoptions.plotOptions" [stroke]="radialoptions.stroke">
+                    </apx-chart>
+
+                    <p class="text-muted mt-4">48.02 GB (76%) of 64 GB used</p>
+                </div>
+
+                <div class="mt-4">
+                    <div class="card border shadow-none mb-2">
+                        <a href="javascript: void(0);" class="text-body">
+                            <div class="p-2">
+                                <div class="d-flex">
+                                    <div class="avatar-xs align-self-center me-2">
+                                        <div class="avatar-title rounded bg-transparent text-success font-size-20">
+                                            <i class="mdi mdi-image"></i>
+                                        </div>
+                                    </div>
+
+                                    <div class="overflow-hidden me-auto">
+                                        <h5 class="font-size-13 text-truncate mb-1">Images</h5>
+                                        <p class="text-muted text-truncate mb-0">176 Files</p>
+                                    </div>
+
+                                    <div class="ms-2">
+                                        <p class="text-muted">6 GB</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+
+                    <div class="card border shadow-none mb-2">
+                        <a href="javascript: void(0);" class="text-body">
+                            <div class="p-2">
+                                <div class="d-flex">
+                                    <div class="avatar-xs align-self-center me-2">
+                                        <div class="avatar-title rounded bg-transparent text-danger font-size-20">
+                                            <i class="mdi mdi-play-circle-outline"></i>
+                                        </div>
+                                    </div>
+
+                                    <div class="overflow-hidden me-auto">
+                                        <h5 class="font-size-13 text-truncate mb-1">Video</h5>
+                                        <p class="text-muted text-truncate mb-0">45 Files</p>
+                                    </div>
+
+                                    <div class="ms-2">
+                                        <p class="text-muted">4.1 GB</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+
+                    <div class="card border shadow-none mb-2">
+                        <a href="javascript: void(0);" class="text-body">
+                            <div class="p-2">
+                                <div class="d-flex">
+                                    <div class="avatar-xs align-self-center me-2">
+                                        <div class="avatar-title rounded bg-transparent text-info font-size-20">
+                                            <i class="mdi mdi-music"></i>
+                                        </div>
+                                    </div>
+
+                                    <div class="overflow-hidden me-auto">
+                                        <h5 class="font-size-13 text-truncate mb-1">Music</h5>
+                                        <p class="text-muted text-truncate mb-0">21 Files</p>
+                                    </div>
+
+                                    <div class="ms-2">
+                                        <p class="text-muted">3.2 GB</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+
+                    <div class="card border shadow-none mb-2">
+                        <a href="javascript: void(0);" class="text-body">
+                            <div class="p-2">
+                                <div class="d-flex">
+                                    <div class="avatar-xs align-self-center me-2">
+                                        <div class="avatar-title rounded bg-transparent text-primary font-size-20">
+                                            <i class="mdi mdi-file-document"></i>
+                                        </div>
+                                    </div>
+
+                                    <div class="overflow-hidden me-auto">
+                                        <h5 class="font-size-13 text-truncate mb-1">Document</h5>
+                                        <p class="text-muted text-truncate mb-0">21 Files</p>
+                                    </div>
+
+                                    <div class="ms-2">
+                                        <p class="text-muted">2 GB</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+
+                    <div class="card border shadow-none">
+                        <a href="javascript: void(0);" class="text-body">
+                            <div class="p-2">
+                                <div class="d-flex">
+                                    <div class="avatar-xs align-self-center me-2">
+                                        <div class="avatar-title rounded bg-transparent text-warning font-size-20">
+                                            <i class="mdi mdi-folder"></i>
+                                        </div>
+                                    </div>
+
+                                    <div class="overflow-hidden me-auto">
+                                        <h5 class="font-size-13 text-truncate mb-1">Others</h5>
+                                        <p class="text-muted text-truncate mb-0">20 Files</p>
+                                    </div>
+
+                                    <div class="ms-2">
+                                        <p class="text-muted">1.4 GB</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    -->
+    </div>
+    <!-- end row -->
+</div>

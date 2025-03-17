@@ -1,0 +1,17 @@
+.categories-list { 
+    li {
+        ul {
+            max-height: 500px;
+            overflow: hidden;
+            overflow-y: scroll;
+            li {
+                a {
+                    font-size: 11px;
+                    span {
+                        white-space:nowrap;
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,159 @@
+<div class="container-fluid">    
+    <div class="row mb-4">
+        <div class="col-lg-12">
+            <div class="d-flex align-items-center">
+                <img src="assets/images/users/avatar-1.jpg" alt="" class="avatar-sm rounded">
+                <div class="ms-3 flex-grow-1">
+                    <h5 class="mb-2 card-title">Hello,</h5>
+                    <p class="text-muted mb-0">Ready to jump back in?</p>
+                </div>
+                <div>
+                    <a routerLink="/filemanager" class="btn btn-primary"><i class="bx bx-plus align-middle"></i> Add Ressource</a>
+                </div>
+            </div>
+        </div><!--end col-->
+    </div><!--end row-->
+   
+    <div class="row">
+        <div class="col-lg-3">
+            <div class="card mini-stats-wid">
+                <div class="card-body">
+                    <div class="d-flex">
+                        <div class="flex-grow-1">
+                            <p class="text-muted fw-medium">Ressources</p>
+                            <h4 class="mb-0">14,487</h4>
+                        </div>
+            
+                        <div class="flex-shrink-0 align-self-center">
+                            <apx-chart class="apex-charts" dir="ltr" [series]="jobViewChart.series"
+                            [chart]="jobViewChart.chart" [stroke]="jobViewChart.stroke"
+                            [colors]="jobViewChart.colors" [fill]="jobViewChart.fill"
+                            [tooltip]="jobViewChart.tooltip"></apx-chart>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body border-top py-3">
+                    <p class="mb-0"> <span class="badge badge-soft-success me-1"><i class="bx bx-trending-up align-bottom me-1"></i> 18.89%</span> Increase last month</p>
+                </div>
+            </div>
+        </div><!--end col-->
+        <div class="col-lg-3">
+            <div class="card mini-stats-wid">
+                <div class="card-body">
+                    <div class="d-flex">
+                        <div class="flex-grow-1">
+                            <p class="text-muted fw-medium">Requetes</p>
+                            <h4 class="mb-0">7,402</h4>
+                        </div>
+        
+                        <div class="flex-shrink-0 align-self-center">
+                            <apx-chart class="apex-charts" dir="ltr" [series]="ApplicationChart.series"
+                            [chart]="ApplicationChart.chart" [stroke]="ApplicationChart.stroke"
+                            [colors]="ApplicationChart.colors" [fill]="ApplicationChart.fill"
+                            [tooltip]="ApplicationChart.tooltip"></apx-chart>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body border-top py-3">
+                    <p class="mb-0"> <span class="badge badge-soft-success me-1"><i class="bx bx-trending-up align-bottom me-1"></i> 24.07%</span> Increase last month</p>
+                </div>
+            </div>
+        </div><!--end col-->
+        <div class="col-lg-3">
+            <div class="card mini-stats-wid">
+                <div class="card-body">
+                    <div class="d-flex">
+                        <div class="flex-grow-1">
+                            <p class="text-muted fw-medium">Requetes Approved</p>
+                            <h4 class="mb-0">12,487</h4>
+                        </div>
+        
+                        <div class="flex-shrink-0 align-self-center">
+                            <apx-chart class="apex-charts" dir="ltr" [series]="jobViewChart.series"
+                            [chart]="jobViewChart.chart" [stroke]="jobViewChart.stroke"
+                            [colors]="jobViewChart.colors" [fill]="jobViewChart.fill"
+                            [tooltip]="jobViewChart.tooltip"></apx-chart>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body border-top py-3">
+                    <p class="mb-0"> <span class="badge badge-soft-success me-1"><i class="bx bx-trending-up align-bottom me-1"></i> 8.41%</span> Increase last month</p>
+                </div>
+            </div>
+        </div><!--end col-->
+        <div class="col-lg-3">
+            <div class="card mini-stats-wid">
+                <div class="card-body">
+                    <div class="d-flex">
+                        <div class="flex-grow-1">
+                            <p class="text-muted fw-medium">Requetes Rejected</p>
+                            <h4 class="mb-0">12,487</h4>
+                        </div>
+        
+                        <div class="flex-shrink-0 align-self-center">
+                            <apx-chart class="apex-charts" dir="ltr" [series]="RejectedChart.series"
+                            [chart]="RejectedChart.chart" [stroke]="RejectedChart.stroke"
+                            [colors]="RejectedChart.colors" [fill]="RejectedChart.fill"
+                            [tooltip]="RejectedChart.tooltip"></apx-chart>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body border-top py-3">
+                    <p class="mb-0"> <span class="badge badge-soft-danger me-1"><i class="bx bx-trending-down align-bottom me-1"></i> 20.63%</span> Decrease last month</p>
+                </div>
+            </div>
+        </div><!--end col-->
+    </div><!--end row-->
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-sm-flex flex-wrap">
+                        <h4 class="card-title mb-4">Statistics Applications</h4>
+                        <div class="ms-auto">
+                            <ul class="nav nav-pills">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="javascript:void(0);">Week</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="javascript:void(0);">Month</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link active" href="javascript:void(0);">Year</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <apx-chart dir="ltr" class="apex-charts" [series]="emailSentBarChart.series"
+                        [chart]="emailSentBarChart.chart" [legend]="emailSentBarChart.legend"
+                        [stroke]="emailSentBarChart.stroke" [plotOptions]="emailSentBarChart.plotOptions"
+                        [fill]="emailSentBarChart.fill" [labels]="emailSentBarChart.labels"
+                        [dataLabels]="emailSentBarChart.dataLabels" [colors]="emailSentBarChart.colors"
+                        [markers]="emailSentBarChart.markers" [tooltip]="emailSentBarChart.tooltip">
+                    </apx-chart>
+                </div>
+            </div>
+        </div><!--end col-->
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex">
+                        <div>
+                            <h4 class="card-title mb-3">Invite your friends to DeeperMind</h4>
+                            <p class="text-muted">Nor again is there anyone who loves or pursues or desires to obtain pain of itself, because it is pain, but because occasionally.</p>
+                            <div>
+                                <a href="javascript:void(0);" class="btn btn-primary btn-sm"><i class='bx bx-user-plus align-middle'></i> Invite Friends</a>
+                            </div>
+                        </div>
+                        <div>
+                            <img src="assets/images/jobs.png" alt="" height="130">
+                        </div>
+                    </div>
+                </div>
+            </div><!--end card-->
+           
+        </div><!--end col-->
+    </div><!--end row-->
+
+</div> <!-- container-fluid -->
