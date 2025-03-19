@@ -33,6 +33,8 @@ import { ToastrModule } from 'ngx-toastr';
 import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
 import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 
+import { NgxStripeModule } from 'ngx-stripe';
+
 import { OAuthModule } from 'angular-oauth2-oidc';
 
 
@@ -57,6 +59,7 @@ export function createTranslateLoader(http: HttpClient): any {
     BrowserAnimationsModule,
     HttpClientModule,
     OAuthModule.forRoot(),
+    NgxStripeModule.forRoot(),
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,

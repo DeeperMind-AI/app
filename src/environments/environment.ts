@@ -8,6 +8,9 @@ export const environment = {
   googleConfig:{
     apiKey:"259564130297-f7m7uksgbe104go97525aaghsia9omm0.apps.googleusercontent.com"
   },
+  stripe: {
+    stripePublicKey:"pk_live_794nNEy5tSskxpdnnkUxzfWJ"
+  },
   firebaseConfig: {
     apiKey: "AIzaSyAZUppcSdw3FEYTGISN1spTBoCArtRewjM",
     authDomain: "bott-813eb.firebaseapp.com",
@@ -17,7 +20,7 @@ export const environment = {
     appId: "1:986343673221:web:1de830620027314cb088ec",
     measurementId: "G-L1GHK7VFG7"
   },
-  tradBotServer:"https://apis.deepermind.ai/",
+  tradBotServer:"https://apis.deepermind.ai/", //https://apis.deepermind.ai
   ekitServer:'http://apis.agrisource.ekoal.org'
 };
 

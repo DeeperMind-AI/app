@@ -79,6 +79,11 @@ export class FilemanagerComponent implements OnInit {
       message: ['', [Validators.required]],
     });
     
+    /*const ask$ = this.http.post(this.uri+"cleanES",{}).pipe(
+      map((result:any) => {console.log(result.ret);this.filesList=result.ret;this.loadingDocs = false;}), catchError(err => throwError(err))
+    )
+      ask$.subscribe();
+*/
     //AJOUT MESSAGE BONJOUR
     const currentDate = new Date();
     let message :string="Hello, what can i find for you ?";
@@ -377,7 +382,7 @@ export class FilemanagerComponent implements OnInit {
   }
   showPreview(uri,f) {
     
-    this.pdfPreviewURL = "http://saas.medias.ekoal.org/"+uri;
+    this.pdfPreviewURL = "https://medias.deepermind.ai/"+uri;
     console.log(f);
     this.pdfMetas = JSON.stringify(f); 
     

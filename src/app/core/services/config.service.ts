@@ -15,7 +15,7 @@ export class ConfigService {
 
   chatParams:any = {
     ownerUID:(JSON.parse(this.locStor.getItem('currentUser'))["email"]?JSON.parse(this.locStor.getItem('currentUser'))["email"]:JSON.parse(this.locStor.getItem('currentUser'))["mail"]),
-    customPrompt:`You are an assistant for question-answering tasks. Use the following pieces of retrieved context to answer the question. If you don't know the answer, just say that you don't know. Use three sentences maximum and keep the answer concise.
+    customPrompt:`You are an assistant for question-answering tasks. Use the following pieces of retrieved context to answer the question. If you don't know the answer, just say that you don't know. Détaille au maximum tes réponses. Ajoute du html dans la réponse pour la mise en forme.
             Question: {question} 
 Context: {context} 
 Answer:`,

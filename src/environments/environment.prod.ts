@@ -9,6 +9,9 @@ export const environment = {
   googleConfig:{
     apiKey:"259564130297-f7m7uksgbe104go97525aaghsia9omm0.apps.googleusercontent.com"
   },
+  stripe: {
+    stripePublicKey:"pk_live_794nNEy5tSskxpdnnkUxzfWJ"
+  },
   firebaseConfig: {
     apiKey: "AIzaSyAZUppcSdw3FEYTGISN1spTBoCArtRewjM",
     authDomain: "bott-813eb.firebaseapp.com",

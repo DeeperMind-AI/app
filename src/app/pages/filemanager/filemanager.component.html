@@ -124,6 +124,9 @@
                                         </div>
                                     </div>
                                 </div>
+
+                                <input type="text"/>
+
                                 <ul class="list-unstyled categories-list" style="overflow: hidden;">
                                     <li>
                                         <div class="custom-accordion">
@@ -131,7 +134,7 @@
                                                 (click)="isColapseFilesAll = !isColapseFilesAll" [attr.aria-expanded]="isColapseFilesAll"
                                                 data-toggle="collapse" href="javascript:void(0);" role="button"
                                                 aria-expanded="false" aria-controls="categories-collapse" title="Toutes vos ressources">
-                                                <i style="color:#F8D775" class="mdi mdi-folder-table font-size-16"></i> Yours datas {{!loadingDocs?"("+filesList.length+")":""}}
+                                                <i style="color:#F8D775" class="mdi mdi-folder-table font-size-16"></i> Your datas {{!loadingDocs?"("+filesList.length+")":""}}
                                                 <i *ngIf="loadingDocs" style="color:#4682ad;margin-left:3px;" class="bx bx-hourglass bx-spin font-size-14 align-middle"></i>
                                                 <i
                                                     class="mdi mdi-chevron-up accor-down-icon ms-auto"></i>
@@ -174,7 +177,7 @@
                                                     <ul class="list-unstyled mb-0">
                                                         <div *ngFor="let rr of aiResponseContexts">
                                                             <li *ngIf="(rr.metadata.source_type == 'file/pdf')" title="{{rr.metadata.original_fname}}"  >
-                                                                <a href="javascript:void(0)" (click)="showPreview(rr.metadata.original_fname,rr)" class="d-flex align-items-center">
+                                                                <a href="javascript:void(0)" (click)="showPreview(rr.metadata.fname+'.pdf',rr)" class="d-flex align-items-center">
                                                                     <i style="color:#da3c33" class="mdi mdi-file-pdf-box font-size-16 me-2"></i>
                                                                     <span class="me-auto">{{rr.metadata.original_fname}} {{rr.occurs}}</span></a></li>
                                                         </div>
@@ -306,9 +309,9 @@
                                               </div>
                                               <div class="ctext-wrap">
                                                 <div class="conversation-name">{{ data.name }}</div>
-                                                <p style="white-space: pre-wrap;">
-                                                  {{ data.message }}
-                                                </p>
+                                                <div  [innerHtml]="data.message">
+                                                  
+                                                </div>
                                                 <p class="chat-time mb-0"><i class="bx bx-time-five align-middle me-1"></i> {{ data.time }}</p>
                                                 <div class="actions" style="float:right;">
                                                     <i class="mdi mdi-thumb-up-outline"></i>

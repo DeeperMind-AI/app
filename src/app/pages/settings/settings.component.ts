@@ -1,9 +1,23 @@
 import { Component } from '@angular/core';
 import { ConfigService } from 'src/app/core/services/config.service';
 
+import { StripeFactoryService, StripeInstance } from "ngx-stripe";
+import { HttpClient, HttpResponse } from '@angular/common/http';
+import { catchError, map, switchMap, throwError } from "rxjs";
+
+
 import { Pricing } from './pricing.model';
 
+
+
 import { pricingData } from './data';
+import { environment } from 'src/environments/environment';
+import Swal from 'sweetalert2';
+import { ActivatedRoute } from '@angular/router';
+
+interface IStripeSession {
+  id: string;
+}
 
 @Component({
   selector: 'app-settings',
@@ -12,30 +26,72 @@ import { pricingData } from './data';
 })
 export class SettingsComponent {
   
+  public stripe!: StripeInstance;
+  public stripeAmount!: number;
+  isLoading: boolean = false;
+
   locStor = localStorage;
   params:any;
   pricingData: Pricing[];
 
 
-  constructor(public configService:ConfigService) {
-
+  constructor(public configService:ConfigService,private http: HttpClient,
+    private stripeFactory: StripeFactoryService,private route: ActivatedRoute) {
+      this.route.queryParams.subscribe(params => {
+        switch (params["status"]) {
+          case "stripe-successful-payment":
+            Swal.fire('Paiement validé', '', 'success');
+            break;
+          case "stripe-canceled-payment":
+            Swal.fire('Paiement annulé', '', 'error');
+            break;
+        }
+    });
   }
 
   
   ngOnInit(): void {
-      
+    
+
+
+    
+    
+
+    this.stripe=
+      this.stripeFactory.create(environment.stripe.stripePublicKey);
+      this.stripeAmount = 100;
+
     this.pricingData = pricingData;
-      this.params = {
-        
-        ownerUID:(JSON.parse(this.locStor.getItem('currentUser'))["email"]?JSON.parse(this.locStor.getItem('currentUser'))["email"]:JSON.parse(this.locStor.getItem('currentUser'))["mail"]),
-        customPrompt:`You are an assistant for question-answering tasks. Use the following pieces of retrieved context to answer the question. If you don't know the answer, just say that you don't know. Use three sentences maximum and keep the answer concise.
-                Question: {question} 
-    Context: {context} 
-  Answer:`,
-        k:10,
-        model:"gpt-4o-mini",
-        histo:true
-      };
+    this.params = this.configService.chatParams;
+
+    }
+
+    cleanIndex() {
+      const ask$ = this.http.post(environment.tradBotServer+"cleanES",{ownerUID:this.params.ownerUID}).pipe(
+              map((result:any) => {}), catchError(err => throwError(err))
+          )
+      ask$.subscribe();
+      const ask2$ = this.http.post(environment.tradBotServer+"cleanMDB",{ownerUID:this.params.ownerUID}).pipe(
+        map((result:any) => {}), catchError(err => throwError(err))
+    )
+      ask2$.subscribe();
+    }
+
+    buy(amount) {
+      this.http.post(environment.tradBotServer + 'stripe/create-checkout-session', { data: { amount: amount } }, { observe: 'response' })
+        .pipe(
+          switchMap((response: HttpResponse<Object>) => {
+            const session: IStripeSession = response.body as IStripeSession;
+            console.log(session.id);
+            return this.stripe.redirectToCheckout({ sessionId: session.id });
+          })
+        )
+        .subscribe(result => {
+          // If `redirectToCheckout` fails due to a browser or network
+          if (result.error) {
+            console.log(result.error)
+          }
+        });
     }
 
   public onPromptChange(event: Event): void {

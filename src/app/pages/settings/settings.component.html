@@ -107,7 +107,7 @@
                         </h2>
                       </div>
                       <div class="text-center plan-btn">
-                        <a href="javascript: void(0);" class="btn btn-primary btn-sm position-relative">Select</a>
+                        <a href="javascript: void(0);" (click)="buy(data.price)" class="btn btn-primary btn-sm position-relative">Select</a>
                       </div>
             
                       <div class="plan-features mt-5">
@@ -139,7 +139,7 @@
                 <label for="example-text-input" class="col-form-label">Actions
                     <i class="bx bx-info-circle" title="Vider votre index"></i>
                 </label>
-                <button type="button" class="btn btn-danger form-control w-sm"><i class="mdi mdi-trash-can d-block font-size-16"></i> Supprimer l'index </button>
+                <button type="button" class="btn btn-danger form-control w-sm"><i class="mdi mdi-trash-can d-block font-size-16" (click)="cleanIndex()"></i> Supprimer l'index </button>
             </div>
         </tab>
     </tabset>
