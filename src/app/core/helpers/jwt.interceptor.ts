@@ -12,7 +12,7 @@ export class JwtInterceptor implements HttpInterceptor {
     constructor(private authenticationService: AuthenticationService, private authfackservice: AuthfakeauthenticationService) { }
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-        if (environment.defaultauth === 'firebase') {
+        /*if (environment.defaultauth === 'firebase') {
             const currentUser = this.authenticationService.currentUser();
             if (currentUser && currentUser.token) {
                 request = request.clone({
@@ -21,17 +21,18 @@ export class JwtInterceptor implements HttpInterceptor {
                     }
                 });
             }
-        } else {
-            // add authorization header with jwt token if available
-            const currentUser = this.authfackservice.currentUserValue;
-            if (currentUser && currentUser.token) {
-                request = request.clone({
-                    setHeaders: {
-                        Authorization: `Bearer ${currentUser.token}`
-                    }
-                });
-            }
+        } else {*/
+        
+        // add authorization header with jwt token if available
+        const currentUser = this.authfackservice.currentUserValue;
+        if (currentUser && currentUser.token) {
+            request = request.clone({
+                setHeaders: {
+                    Authorization: `Bearer ${JSON.parse(localStorage.currentUser).token}`
+                }
+            });
         }
-        return next.handle(request);
+    //}
+    return next.handle(request);
     }
 }

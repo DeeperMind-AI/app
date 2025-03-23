@@ -61,7 +61,7 @@
                         
                         <div class="row">
                             <div class="col-12">
-                        <button type="button" class="btn btn-success form-control w-sm"><i class="mdi mdi-trash-can d-block font-size-16"></i> Save </button>
+                        <button type="button"  (click)="validParams()" class="btn btn-success form-control w-sm"><i class="mdi mdi-content-save-outline d-block font-size-16"></i> Save </button>
                             </div>
                         </div>
                     </form>
@@ -69,9 +69,39 @@
             </div>
             
         </tab>
+        <!--
         <tab heading="Account">
-            
+          <div class="card">
+            <div class="card-body">
+                <form>
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label for="example-text-input" class="col-md-3 col-form-label">Name
+                                    <i class="bx bx-info-circle" title="Permet de travailler sur son/ses propres DATASETS"></i>
+                                </label>
+                                <input [(ngModel)]="user.ownerUID"  name="user.ownerUID" class="form-control" type="text" id="example-text-input">
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="mb-3">
+                              <label for="example-text-input" class="col-md-3 col-form-label">Surname
+                                <i class="bx bx-info-circle" title="Permet de travailler sur son/ses propres DATASETS"></i>
+                            </label>
+                            <input [(ngModel)]="user.ownerUID"  name="user.ownerUID" class="form-control" type="text" id="example-text-input">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-12">
+                        <button type="button" (click)="validUser()" class="btn btn-success form-control w-sm"><i class="mdi mdi-content-save-outline d-block font-size-16"></i> Save </button>
+                      </div>
+                  </div>
+                </form>
+            </div>
+          </div>
         </tab>
+        
         <tab heading="Subscription">
             <div class="card">
                 <div class="card-body">
@@ -134,12 +164,12 @@
         <tab heading="Orders">
             
         </tab>
-        <tab heading="Action ADMIN">
-            <div class="mb-3">
-                <label for="example-text-input" class="col-form-label">Actions
-                    <i class="bx bx-info-circle" title="Vider votre index"></i>
-                </label>
-                <button type="button" class="btn btn-danger form-control w-sm"><i class="mdi mdi-trash-can d-block font-size-16" (click)="cleanIndex()"></i> Supprimer l'index </button>
+        -->
+        <tab heading="Actions">
+            <div class="card">
+              <div class="card-body">
+                <button type="button" class="btn btn-danger form-control w-sm"><i class="mdi mdi-trash-can d-block font-size-16" (click)="cleanIndex()"></i> Delete your data index </button>
+              </div>
             </div>
         </tab>
     </tabset>

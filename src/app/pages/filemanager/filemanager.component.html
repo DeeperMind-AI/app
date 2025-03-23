@@ -1,5 +1,5 @@
 <div class="container-fluid">
-    <app-page-title title="Files management"></app-page-title>
+    <app-page-title title="Datas management"></app-page-title>
     <div class="d-xl-flex">
         <div class="w-100">
                     
@@ -53,7 +53,7 @@
                                                 </div>
                                                 <div class="modal-body">
                                                     <form>
-                                                        <div class="mb-3">
+                                                        <!--<div class="mb-3">
                                                             <label for="chunkMode">Chunk mode
                                                                 <i class="bx bx-info-circle" title="..."></i>
                                                             </label>
@@ -68,9 +68,7 @@
                                                                 <i class="bx bx-info-circle" title="..."></i>
                                                             </label>
                                                             <input  [disabled]="disablePops" type="checkbox" id="fsAutoCat" class="form-control form-check-input">
-                                                        </div>
-
-
+                                                        </div>-->
                                                         <div class="mb-3">
                                                             <label for="chunkMode">Data type
                                                                 <i class="bx bx-info-circle" title="..."></i>
@@ -81,23 +79,23 @@
                                                             </select>
                                                         </div>
 
-                                                        <div class="mb-3" *ngIf="newSourcePop.sourceType=='file'">
+                                                        <div class="mb-3" *ngIf="newSourcePop.sourceType==='file'">
                                                             <label for="fileinp">File
                                                                 <i class="bx bx-info-circle" title="..."></i>
                                                             </label>
                                                             <input  [disabled]="disablePops" type="file" class="form-control" accept=".pdf,.zip"  name="fileinp" (change)="onFileSelected($event)"/>
                                                         </div>
-                                                        <div class="mb-3" *ngIf="newSourcePop.sourceType=='free'">
+                                                        <div class="mb-3" *ngIf="newSourcePop.sourceType==='free'">
                                                             <label for="fileinp">Title
                                                                 <i class="bx bx-info-circle" title="..."></i>
                                                             </label>
-                                                            <input type="text" class="form-control" formControlName="message" >
+                                                            <input type="text" class="form-control" >
                                                         </div>
                                                         <div class="mb-3" *ngIf="newSourcePop.sourceType=='free'">
                                                             <label for="fileinp">Content
                                                                 <i class="bx bx-info-circle" title="..."></i>
                                                             </label>
-                                                            <textarea  name="params.customPrompt"  formControlName="textarea" class="form-control" rows="5"></textarea>
+                                                            <textarea  name="params.customPrompt" class="form-control" rows="5"></textarea>
                                                         </div>
                                                         <div class="mb-3">
                                                             <label for="fileinp">Metadatas
@@ -125,7 +123,7 @@
                                     </div>
                                 </div>
 
-                                <input type="text"/>
+                                <!--<input type="text"/>-->
 
                                 <ul class="list-unstyled categories-list" style="overflow: hidden;">
                                     <li>
@@ -313,11 +311,11 @@
                                                   
                                                 </div>
                                                 <p class="chat-time mb-0"><i class="bx bx-time-five align-middle me-1"></i> {{ data.time }}</p>
-                                                <div class="actions" style="float:right;">
+                                                <!--<div class="actions" style="float:right;">
                                                     <i class="mdi mdi-thumb-up-outline"></i>
                                                     <i class="mdi mdi-thumb-down-outline"></i>
                                                     <i class="mdi mdi-refresh"></i>
-                                                </div>
+                                                </div>-->
                                                 
                                               </div>
                           
@@ -331,7 +329,7 @@
                                       <form (ngSubmit)="messageSave()" [formGroup]="formData" class="row">
                                         <div class="col">
                                           <div class="position-relative">
-                                            <input type="text" class="form-control chat-input" placeholder="Question..."
+                                            <input type="text" class="form-control chat-input" placeholder="Search..."
                                               formControlName="message" [ngClass]="{'is-invalid': chatSubmit && form.message.errors}"
                                               >
                                             <div *ngIf="chatSubmit && form.message.errors" class="invalid-feedback">

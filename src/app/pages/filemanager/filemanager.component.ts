@@ -8,6 +8,7 @@ import { ChatMessage } from '../chat/chat.model';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { environment } from 'src/environments/environment';
 import { ConfigService } from 'src/app/core/services/config.service';
+import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-filemanager',
   templateUrl: './filemanager.component.html',
@@ -59,17 +60,41 @@ export class FilemanagerComponent implements OnInit {
   chatSubmit: boolean;
 
   file:File;
-  constructor(public sanitizer: DomSanitizer,private modalService: BsModalService,private http: HttpClient,public formBuilder: UntypedFormBuilder, public configService:ConfigService) { }
+  constructor(public toastr:ToastrService,public sanitizer: DomSanitizer,private modalService: BsModalService,private http: HttpClient,public formBuilder: UntypedFormBuilder, public configService:ConfigService) { }
   public isCollapsed = false;
   
+  firstMessage = false;
 
   loadingDocs = false;
   fetchDocs() {
     this.loadingDocs = true;
     const ask$ = this.http.post(this.uri+"loadDocs",{ownerUID:this.params.ownerUID}).pipe(
-      map((result:any) => {console.log(result.ret);this.filesList=result.ret;this.loadingDocs = false;}), catchError(err => throwError(err))
+      map((result:any) => {
+        this.filesList=result.ret;
+        this.loadingDocs = false;
+        let message:string = ""
+        if (!this.firstMessage) {
+          if (this.filesList.length > 0){
+            message = "What do you want to find in your datas ?";
+          }
+          else {
+            message = "There is no datas, start by adding some by clicking on add in left panel!";
+          }
+          this.firstMessage = true;
+        }
+        const currentDate = new Date();
+        this.chatMessagesData.push({
+          align: 'left',
+          name: 'Assistant',
+          message,
+          time: currentDate.getHours() + ':' + currentDate.getMinutes()
+        });
+        this.onListScroll();
+      }), 
+        catchError(err => throwError(err))
     )
-      ask$.subscribe();
+      
+    ask$.subscribe();
   }
 
   ngOnInit(): void {
@@ -85,15 +110,7 @@ export class FilemanagerComponent implements OnInit {
       ask$.subscribe();
 */
     //AJOUT MESSAGE BONJOUR
-    const currentDate = new Date();
-    let message :string="Hello, what can i find for you ?";
-    this.chatMessagesData.push({
-      align: 'left',
-      name: 'Assistant',
-      message,
-      time: currentDate.getHours() + ':' + currentDate.getMinutes()
-    });
-    this.onListScroll();
+    
 
     this.params = this.configService.chatParams;
 
@@ -188,38 +205,46 @@ export class FilemanagerComponent implements OnInit {
   }
 
   saveFile() {
-    if (this.file) {
-      //return;
-      this.disablePops = true;
-      const formData = new FormData();
+    //CHECK CBO DATA TYPE
+    switch (this.newSourcePop.sourceType) {
+      case "file":
+        if (this.file) {
+          
+          //return;
+          this.disablePops = true;
+          const formData = new FormData();
+    
+          formData.append("fileinp", this.file);
+          //ON ENVOIE le nom modifié par l'utilisateur
+          //formData.append("meta.name", this.tmpMetas.name);
+          
+          formData.append("meta.ownerUID", this.params.ownerUID);
+          const upload$ = this.http.post(this.uri+"upload", formData,{
+            reportProgress: true,
+            observe: 'events'
+          })
+          .pipe(
+            map(event => this.getEventMessage(event, this.file)),
+            tap(message => this.showProgress(message)),
+            last(),
+            finalize(() => {
+              this.tmpMetas = [];
+              this.uploadStatus = "";
+              this.reset();
+              this.fetchDocs();
+              this.modalRef?.hide();
+              this.toastr.info('Your data is being indexed, a message will be displayed when it is available.', 'Information');
+              }
+            )
+          );
+          upload$.subscribe();
+        }
+        break;
+      case "free":
 
-      formData.append("fileinp", this.file);
-      //ON ENVOIE le nom modifié par l'utilisateur
-      //formData.append("meta.name", this.tmpMetas.name);
-      
-      formData.append("meta.ownerUID", this.params.ownerUID);
-      
-      
-      const upload$ = this.http.post(this.uri+"upload", formData,{
-        reportProgress: true,
-        observe: 'events'
-      })
-      .pipe(
-        map(event => this.getEventMessage(event, this.file)),
-        tap(message => this.showProgress(message)),
-        last(),
-        finalize(() => {
-          this.tmpMetas = [];
-          this.uploadStatus = "";
-          this.reset();
-          this.fetchDocs();
-          this.modalRef?.hide();
-          }
-        )
-      );
-
-        upload$.subscribe();
+        break;
     }
+    
     //this.upload();
   }
 
@@ -394,7 +419,6 @@ export class FilemanagerComponent implements OnInit {
 
   onFileSelected(event) {
 
-  
     this.file = event.target.files[0];
     this.tmpMetas = [
       {lib:"name",val:this.file.name},

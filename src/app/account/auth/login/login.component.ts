@@ -85,6 +85,7 @@ export class LoginComponent implements OnInit {
 
 
   validGauth(res) {
+    
     localStorage.setItem('currentUser', JSON.stringify(res));
     //this.authFackservice..next(data.user);
     let gotoRoute;

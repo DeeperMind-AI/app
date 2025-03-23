@@ -32,6 +32,7 @@ export class SettingsComponent {
 
   locStor = localStorage;
   params:any;
+  user:any = {};
   pricingData: Pricing[];
 
 
@@ -93,7 +94,12 @@ export class SettingsComponent {
           }
         });
     }
-
+    validParams (){
+      alert("validParams");
+    }
+    validUser (){
+      alert("validUser");
+    }
   public onPromptChange(event: Event): void {
     
     const value = (event.target as any).value;
