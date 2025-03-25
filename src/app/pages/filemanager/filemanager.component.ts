@@ -9,6 +9,7 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { environment } from 'src/environments/environment';
 import { ConfigService } from 'src/app/core/services/config.service';
 import { ToastrService } from 'ngx-toastr';
+import { Socket } from 'ngx-socket-io';
 @Component({
   selector: 'app-filemanager',
   templateUrl: './filemanager.component.html',
@@ -60,7 +61,7 @@ export class FilemanagerComponent implements OnInit {
   chatSubmit: boolean;
 
   file:File;
-  constructor(public toastr:ToastrService,public sanitizer: DomSanitizer,private modalService: BsModalService,private http: HttpClient,public formBuilder: UntypedFormBuilder, public configService:ConfigService) { }
+  constructor(private socket: Socket,public toastr:ToastrService,public sanitizer: DomSanitizer,private modalService: BsModalService,private http: HttpClient,public formBuilder: UntypedFormBuilder, public configService:ConfigService) { }
   public isCollapsed = false;
   
   firstMessage = false;
@@ -80,16 +81,17 @@ export class FilemanagerComponent implements OnInit {
           else {
             message = "There is no datas, start by adding some by clicking on add in left panel!";
           }
+          const currentDate = new Date();
+          this.chatMessagesData.push({
+            align: 'left',
+            name: 'Assistant',
+            message,
+            time: currentDate.getHours() + ':' + currentDate.getMinutes()
+          });
+          this.onListScroll();
           this.firstMessage = true;
         }
-        const currentDate = new Date();
-        this.chatMessagesData.push({
-          align: 'left',
-          name: 'Assistant',
-          message,
-          time: currentDate.getHours() + ':' + currentDate.getMinutes()
-        });
-        this.onListScroll();
+        
       }), 
         catchError(err => throwError(err))
     )
@@ -97,11 +99,27 @@ export class FilemanagerComponent implements OnInit {
     ask$.subscribe();
   }
 
+  onServerMessage() {
+    this.toastr.success('New file indexed !.', 'Information');
+    this.fetchDocs();
+  }
+
   ngOnInit(): void {
     this.breadCrumbItems = [{ label: 'Apps' }, { label: 'File Manager', active: true }];
     this.chatMessagesData = [];
     this.formData = this.formBuilder.group({
       message: ['', [Validators.required]],
+    });
+    let that = this;
+    
+    //console.log(this.socket.connect());
+    this.socket.on('connect', () => {
+      console.log("client connected");
+      //this.socket.emit(message, { data: "I'm connected!" });
+    });
+    this.socket.on("message",function(data) {
+      console.log("message recu",data);
+      that.onServerMessage();
     });
     
     /*const ask$ = this.http.post(this.uri+"cleanES",{}).pipe(
@@ -228,10 +246,9 @@ export class FilemanagerComponent implements OnInit {
             tap(message => this.showProgress(message)),
             last(),
             finalize(() => {
-              this.tmpMetas = [];
-              this.uploadStatus = "";
+              
               this.reset();
-              this.fetchDocs();
+              //this.fetchDocs();
               this.modalRef?.hide();
               this.toastr.info('Your data is being indexed, a message will be displayed when it is available.', 'Information');
               }
@@ -428,8 +445,7 @@ export class FilemanagerComponent implements OnInit {
     
   }
   reset() {
-    console.log("ok");
-    //this.uploadProgress = null;
-    //this.uploadSub = null;
+    this.tmpMetas = [];
+    this.uploadStatus = "";
   }
 }

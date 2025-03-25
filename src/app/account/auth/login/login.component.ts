@@ -9,6 +9,7 @@ import { catchError, first, map } from 'rxjs/operators';
 import { environment } from '../../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { throwError } from 'rxjs';
+import { Socket } from 'ngx-socket-io';
 
 
 declare const google: any;
@@ -34,7 +35,7 @@ export class LoginComponent implements OnInit {
   year: number = new Date().getFullYear();
 
   // tslint:disable-next-line: max-line-length
-  constructor(private http: HttpClient,private formBuilder: UntypedFormBuilder, private route: ActivatedRoute, private router: Router, private authenticationService: AuthenticationService) { }
+  constructor(private socket: Socket,private http: HttpClient,private formBuilder: UntypedFormBuilder, private route: ActivatedRoute, private router: Router, private authenticationService: AuthenticationService) { }
 
 
 
@@ -88,6 +89,8 @@ export class LoginComponent implements OnInit {
     
     localStorage.setItem('currentUser', JSON.stringify(res));
     //this.authFackservice..next(data.user);
+    //ON STORE LE SOCKET LIE AU CLIENT (x sockets pour 1 clients)
+    this.socket.emit('storeClientInfo', { ownerUID:res.email });
     let gotoRoute;
     if (this.returnUrl) { gotoRoute = this.returnUrl; } else { gotoRoute = '/filemanager' }
     this.router.navigate([gotoRoute]);

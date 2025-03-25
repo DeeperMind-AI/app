@@ -33,6 +33,8 @@ import { ToastrModule } from 'ngx-toastr';
 import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
 import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 
+import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
+
 import { NgxStripeModule } from 'ngx-stripe';
 
 import { OAuthModule } from 'angular-oauth2-oidc';
@@ -49,6 +51,8 @@ export function createTranslateLoader(http: HttpClient): any {
   return new TranslateHttpLoader(http, 'assets/i18n/', '.json');
 }
 
+const config: SocketIoConfig = { url: environment.tradBotServer, options: {transports: ['websocket'], upgrade: true} };
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -59,6 +63,7 @@ export function createTranslateLoader(http: HttpClient): any {
     BrowserAnimationsModule,
     HttpClientModule,
     OAuthModule.forRoot(),
+    SocketIoModule.forRoot(config),
     NgxStripeModule.forRoot(),
     TranslateModule.forRoot({
       loader: {
