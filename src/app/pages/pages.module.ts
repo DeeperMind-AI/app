@@ -37,6 +37,7 @@ import { AccordionModule } from 'ngx-bootstrap/accordion';
 
 import { FilemanagerComponent } from './filemanager/filemanager.component';
 import { SettingsComponent } from './settings/settings.component';
+import { AlertModule } from 'ngx-bootstrap/alert';
 
 @NgModule({
   declarations: [ChatComponent, FilemanagerComponent, SettingsComponent],
@@ -45,6 +46,7 @@ import { SettingsComponent } from './settings/settings.component';
     FormsModule,
     BsDropdownModule.forRoot(),
     ModalModule.forRoot(),
+    AlertModule.forRoot(),
     PagesRoutingModule,
     NgApexchartsModule,
     ReactiveFormsModule,

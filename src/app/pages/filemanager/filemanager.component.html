@@ -2,9 +2,17 @@
     <app-page-title title="Datas management"></app-page-title>
     <div class="d-xl-flex">
         <div class="w-100">
+            <div class="card" *ngIf="datasProcess.length>0">
+                <div class="card-body" >
+                    <alert [id]="pro.processUID" (close)="close(pro.processUID)" *ngFor="let pro of datasProcess" type="info" [dismissible]="true"  role="alert">
+                        <i class="mdi mdi-alert-circle-outline me-2"></i>
+                        {{pro.msg}}: <strong>{{pro.dataTitle}}</strong>
+                    </alert>
+                    
+                </div>
+            </div>
                     
             <div class="d-md-flex">
-                
                 <div class="card filemanager-sidebar me-md-2">
                     <div class="card-body">
 

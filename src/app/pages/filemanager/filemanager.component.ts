@@ -10,6 +10,8 @@ import { environment } from 'src/environments/environment';
 import { ConfigService } from 'src/app/core/services/config.service';
 import { ToastrService } from 'ngx-toastr';
 import { Socket } from 'ngx-socket-io';
+import { AlertColor } from '../ui/alerts/alerts.model';
+
 @Component({
   selector: 'app-filemanager',
   templateUrl: './filemanager.component.html',
@@ -47,7 +49,7 @@ export class FilemanagerComponent implements OnInit {
   isColapseFilesIa:boolean = false;
   isColapseFilesClass:boolean = false;
   docTabSelected:number = 1;
-
+  datasProcess = [];
   disablePops = false;
   //
   metas:any;
@@ -99,9 +101,22 @@ export class FilemanagerComponent implements OnInit {
     ask$.subscribe();
   }
 
-  onServerMessage() {
+  removertAlert(processUID) {
+    for (var reliP=0;reliP<this.datasProcess.length;reliP++) {
+      if (this.datasProcess[reliP].processUID == processUID) 
+      {
+        this.datasProcess.splice(reliP,1);
+        this.fetchDocs();
+        return;
+      }
+    }
+  }
+
+  onServerMessage(data) {
     this.toastr.success('New file indexed !.', 'Information');
-    this.fetchDocs();
+    this.removertAlert(data.processUID);
+    
+   
   }
 
   ngOnInit(): void {
@@ -114,12 +129,14 @@ export class FilemanagerComponent implements OnInit {
     
     //console.log(this.socket.connect());
     this.socket.on('connect', () => {
+      this.socket.emit('storeClientInfo', { ownerUID:this.params.ownerUID });
       console.log("client connected");
       //this.socket.emit(message, { data: "I'm connected!" });
     });
+
     this.socket.on("message",function(data) {
       console.log("message recu",data);
-      that.onServerMessage();
+      that.onServerMessage(data);
     });
     
     /*const ask$ = this.http.post(this.uri+"cleanES",{}).pipe(
@@ -235,8 +252,9 @@ export class FilemanagerComponent implements OnInit {
           formData.append("fileinp", this.file);
           //ON ENVOIE le nom modifié par l'utilisateur
           //formData.append("meta.name", this.tmpMetas.name);
-          
+          let processUID = "p_"+this.generateGuid();
           formData.append("meta.ownerUID", this.params.ownerUID);
+          formData.append("processUID", processUID);
           const upload$ = this.http.post(this.uri+"upload", formData,{
             reportProgress: true,
             observe: 'events'
@@ -250,6 +268,13 @@ export class FilemanagerComponent implements OnInit {
               this.reset();
               //this.fetchDocs();
               this.modalRef?.hide();
+              
+              this.datasProcess.push({
+                processUID:processUID,
+                percent:0,
+                msg:"Your data is being indexed",
+                dataTitle: this.file.name
+              });
               this.toastr.info('Your data is being indexed, a message will be displayed when it is available.', 'Information');
               }
             )
@@ -265,6 +290,13 @@ export class FilemanagerComponent implements OnInit {
     //this.upload();
   }
 
+  generateGuid() : string {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+      var r = Math.random() * 16 | 0,
+        v = c == 'x' ? r : (r & 0x3 | 0x8);
+      return v.toString(16);
+    });
+  }
 
    // Delete Message
    deleteMessage(event:any){
@@ -444,8 +476,14 @@ export class FilemanagerComponent implements OnInit {
     ]    
     
   }
+  //RESET DATAS FORM NEW DATA
   reset() {
     this.tmpMetas = [];
     this.uploadStatus = "";
+  }
+
+  // tslint:disable-next-line: no-shadowed-variable
+  close(processUID:string) {
+    this.removertAlert(processUID);
   }
 }
