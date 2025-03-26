@@ -27,7 +27,7 @@ export class FilemanagerComponent implements OnInit {
   //uri = "http://fileai.api.ekoal.org";
   //uri = "http://localhost:5002";
   locStor = localStorage;
-  nuDirName:string="";
+  
   dirStructure:any[] = [
               {uid:"filesAll",libelle:"Tous les fichiers",title:"Toutes vos ressources",icon:"mdi-folder-table",color:"#F8D775",isColapse:false},
               {uid:"filesIaSel",libelle:"Sélection IA",title:"",icon:"mdi-folder-search",color:"#F8D775",isColapse:false},
@@ -44,7 +44,7 @@ export class FilemanagerComponent implements OnInit {
   chatMessagesData: ChatMessage[];
   pdfPreviewURL;
   pdfMetas="";
-  filesList = [];
+  
   isColapseFilesAll:boolean = false;
   isColapseFilesIa:boolean = false;
   isColapseFilesClass:boolean = false;
@@ -68,6 +68,8 @@ export class FilemanagerComponent implements OnInit {
   
   firstMessage = false;
 
+  //Chargement des données
+  filesList = [];
   loadingDocs = false;
   fetchDocs() {
     this.loadingDocs = true;
@@ -94,6 +96,22 @@ export class FilemanagerComponent implements OnInit {
           this.firstMessage = true;
         }
         
+      }), 
+        catchError(err => throwError(err))
+    )
+      
+    ask$.subscribe();
+  }
+  //Chargement des catégories
+  categsList = [];
+  loadingCategs = false;
+  fetchCategs() {
+    this.loadingCategs = true;
+    const ask$ = this.http.post(this.uri+"loadCategs",{ownerUID:this.params.ownerUID}).pipe(
+      map((result:any) => {
+        console.log(result);
+        this.categsList=result.ret;
+        this.loadingCategs = false;
       }), 
         catchError(err => throwError(err))
     )
@@ -149,6 +167,7 @@ export class FilemanagerComponent implements OnInit {
 
     this.params = this.configService.chatParams;
 
+    this.fetchCategs();
     this.fetchDocs();
 
     this.radialoptions =  {
@@ -239,7 +258,31 @@ export class FilemanagerComponent implements OnInit {
     this.uploadStatus=val;
   }
 
+  categ:any = {
+
+  };
+  saveCateg() {
+    
+    let categ={
+      ownerUID:this.params.ownerUID,
+      title:this.categ.name,
+      color:this.categ.color
+    }
+    const ask$ = this.http.post(this.uri+"addCateg",categ).pipe(
+      map((result:any) => {
+    
+        
+        this.fetchCategs();
+        
+      }), 
+        catchError(err => throwError(err))
+    )
+      
+    ask$.subscribe();
+  }
+
   saveFile() {
+    let processUID = "p_"+this.generateGuid();
     //CHECK CBO DATA TYPE
     switch (this.newSourcePop.sourceType) {
       case "file":
@@ -252,7 +295,7 @@ export class FilemanagerComponent implements OnInit {
           formData.append("fileinp", this.file);
           //ON ENVOIE le nom modifié par l'utilisateur
           //formData.append("meta.name", this.tmpMetas.name);
-          let processUID = "p_"+this.generateGuid();
+          
           formData.append("meta.ownerUID", this.params.ownerUID);
           formData.append("processUID", processUID);
           const upload$ = this.http.post(this.uri+"upload", formData,{
@@ -264,18 +307,17 @@ export class FilemanagerComponent implements OnInit {
             tap(message => this.showProgress(message)),
             last(),
             finalize(() => {
-              
-              this.reset();
-              //this.fetchDocs();
               this.modalRef?.hide();
-              
+              //EMPTY FORM
+              this.reset();
+              //ADD NEW PROCESS IN STACK
               this.datasProcess.push({
                 processUID:processUID,
                 percent:0,
                 msg:"Your data is being indexed",
                 dataTitle: this.file.name
               });
-              this.toastr.info('Your data is being indexed, a message will be displayed when it is available.', 'Information');
+              //this.toastr.info('Your data is being indexed, a message will be displayed when it is available.', 'Information');
               }
             )
           );
@@ -283,7 +325,28 @@ export class FilemanagerComponent implements OnInit {
         }
         break;
       case "free":
-
+        //ENVOI DU CONTENU LIBRE
+        const ask$ = this.http.post(this.uri+"uploadFree",{
+          title:this.newSourcePop.freeTitle,
+          content:this.newSourcePop.freeContent,
+          ownerUID:this.params.ownerUID,
+        }).pipe(
+          map((result:any) => {
+            this.modalRef?.hide();
+            //EMPTY FORM
+            this.reset();
+            //ADD NEW PROCESS IN STACK
+            this.datasProcess.push({
+              processUID:processUID,
+              percent:0,
+              msg:"Your data is being indexed",
+              dataTitle: this.newSourcePop.freeTitle
+            });
+          }), catchError(err => throwError(err))
+      )
+        ask$.subscribe();
+        
+        
         break;
     }
     
@@ -406,7 +469,7 @@ export class FilemanagerComponent implements OnInit {
     this.loading = false;
 
     const currentDate = new Date();
-    let message :string=this.aiResponse.toString();
+    let message :string= this.aiResponse.toString();
     this.chatMessagesData.push({
       align: 'left',
       name: 'Assistant',
@@ -487,3 +550,6 @@ export class FilemanagerComponent implements OnInit {
     this.removertAlert(processUID);
   }
 }
+
+
+

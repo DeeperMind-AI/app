@@ -38,15 +38,18 @@
                                                     <form>
                                                         <div class="mb-3">
                                                             <label for="formrow-firstname-input">Category name</label>
-                                                            <input type="text" class="form-control" name="nuDirName" [(ngModel)]="nuDirName">
+                                                            <input type="text" class="form-control" name="categ.name" [(ngModel)]="categ.name">
                                                         </div>
-                                
+                                                        <div class="mb-3">
+                                                            <label for="formrow-firstname-input">Code couleur</label>
+                                                            <input type="color" class="form-control" name="categ.color" [(ngModel)]="categ.color">
+                                                        </div>
                                                     </form>
                                                     
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="button"  class="btn btn-secondary waves-effect" data-bs-dismiss="modal" (click)="modalRef?.hide()">Close</button>
-                                                    <button type="button" class="btn btn-primary waves-effect waves-light">Save dir</button>
+                                                    <button type="button" class="btn btn-primary waves-effect waves-light" (click)="saveCateg()" >Save</button>
                                                 </div>
                                                 </ng-template><!-- /.modal -->
                                                     
@@ -94,16 +97,16 @@
                                                             <input  [disabled]="disablePops" type="file" class="form-control" accept=".pdf,.zip"  name="fileinp" (change)="onFileSelected($event)"/>
                                                         </div>
                                                         <div class="mb-3" *ngIf="newSourcePop.sourceType==='free'">
-                                                            <label for="fileinp">Title
+                                                            <label for="freeTitle">Title
                                                                 <i class="bx bx-info-circle" title="..."></i>
                                                             </label>
-                                                            <input type="text" class="form-control" >
+                                                            <input type="text" class="form-control"  name="newSourcePop.freeTitle" [(ngModel)]="newSourcePop.freeTitle" >
                                                         </div>
                                                         <div class="mb-3" *ngIf="newSourcePop.sourceType=='free'">
-                                                            <label for="fileinp">Content
+                                                            <label for="freeContent">Content
                                                                 <i class="bx bx-info-circle" title="..."></i>
                                                             </label>
-                                                            <textarea  name="params.customPrompt" class="form-control" rows="5"></textarea>
+                                                            <textarea  class="form-control" rows="5"  name="newSourcePop.freeContent" [(ngModel)]="newSourcePop.freeContent"></textarea>
                                                         </div>
                                                         <div class="mb-3">
                                                             <label for="fileinp">Metadatas
@@ -140,7 +143,7 @@
                                                 (click)="isColapseFilesAll = !isColapseFilesAll" [attr.aria-expanded]="isColapseFilesAll"
                                                 data-toggle="collapse" href="javascript:void(0);" role="button"
                                                 aria-expanded="false" aria-controls="categories-collapse" title="Toutes vos ressources">
-                                                <i style="color:#F8D775" class="mdi mdi-folder-table font-size-16"></i> Your datas {{!loadingDocs?"("+filesList.length+")":""}}
+                                                <i style="color:#F8D775" class="mdi mdi-folder-table font-size-16 me-2"></i> All your datas {{!loadingDocs?"("+filesList.length+")":""}}
                                                 <i *ngIf="loadingDocs" style="color:#4682ad;margin-left:3px;" class="bx bx-hourglass bx-spin font-size-14 align-middle"></i>
                                                 <i
                                                     class="mdi mdi-chevron-up accor-down-icon ms-auto"></i>
@@ -158,7 +161,7 @@
                                                             </li>
                                                             <li *ngIf="ff.original_fname" title="{{ff.original_fname}}"  >
                                                                 <a href="javascript:void(0)" (click)="showPreview(ff.fname + '.pdf',ff)" class="d-flex align-items-center">
-                                                                    <i style="color:#da3c33" class="mdi mdi-file-pdf-box font-size-16 me-2"></i>
+                                                                    <i [style.color]="(ff.source_type === 'file/pdf'?'#da3c33':'#339dda')" [ngClass]="{'mdi-file-pdf-box': ff.source_type === 'file/pdf','mdi-note-text': !ff.source_type || (ff.source_type=='free')}" class="mdi mdi-file-pdf-box font-size-16 me-2"></i>
                                                                     <span class="me-auto">{{ff.original_fname}}</span>
                                                             </a>
                                                             </li>
@@ -198,17 +201,21 @@
                                                 (click)="isColapseFilesClass = !isColapseFilesClass" [attr.aria-expanded]="isColapseFilesClass"
                                                 data-toggle="collapse" href="javascript:void(0);" role="button"
                                                 aria-expanded="false" aria-controls="categories-collapse-filesAll">
-                                                <i style="color:#F8D775" class="mdi mdi-folder-pound font-size-16 me-2"></i> Auto. classification (0) <i
+                                                <i style="color:#F8D775" class="mdi mdi-folder-pound font-size-16 me-2"></i> Categories {{!loadingCategs?"("+categsList.length+")":""}}
+                                                <i *ngIf="loadingCategs"   style="color:#4682ad;margin-left:3px;" class="bx bx-hourglass bx-spin font-size-14 align-middle"></i> <i
+                                                
                                                     class="mdi mdi-chevron-up accor-down-icon accor-down-icon ms-auto"></i>
+                                                    
                                             </a>                                            
-                                            <div class="collapse" id="categories-collapse-filesAll"
+                                            <div class="collapse" id="categories-collapse-categs"
                                                 [collapse]="isColapseFilesClass">
                                                 <div class="card border-0 shadow-none ps-2 mb-0">
                                                     <ul class="list-unstyled mb-0">
-                                                        <!--<div *ngFor="let rr of aiResponseContexts">
-                                                            <li *ngIf="(rr.metadata.source_type == 'file/pdf')" title="{{rr.metadata.original_fname}}"  ><a href="javascript:void(0)" (click)="showPreview(rr.metadata.original_fname,rr)" class="d-flex align-items-center"><span
-                                                                class="me-auto">{{rr.metadata.original_fname}} {{rr.occurs}}</span></a></li>
-                                                        </div>-->
+                                                        <div *ngFor="let rr of categsList">
+                                                            <li title="{{rr.title}}"  ><a href="javascript:void(0)" (click)="showPreview(rr.metadata.fname+'.pdf',rr)" class="d-flex align-items-center">
+                                                                <i [style.color]="rr.color" class="mdi mdi-folder font-size-16 me-2"></i><span
+                                                                class="me-auto">{{rr.title}}</span></a></li>
+                                                            </div>
                                                     </ul>
                                                 </div>
                                             </div>   
@@ -315,7 +322,7 @@
                                               </div>
                                               <div class="ctext-wrap">
                                                 <div class="conversation-name">{{ data.name }}</div>
-                                                <div  [innerHtml]="data.message">
+                                                <div [innerHtml]="data.message">
                                                   
                                                 </div>
                                                 <p class="chat-time mb-0"><i class="bx bx-time-five align-middle me-1"></i> {{ data.time }}</p>
@@ -330,7 +337,9 @@
                                             </div>
                                           </li>
                                         </ul>
+                                        <i *ngIf="loading" style="color:#4682ad;margin-left:3px;" class="bx bx-hourglass bx-spin font-size-14 align-middle"></i>
                                       </ngx-simplebar>
+                                      
                                     </div>
                                     <div class="p-3 chat-input-section">
                           
