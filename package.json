@@ -70,6 +70,7 @@
     "ngx-echarts": "^15.0.1",
     "ngx-image-cropper": "^6.3.2",
     "ngx-lightbox": "^3.0.0",
+    "ngx-markdown": "^15.1.2",
     "ngx-mask": "^14.2.4",
     "ngx-masonry": "^14.0.1",
     "ngx-owl-carousel-o": "^15.0.0",

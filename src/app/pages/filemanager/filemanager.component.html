@@ -37,19 +37,19 @@
                                                 <div class="modal-body">
                                                     <form>
                                                         <div class="mb-3">
-                                                            <label for="formrow-firstname-input">Category name</label>
-                                                            <input type="text" class="form-control" name="categ.name" [(ngModel)]="categ.name">
+                                                            <label  for="formrow-firstname-input">Category name</label>
+                                                            <input [disabled]="disablePops" type="text" class="form-control" name="categ.name" [(ngModel)]="categ.name">
                                                         </div>
                                                         <div class="mb-3">
                                                             <label for="formrow-firstname-input">Code couleur</label>
-                                                            <input type="color" class="form-control" name="categ.color" [(ngModel)]="categ.color">
+                                                            <input type="color" [disabled]="disablePops" class="form-control" name="categ.color" [(ngModel)]="categ.color">
                                                         </div>
                                                     </form>
                                                     
                                                 </div>
                                                 <div class="modal-footer">
-                                                    <button type="button"  class="btn btn-secondary waves-effect" data-bs-dismiss="modal" (click)="modalRef?.hide()">Close</button>
-                                                    <button type="button" class="btn btn-primary waves-effect waves-light" (click)="saveCateg()" >Save</button>
+                                                    <button type="button" [disabled]="disablePops" class="btn btn-secondary waves-effect" data-bs-dismiss="modal" (click)="modalRef?.hide()">Close</button>
+                                                    <button type="button" [disabled]="disablePops" class="btn btn-primary waves-effect waves-light" (click)="saveCateg()" >Save</button>
                                                 </div>
                                                 </ng-template><!-- /.modal -->
                                                     
@@ -153,16 +153,21 @@
                                                 <div class="card border-0 shadow-none ps-2 mb-0">
                                                     <ul class="list-unstyled mb-0">
                                                         <div *ngFor="let ff of filesList">
-                                                            <li *ngIf="ff.file" title="{{ff.file.name}}"  >
+                                                            <li *ngIf="ff.file" title="{{ff.name}}"  >
+                                                                <a href="javascript:void(0)" (click)="showPreview(ff.file.name,ff)" class="d-flex align-items-center">
+                                                                    <i style="color:#524f4f" class="mdi mdi-checkbox-blank-outline font-size-16 me-2"></i>
+                                                            </a>
                                                                 <a href="javascript:void(0)" (click)="showPreview(ff.file.name,ff)" class="d-flex align-items-center">
                                                                     <i style="color:#da3c33" class="mdi mdi-file-pdf-box font-size-16 me-2"></i>
                                                                     <span class="me-auto">{{ff.file.name}}</span>
                                                             </a>
                                                             </li>
                                                             <li *ngIf="ff.original_fname" title="{{ff.original_fname}}"  >
-                                                                <a href="javascript:void(0)" (click)="showPreview(ff.fname + '.pdf',ff)" class="d-flex align-items-center">
+                                                                <a href="javascript:void(0)"  class="d-flex align-items-center">
+                                                                    <i style="color:#524f4f" (click)="check(ff)" [ngClass]="{'mdi-checkbox-marked-outline': ff.checked==true,'mdi-checkbox-blank-outline': !ff.checked || (ff.checked==false)}" class="mdi  font-size-16 me-2"></i>
+                                                                    
                                                                     <i [style.color]="(ff.source_type === 'file/pdf'?'#da3c33':'#339dda')" [ngClass]="{'mdi-file-pdf-box': ff.source_type === 'file/pdf','mdi-note-text': !ff.source_type || (ff.source_type=='free')}" class="mdi mdi-file-pdf-box font-size-16 me-2"></i>
-                                                                    <span class="me-auto">{{ff.original_fname}}</span>
+                                                                    <span  (click)="showPreview(ff.fname+'.pdf',ff)" class="me-auto">{{ff.original_fname}}</span>
                                                             </a>
                                                             </li>
                                                         </div>
@@ -214,8 +219,28 @@
                                                         <div *ngFor="let rr of categsList">
                                                             <li title="{{rr.title}}"  ><a href="javascript:void(0)" (click)="showPreview(rr.metadata.fname+'.pdf',rr)" class="d-flex align-items-center">
                                                                 <i [style.color]="rr.color" class="mdi mdi-folder font-size-16 me-2"></i><span
-                                                                class="me-auto">{{rr.title}}</span></a></li>
-                                                            </div>
+                                                                class="me-auto">{{rr.title}}</span></a>
+                                                            
+                                                                <div class="card border-0 shadow-none ps-2 mb-0">
+                                                                    <ul class="list-unstyled mb-0">
+                                                                        <div *ngFor="let ff of filesList">
+                                                                            <li *ngIf="(ff.category == rr.title) && ff.file" title="{{ff.file.name}}"  >
+                                                                                <a href="javascript:void(0)" (click)="showPreview(ff.file.name,ff)" class="d-flex align-items-center">
+                                                                                    <i style="color:#da3c33" class="mdi mdi-file-pdf-box font-size-16 me-2"></i>
+                                                                                    <span class="me-auto">{{ff.file.name}}</span>
+                                                                            </a>
+                                                                            </li>
+                                                                            <li *ngIf="(ff.category == rr.title) && ff.original_fname" title="{{ff.original_fname}}"  >
+                                                                                <a href="javascript:void(0)" (click)="showPreview(ff.fname + '.pdf',ff)" class="d-flex align-items-center">
+                                                                                    <i [style.color]="(ff.source_type === 'file/pdf'?'#da3c33':'#339dda')" [ngClass]="{'mdi-file-pdf-box': ff.source_type === 'file/pdf','mdi-note-text': !ff.source_type || (ff.source_type=='free')}" class="mdi mdi-file-pdf-box font-size-16 me-2"></i>
+                                                                                    <span class="me-auto">{{ff.original_fname}}</span>
+                                                                            </a>
+                                                                            </li>
+                                                                        </div>
+                                                                    </ul>
+                                                                </div>
+                                                            </li>
+                                                        </div>
                                                     </ul>
                                                 </div>
                                             </div>   
@@ -298,7 +323,7 @@
                     <div class="w-100 user-chat card">
                         
                           <tabset class="nav-tabs nav-tabs-custom tab-container">
-                            <tab heading="Full DB AI search">
+                            <tab [heading]="'AI search '+(filterOnFileUID?'(filtered on selected file)':'')">
                                 <div>
                                     <div class="chat-conversation p-3">
                                       <ngx-simplebar style="height: 470px;" #scrollRef>
@@ -322,10 +347,15 @@
                                               </div>
                                               <div class="ctext-wrap">
                                                 <div class="conversation-name">{{ data.name }}</div>
-                                                <div [innerHtml]="data.message">
-                                                  
-                                                </div>
-                                                <p class="chat-time mb-0"><i class="bx bx-time-five align-middle me-1"></i> {{ data.time }}</p>
+                                                <markdown [data]="data.message">
+                                                    
+                                                </markdown>
+                                                
+                                                <p class="chat-time mb-0">
+                                                    <!--<i class="bx bx-time-five align-middle me-1"></i> {{ data.time }}-->
+                                                    <a title="redo" href="javascript:void(0)" (click)="redo(data.message)"><i class="bx bx bx-redo align-middle me-1"></i></a>
+                                                    <a title="copy" href="javascript:void(0)" (click)="copy(data.message)"><i class="bx bx-copy align-middle me-1"></i></a>
+                                                </p>
                                                 <!--<div class="actions" style="float:right;">
                                                     <i class="mdi mdi-thumb-up-outline"></i>
                                                     <i class="mdi mdi-thumb-down-outline"></i>
@@ -354,21 +384,22 @@
                                             </div>
                                             <div class="chat-input-links">
                                               <ul class="list-inline mb-0">
-                                                <li class="list-inline-item"><a href="javascript: void(0);" class="emoji-btn"
+                                                <!--<li class="list-inline-item"><a href="javascript: void(0);" class="emoji-btn"
                                                     data-toggle="tooltip" placement="top" tooltip="Emoji" id="emoji-btn"
                                                     ><i class="mdi mdi-emoticon-happy-outline"></i></a>
                                                 </li>
-                                                <!--
+                                                
                                                 (click)="toggleEmojiPicker()"
                                                 (emojiSelect)="addEmoji($event)"
                                                 *ngIf="showEmojiPicker"
                                                 <emoji-mart class="emoji-mart"  
-                                                  title="Pick your emoji…"></emoji-mart>-->
+                                                  title="Pick your emoji…"></emoji-mart>
                                                 <li class="list-inline-item"><a href="javascript: void(0);" data-toggle="tooltip" placement="top"
                                                     tooltip="Images"><i class="mdi mdi-file-image-outline"></i></a></li>
                                                 <li class="list-inline-item"><a href="javascript: void(0);" data-toggle="tooltip" placement="top"
                                                     tooltip="Add Files"><i class="mdi mdi-file-document-outline"></i></a>
                                                 </li>
+                                                -->
                                               </ul>
                                             </div>
                                           </div>

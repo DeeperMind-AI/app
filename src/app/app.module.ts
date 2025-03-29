@@ -39,6 +39,7 @@ import { NgxStripeModule } from 'ngx-stripe';
 
 import { OAuthModule } from 'angular-oauth2-oidc';
 
+import { MarkdownModule } from 'ngx-markdown';
 
 if (environment.defaultauth === 'firebase') {
   initFirebaseBackend(environment.firebaseConfig);
@@ -76,6 +77,7 @@ const config: SocketIoConfig = { url: environment.tradBotServer, options: {trans
     AppRoutingModule,
     ExtrapagesModule,
     CarouselModule,
+    
     AccordionModule.forRoot(),
     TabsModule.forRoot(),
     TooltipModule.forRoot(),

@@ -119,6 +119,23 @@ export class FilemanagerComponent implements OnInit {
     ask$.subscribe();
   }
 
+  redo(str) {
+
+  }
+  copy(str) {
+    const selBox = document.createElement('textarea');
+    selBox.style.position = 'fixed';
+    selBox.style.left = '0';
+    selBox.style.top = '0';
+    selBox.style.opacity = '0';
+    selBox.value = str;
+    document.body.appendChild(selBox);
+    selBox.focus();
+    selBox.select();
+    document.execCommand('copy');
+    document.body.removeChild(selBox);
+  }
+
   removertAlert(processUID) {
     for (var reliP=0;reliP<this.datasProcess.length;reliP++) {
       if (this.datasProcess[reliP].processUID == processUID) 
@@ -263,6 +280,7 @@ export class FilemanagerComponent implements OnInit {
   };
   saveCateg() {
     
+    this.disablePops = true;
     let categ={
       ownerUID:this.params.ownerUID,
       title:this.categ.name,
@@ -271,7 +289,8 @@ export class FilemanagerComponent implements OnInit {
     const ask$ = this.http.post(this.uri+"addCateg",categ).pipe(
       map((result:any) => {
     
-        
+        this.disablePops = false;
+        this.modalRef?.hide();
         this.fetchCategs();
         
       }), 
@@ -406,12 +425,13 @@ export class FilemanagerComponent implements OnInit {
       });
 
       this.loading = true;
-      const ask$ = this.http.post(this.uri+"askToFullDb2",{
+      const ask$ = this.http.post(this.uri+"askIASimilarity",{
         question:message,
         chat_history:this.chat_history,
         ownerUID:this.params.ownerUID,
         prompt:this.params.customPrompt,
         k:this.params.k,
+        metaUID:(this.filterOnFileUID?this.filterOnFileUID:null),
         model:this.params.model,
       }).pipe(
         map((result:any) => {this.saveNuDir(result)}), catchError(err => throwError(err))
@@ -503,7 +523,7 @@ export class FilemanagerComponent implements OnInit {
     if(event.charCode==13) {
       //alert(this.params.ownerUID);
       this.loading = true;
-      const ask$ = this.http.post(this.uri+"askToFullDb2",{
+      const ask$ = this.http.post(this.uri+"askIASimilarity",{
         question:this.question,
         chat_history:this.chat_history,
         ownerUID:this.params.ownerUID,
@@ -517,6 +537,32 @@ export class FilemanagerComponent implements OnInit {
       
     }
   }
+
+  filterOnFileUID:string;
+  check(fil) {
+    console.log(fil);
+    for (var reliF = 0;reliF < this.filesList.length;reliF++)
+    {
+      if (this.filesList[reliF]._id == fil._id)
+      {
+        this.filesList[reliF].checked = !this.filesList[reliF].checked;
+        if (this.filesList[reliF].checked) {
+          this.filterOnFileUID = this.filesList[reliF].uid;
+        }else{
+          this.filterOnFileUID = "";
+        }
+        
+      }
+      else {
+        this.filesList[reliF].checked = false;
+      }
+        
+    }
+    //fil.checked = (fil.checked == true?false:true);
+    console.log(fil.checked);
+  }
+  
+
   showPreview(uri,f) {
     
     this.pdfPreviewURL = "https://medias.deepermind.ai/"+uri;
