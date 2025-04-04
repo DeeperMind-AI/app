@@ -1,5 +1,5 @@
 <div class="container-fluid">
-    <app-page-title title="Datas management"></app-page-title>
+    <app-page-title title="{{ 'FILEMANAGER.HEADER.TEXT' | translate}}"></app-page-title>
     <div class="d-xl-flex">
         <div class="w-100">
             <div class="card" *ngIf="datasProcess.length>0">
@@ -14,7 +14,7 @@
                     
             <div class="d-md-flex">
                 <div class="card filemanager-sidebar me-md-2">
-                    <div class="card-body">
+                    <div class="m-1">
 
                         <div class="d-flex flex-column h-100">
                             <div class="mb-4">
@@ -134,16 +134,19 @@
                                     </div>
                                 </div>
 
+                                <div class="mb-3">
+                                    <div  class="search-box mb-2 "><div  class="position-relative"><input  type="text" id="searchTableList" name="fileFilterTerm" [(ngModel)]="fileFilterTerm" placeholder="{{ 'FILEMANAGER.SIDEBARLEFT.TEXT_FILTER.TEXT' | translate}}" class="form-control ng-pristine ng-valid ng-touched"><i  class="bx bx-filter search-icon"></i></div></div>
+                                </div>
                                 <!--<input type="text"/>-->
 
-                                <ul class="list-unstyled categories-list" style="overflow: hidden;">
+                                <ul class="list-unstyled categories-list">
                                     <li>
                                         <div class="custom-accordion">
                                             <a class="text-body fw-medium py-1 d-flex align-items-center"
                                                 (click)="isColapseFilesAll = !isColapseFilesAll" [attr.aria-expanded]="isColapseFilesAll"
                                                 data-toggle="collapse" href="javascript:void(0);" role="button"
-                                                aria-expanded="false" aria-controls="categories-collapse" title="Toutes vos ressources">
-                                                <i style="color:#F8D775" class="mdi mdi-folder-table font-size-16 me-2"></i> All your datas {{!loadingDocs?"("+filesList.length+")":""}}
+                                                aria-expanded="false" aria-controls="categories-collapse" title="{{ 'FILEMANAGER.SIDEBARLEFT.ALL_DATAS.TITLE' | translate}}">
+                                                <i style="color:#F8D775" class="mdi mdi-folder-table font-size-16 me-2"></i> {{ 'FILEMANAGER.SIDEBARLEFT.ALL_DATAS.TEXT' | translate}} {{!loadingDocs?"("+filesList.length+")":""}}
                                                 <i *ngIf="loadingDocs" style="color:#4682ad;margin-left:3px;" class="bx bx-hourglass bx-spin font-size-14 align-middle"></i>
                                                 <i
                                                     class="mdi mdi-chevron-up accor-down-icon ms-auto"></i>
@@ -152,7 +155,7 @@
                                                 [collapse]="isColapseFilesAll">
                                                 <div class="card border-0 shadow-none ps-2 mb-0">
                                                     <ul class="list-unstyled mb-0">
-                                                        <div *ngFor="let ff of filesList">
+                                                        <div *ngFor="let ff of filesList | filterTextFilter:fileFilterTerm">
                                                             <li *ngIf="ff.file" title="{{ff.name}}"  >
                                                                 <a href="javascript:void(0)" (click)="showPreview(ff.file.name,ff)" class="d-flex align-items-center">
                                                                     <i style="color:#524f4f" class="mdi mdi-checkbox-blank-outline font-size-16 me-2"></i>
@@ -180,9 +183,9 @@
                                         <div class="custom-accordion">
                                             <a class="text-body fw-medium py-1 d-flex align-items-center"
                                                 (click)="isColapseFilesIa = !isColapseFilesIa" [attr.aria-expanded]="isColapseFilesIa"
-                                                data-toggle="collapse" href="javascript:void(0);" role="button"
+                                                data-toggle="collapse" href="javascript:void(0);" role="button"  title="{{ 'FILEMANAGER.SIDEBARLEFT.PRESET.TITLE' | translate}}" 
                                                 aria-expanded="false" aria-controls="categories-collapse-filesAll">
-                                                <i style="color:#F8D775" class="mdi mdi-folder-search font-size-16 me-2"></i> AI preset ({{aiResponseContexts.length}}) <i
+                                                <i style="color:#F8D775" class="mdi mdi-folder-search font-size-16 me-2"></i> {{ 'FILEMANAGER.SIDEBARLEFT.PRESET.TEXT' | translate}} ({{aiResponseContexts.length}}) <i
                                                     class="mdi mdi-chevron-up accor-down-icon accor-down-icon ms-auto"></i>
                                             </a>                                            
                                             <div class="collapse" id="categories-collapse-filesAll"
@@ -204,9 +207,9 @@
                                         <div class="custom-accordion">
                                             <a class="text-body fw-medium py-1 d-flex align-items-center"
                                                 (click)="isColapseFilesClass = !isColapseFilesClass" [attr.aria-expanded]="isColapseFilesClass"
-                                                data-toggle="collapse" href="javascript:void(0);" role="button"
+                                                data-toggle="collapse" href="javascript:void(0);" role="button"  title="{{ 'FILEMANAGER.SIDEBARLEFT.CATEGORIES.TITLE' | translate}}"
                                                 aria-expanded="false" aria-controls="categories-collapse-filesAll">
-                                                <i style="color:#F8D775" class="mdi mdi-folder-pound font-size-16 me-2"></i> Categories {{!loadingCategs?"("+categsList.length+")":""}}
+                                                <i style="color:#F8D775" class="mdi mdi-folder-pound font-size-16 me-2"></i> {{ 'FILEMANAGER.SIDEBARLEFT.CATEGORIES.TEXT' | translate}} {{!loadingCategs?"("+categsList.length+")":""}}
                                                 <i *ngIf="loadingCategs"   style="color:#4682ad;margin-left:3px;" class="bx bx-hourglass bx-spin font-size-14 align-middle"></i> <i
                                                 
                                                     class="mdi mdi-chevron-up accor-down-icon accor-down-icon ms-auto"></i>
@@ -323,7 +326,7 @@
                     <div class="w-100 user-chat card">
                         
                           <tabset class="nav-tabs nav-tabs-custom tab-container">
-                            <tab [heading]="'AI search '+(filterOnFileUID?'(filtered on selected file)':'')">
+                            <tab [active]="maintabSelected==1"  [heading]="'AI search '+(filterOnFileUID?'(filtered on selected file)':'')">
                                 <div>
                                     <div class="chat-conversation p-3">
                                       <ngx-simplebar style="height: 470px;" #scrollRef>
@@ -413,10 +416,20 @@
                                   </div>
                                 
                             </tab>
-                            <tab *ngIf="pdfPreviewURL" heading="Document" class="disabled">
+                            <tab *ngIf="loadingCurFile">
+                                <ng-template tabHeading><i style="color:#4682ad;margin-left:3px;" class="bx bx-hourglass bx-spin font-size-14 align-middle"></i></ng-template>
+                                
+                            </tab>
+                            <tab [active]="maintabSelected==2" *ngIf="!loadingCurFile && pdfPreviewURL" class="disabled">
+                                <ng-template tabHeading>
+                                    <i [style.color]="(curFile.source_type === 'file/pdf'?'#da3c33':'#339dda')" [ngClass]="{'mdi-file-pdf-box': curFile.source_type === 'file/pdf','mdi-note-text': !curFile.source_type || (curFile.source_type=='free')}" class="mdi mdi-file-pdf-box font-size-16 me-2"></i>
+                                    {{curFile.original_fname}}
+                                </ng-template>
+                                
                                 <div class="card">
                                     <div class="card-body overflow-hidden">
                                         <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
+                                            <button type="button" class="btn btn-secondary" (click)="docTabSelected=4" [ngClass]="{'active':docTabSelected==4}">Summary</button>
                                             <button type="button" class="btn btn-secondary" (click)="docTabSelected=1" [ngClass]="{'active':docTabSelected==1}">Preview</button>
                                             <button type="button" class="btn btn-secondary" (click)="docTabSelected=2" [ngClass]="{'active':docTabSelected==2}">Métadatas</button>
                                             <button type="button" class="btn btn-secondary" (click)="docTabSelected=3" [ngClass]="{'active':docTabSelected==3}">Chat</button>
@@ -427,10 +440,27 @@
                                             webkitallowfullscreen
                                             mozallowfullscreen
                                             allowfullscreen></iframe>
+                                        <div class="row"  *ngIf="(docTabSelected==2) && pdfPreviewURL">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <code>
+                                                        {{curFile}}
+                                                    </code>
+                                                </div>    
+                                            </div>
+                                                
+                                            
+                                            
+                                        </div>
                                         <div class="row">
-                                            <code *ngIf="(docTabSelected==2) && pdfPreviewURL">
-                                                {{pdfMetas}}
-                                            </code>
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <markdown  *ngIf="(docTabSelected==4)" [data]="curFile.summary">
+                                                    </markdown>
+                                                </div>    
+                                            </div>
+                                                
+                                            
                                         </div>
                                     </div>
                                 </div>

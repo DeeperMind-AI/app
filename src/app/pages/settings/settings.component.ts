@@ -14,6 +14,7 @@ import { pricingData } from './data';
 import { environment } from 'src/environments/environment';
 import Swal from 'sweetalert2';
 import { ActivatedRoute } from '@angular/router';
+import { LoaderService } from 'src/app/core/services/loader.service';
 
 interface IStripeSession {
   id: string;
@@ -28,16 +29,21 @@ export class SettingsComponent {
   
   public stripe!: StripeInstance;
   public stripeAmount!: number;
-  isLoading: boolean = false;
+  isLoading: boolean = true;
 
   locStor = localStorage;
-  params:any;
-  user:any = {};
+  params:any = {
+    chat:{},
+    profile:{}
+  };
   pricingData: Pricing[];
 
+  disableForSave:boolean = false;
 
   constructor(public configService:ConfigService,private http: HttpClient,
-    private stripeFactory: StripeFactoryService,private route: ActivatedRoute) {
+    private stripeFactory: StripeFactoryService,
+    private route: ActivatedRoute,
+    private loaderService:LoaderService) {
       this.route.queryParams.subscribe(params => {
         switch (params["status"]) {
           case "stripe-successful-payment":
@@ -53,26 +59,35 @@ export class SettingsComponent {
   
   ngOnInit(): void {
     
+    //this.loaderService.isLoading = true;
+    this.loaderService.isLoading.subscribe((v) => {
 
 
-    
-    
-
-    this.stripe=
+      this.stripe=
       this.stripeFactory.create(environment.stripe.stripePublicKey);
       this.stripeAmount = 100;
 
-    this.pricingData = pricingData;
-    this.params = this.configService.chatParams;
+      this.pricingData = pricingData;
 
+      this.params.chat = this.configService.chatParams;
+      this.params.user = this.configService.userParams;
+      this.params.profile = JSON.parse(this.locStor.getItem('currentUser'));
+      console.log(this.params.profile);
+        this.isLoading = false;
+      
+    });
+    
+    
+
+    
     }
 
     cleanIndex() {
-      const ask$ = this.http.post(environment.tradBotServer+"cleanES",{ownerUID:this.params.ownerUID}).pipe(
+      const ask$ = this.http.post(environment.tradBotServer+"cleanES",{ownerUID:this.params.chat.ownerUID}).pipe(
               map((result:any) => {}), catchError(err => throwError(err))
           )
       ask$.subscribe();
-      const ask2$ = this.http.post(environment.tradBotServer+"cleanMDB",{ownerUID:this.params.ownerUID}).pipe(
+      const ask2$ = this.http.post(environment.tradBotServer+"cleanMDB",{ownerUID:this.params.chat.ownerUID}).pipe(
         map((result:any) => {}), catchError(err => throwError(err))
     )
       ask2$.subscribe();
@@ -94,17 +109,50 @@ export class SettingsComponent {
           }
         });
     }
-    validParams (){
-      alert("validParams");
-    }
-    validUser (){
-      alert("validUser");
-    }
-  public onPromptChange(event: Event): void {
     
-    const value = (event.target as any).value;
-    this.params.customPrompt = value;
+    //SAUVEGARDE DONNEES PROFIL
+    validUser (){
+      this.disableForSave = true;
+      this.locStor.setItem("userParams",JSON.stringify(this.params.profile));
+      this.configService.userParams = this.params.profile;
+      const ask$ = this.http.post(environment.tradBotServer+"updateUser",this.params.profile).pipe(
+            map((result:any) => {
+          
+              //this.disablePops = false;
+              //this.modalRef?.hide();
+              //this.fetchCategs();
+              
+            }), 
+              catchError(err => throwError(err))
+          )
+            
+          ask$.subscribe();
 
-    this.configService.chatParams = this.params;
-  }
+
+    }
+    //Changement parmètre contenu prompt custom
+    public onPromptChange(event: Event): void {
+    
+      this.params.chat.customPrompt = (event.target as any).value ;
+    }
+    //sauvegarde paramètres glbaux -> chat
+    validParamsChat (){
+      this.disableForSave = true;
+      this.locStor.setItem("chatParams",JSON.stringify(this.params.chat));
+      this.configService.chatParams = this.params.chat;
+      this.params.chat.ownerUID = this.params.chat.ownerUID;
+      const ask$ = this.http.post(environment.tradBotServer+"updateUserParams",this.params.chat).pipe(
+            map((result:any) => {
+          
+              //this.disablePops = false;
+              //this.modalRef?.hide();
+              //this.fetchCategs();
+              
+            }), 
+              catchError(err => throwError(err))
+          )
+            
+          ask$.subscribe();
+    }
+  
 }

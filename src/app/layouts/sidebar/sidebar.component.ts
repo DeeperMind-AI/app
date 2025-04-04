@@ -148,19 +148,7 @@ export class SidebarComponent implements OnInit, AfterViewInit, OnChanges {
   initialize(): void {
     this.menuItems = MENU;
     //CHARGEMENT DES PROJETS
-    this.dataService.getProjects()
-      .subscribe((data:any) => 
-      {
-        for (var reliPrjs = 0; reliPrjs < data.length;reliPrjs++) {
-          this.menuItems[2].subItems.push({
-            id: 100+(reliPrjs+1),
-            label: data[reliPrjs].plib,
-            link: '/dashboard',
-            parentId: 100
-          });
-        }
-      }
-    );
+   
 
   }
 

@@ -8,6 +8,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { LanguageService } from '../../core/services/language.service';
 import { TranslateService } from '@ngx-translate/core';
 import { EventService } from 'src/app/core/services/event.service';
+import { ConfigService } from 'src/app/core/services/config.service';
 
 @Component({
   selector: 'app-topbar',
@@ -34,15 +35,20 @@ export class TopbarComponent implements OnInit {
               public languageService: LanguageService,
               public translate: TranslateService,
               public _cookiesService: CookieService,
-              private eventService: EventService) {
+              private eventService: EventService, public configService:ConfigService) {
   }
 
-  listLang = [
-    { text: 'English', flag: 'assets/images/flags/us.jpg', lang: 'en' },
-    { text: 'Spanish', flag: 'assets/images/flags/spain.jpg', lang: 'es' },
+  /*
+  { text: 'Spanish', flag: 'assets/images/flags/spain.jpg', lang: 'es' },
     { text: 'German', flag: 'assets/images/flags/germany.jpg', lang: 'de' },
     { text: 'Italian', flag: 'assets/images/flags/italy.jpg', lang: 'it' },
     { text: 'Russian', flag: 'assets/images/flags/russia.jpg', lang: 'ru' },
+  */
+
+
+  listLang = [
+    { text: 'English', flag: 'assets/images/flags/us.jpg', lang: 'en' },
+    
   ];
 
   openMobileMenu: boolean;

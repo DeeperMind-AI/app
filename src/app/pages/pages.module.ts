@@ -31,7 +31,6 @@ import { FormModule } from './form/form.module';
 import { TablesModule } from './tables/tables.module';
 import { IconsModule } from './icons/icons.module';
 import { ChartModule } from './chart/chart.module';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ChatComponent } from './chat/chat.component';
 import { AccordionModule } from 'ngx-bootstrap/accordion';
 
@@ -40,12 +39,16 @@ import { SettingsComponent } from './settings/settings.component';
 import { AlertModule } from 'ngx-bootstrap/alert';
 import { MarkdownModule } from 'ngx-markdown';
 
+import { TranslateModule } from '@ngx-translate/core';
+import { FileTextFilter } from './filemanager/pipes/fileTextFilter';
 
 @NgModule({
   declarations: [ChatComponent, FilemanagerComponent, SettingsComponent],
   imports: [
     CommonModule,
     FormsModule,
+    TranslateModule,
+    FileTextFilter,
     MarkdownModule.forRoot(),
     BsDropdownModule.forRoot(),
     ModalModule.forRoot(),
@@ -55,7 +58,6 @@ import { MarkdownModule } from 'ngx-markdown';
     ReactiveFormsModule,
     DashboardsModule,
     CryptoModule,
-    HttpClientModule,
     ProjectsModule,
     UIModule,
     AccordionModule,

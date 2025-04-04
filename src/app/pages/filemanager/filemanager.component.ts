@@ -15,7 +15,7 @@ import { AlertColor } from '../ui/alerts/alerts.model';
 @Component({
   selector: 'app-filemanager',
   templateUrl: './filemanager.component.html',
-  styleUrls: ['./filemanager.component.scss']
+  styleUrls: ['./filemanager.component.scss'],
 })
 export class FilemanagerComponent implements OnInit {
   // bread crumb items
@@ -37,20 +37,24 @@ export class FilemanagerComponent implements OnInit {
   modalRef?: BsModalRef;
   radialoptions;
   question:string="";
+
   aiResponse:string = "";
   aiResponseContexts:any[] = [];
+
   chat_history = [];
   loading = false;
   chatMessagesData: ChatMessage[];
   pdfPreviewURL;
   pdfMetas="";
-  
+  fileFilterTerm:string="";
   isColapseFilesAll:boolean = false;
   isColapseFilesIa:boolean = false;
   isColapseFilesClass:boolean = false;
-  docTabSelected:number = 1;
+  docTabSelected:number = 4;
   datasProcess = [];
   disablePops = false;
+  //
+            maintabSelected = 1;
   //
   metas:any;
   //Paramètres des uploads/requetes
@@ -109,7 +113,7 @@ export class FilemanagerComponent implements OnInit {
     this.loadingCategs = true;
     const ask$ = this.http.post(this.uri+"loadCategs",{ownerUID:this.params.ownerUID}).pipe(
       map((result:any) => {
-        console.log(result);
+        
         this.categsList=result.ret;
         this.loadingCategs = false;
       }), 
@@ -134,6 +138,8 @@ export class FilemanagerComponent implements OnInit {
     selBox.select();
     document.execCommand('copy');
     document.body.removeChild(selBox);
+    //MESSAGE
+    this.toastr.success('Copied to clipboard !', 'Success');
   }
 
   removertAlert(processUID) {
@@ -141,10 +147,11 @@ export class FilemanagerComponent implements OnInit {
       if (this.datasProcess[reliP].processUID == processUID) 
       {
         this.datasProcess.splice(reliP,1);
-        this.fetchDocs();
-        return;
+        
+        break;;
       }
     }
+    this.fetchDocs();
   }
 
   onServerMessage(data) {
@@ -170,7 +177,7 @@ export class FilemanagerComponent implements OnInit {
     });
 
     this.socket.on("message",function(data) {
-      console.log("message recu",data);
+      
       that.onServerMessage(data);
     });
     
@@ -317,6 +324,7 @@ export class FilemanagerComponent implements OnInit {
           
           formData.append("meta.ownerUID", this.params.ownerUID);
           formData.append("processUID", processUID);
+        
           const upload$ = this.http.post(this.uri+"upload", formData,{
             reportProgress: true,
             observe: 'events'
@@ -326,16 +334,25 @@ export class FilemanagerComponent implements OnInit {
             tap(message => this.showProgress(message)),
             last(),
             finalize(() => {
+              
               this.modalRef?.hide();
               //EMPTY FORM
-              this.reset();
               //ADD NEW PROCESS IN STACK
+              this.configService.notifications.push(
+                {
+                  processUID:processUID,
+                  percent:0,
+                  msg:"Your data is being indexed",
+                  dataTitle: this.file.name
+                }
+              );
               this.datasProcess.push({
                 processUID:processUID,
                 percent:0,
                 msg:"Your data is being indexed",
                 dataTitle: this.file.name
               });
+              this.reset();
               //this.toastr.info('Your data is being indexed, a message will be displayed when it is available.', 'Information');
               }
             )
@@ -355,6 +372,14 @@ export class FilemanagerComponent implements OnInit {
             //EMPTY FORM
             this.reset();
             //ADD NEW PROCESS IN STACK
+            this.configService.notifications.push(
+              {
+                processUID:processUID,
+                percent:0,
+                msg:"Your data is being indexed",
+                dataTitle: this.file.name
+              }
+            );
             this.datasProcess.push({
               processUID:processUID,
               percent:0,
@@ -429,7 +454,7 @@ export class FilemanagerComponent implements OnInit {
         question:message,
         chat_history:this.chat_history,
         ownerUID:this.params.ownerUID,
-        prompt:this.params.customPrompt,
+        prompt:this.params.customPrompt + this.params.fixedPromptParams + (this.params.promptAddQuestions?"At the end of each answer, add a delimiter '-------------' then on the line below write a list of "+this.params.promptAddQuestionsNumber+" questions that can help you deepen your answer.":""),
         k:this.params.k,
         metaUID:(this.filterOnFileUID?this.filterOnFileUID:null),
         model:this.params.model,
@@ -461,15 +486,15 @@ export class FilemanagerComponent implements OnInit {
       found = false;
       for (var reliC2 = 0;reliC2 < this.aiResponseContexts.length;reliC2++)
       {
-        console.log(result.context[reliC]);
+        
           if (result.context[reliC].metadata.fname == this.aiResponseContexts[reliC2].metadata.fname) {
-            console.log(result.context[reliC].metadata.fname,this.aiResponseContexts[reliC2].metadata.fname);
+            
             found = true;
             break;
           }
       }
       if (!found) {
-        console.log(result.context[reliC])
+        
         result.context[reliC].occurs=0;
         this.aiResponseContexts.push(result.context[reliC]);
       }
@@ -527,7 +552,7 @@ export class FilemanagerComponent implements OnInit {
         question:this.question,
         chat_history:this.chat_history,
         ownerUID:this.params.ownerUID,
-        prompt:this.params.customPrompt,
+        prompt:this.params.customPrompt + this.params.fixedPromptParams + (this.params.promptAddQuestions?"At the end of each answer, add a delimiter '-------------' then on the line below write a list of "+this.params.promptAddQuestionsNumber+" questions that can help you deepen your answer.":""),
         k:this.params.k,
       }).pipe(
         map((result:any) => {this.saveNuDir(result)}), catchError(err => throwError(err))
@@ -540,7 +565,7 @@ export class FilemanagerComponent implements OnInit {
 
   filterOnFileUID:string;
   check(fil) {
-    console.log(fil);
+    
     for (var reliF = 0;reliF < this.filesList.length;reliF++)
     {
       if (this.filesList[reliF]._id == fil._id)
@@ -559,15 +584,33 @@ export class FilemanagerComponent implements OnInit {
         
     }
     //fil.checked = (fil.checked == true?false:true);
-    console.log(fil.checked);
+    
   }
   
 
+
+
+  curFile:any;
+  loadingCurFile:boolean = false;
+
   showPreview(uri,f) {
+    //LOAD FULL METAS
+    this.maintabSelected = 1;
+    this.loadingCurFile = true;
+    const ask$ = this.http.post(this.uri+"getDoc",{metaUID:f._id}).pipe(
+      map((result:any) => {
+        this.curFile = result.ret;
+        this.pdfPreviewURL = "https://medias.deepermind.ai/"+uri;
+        this.pdfMetas = JSON.stringify(f); 
+        this.loadingCurFile = false;
+        this.maintabSelected = 2;
+      }), 
+        catchError(err => throwError(err))
+    )
+      
+    ask$.subscribe();
     
-    this.pdfPreviewURL = "https://medias.deepermind.ai/"+uri;
-    console.log(f);
-    this.pdfMetas = JSON.stringify(f); 
+    //return;
     
   }
   /**

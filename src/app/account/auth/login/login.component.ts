@@ -35,7 +35,10 @@ export class LoginComponent implements OnInit {
   year: number = new Date().getFullYear();
 
   // tslint:disable-next-line: max-line-length
-  constructor(private socket: Socket,private http: HttpClient,private formBuilder: UntypedFormBuilder, private route: ActivatedRoute, private router: Router, private authenticationService: AuthenticationService) { }
+  constructor(private socket: Socket,private http: HttpClient,
+    private formBuilder: UntypedFormBuilder, private route: ActivatedRoute, 
+    private router: Router, private authenticationService: AuthenticationService,
+    ) { }
 
 
 
@@ -91,8 +94,14 @@ export class LoginComponent implements OnInit {
     //this.authFackservice..next(data.user);
     //ON STORE LE SOCKET LIE AU CLIENT (x sockets pour 1 clients)
     this.socket.emit('storeClientInfo', { ownerUID:res.email });
+    //
+    
+    //
     let gotoRoute;
     if (this.returnUrl) { gotoRoute = this.returnUrl; } else { gotoRoute = '/filemanager' }
+
+    
+
     this.router.navigate([gotoRoute]);
   }
   handleCredentialResponse(response: any) {

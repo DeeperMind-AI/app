@@ -1,3 +1,4 @@
+<app-loader></app-loader>
 <div class="container-fluid">
 <app-page-title title="Settings" ></app-page-title>
 <div class="card">
@@ -12,7 +13,7 @@
                                     <label for="example-text-input" class="col-md-3 col-form-label">Owner UID
                                         <i class="bx bx-info-circle" title="Permet de travailler sur son/ses propres DATASETS"></i>
                                     </label>
-                                    <input disabled [(ngModel)]="params.ownerUID"  name="params.ownerUID" class="form-control" type="text" id="example-text-input">
+                                    <input disabled [(ngModel)]="params.chat.ownerUID"  name="params.chat.ownerUID" class="form-control" type="text" id="example-text-input">
                                 </div>
                             </div>
                             <div class="col-6">
@@ -21,7 +22,7 @@
                                         <i class="bx bx-info-circle" title="Modèle IA a utiliser"></i>
                                     </label>
                                     
-                                        <select class="form-select"  name="params.model" [(ngModel)]="params.model" >
+                                        <select class="form-select"  name="params.chat.model" [(ngModel)]="params.chat.model" >
                                             <option value="gpt-3.5-turbo">gpt-3.5-turbo</option>
                                             <option value="gpt-4o-mini" selected>gpt-4o-mini</option>
                                             <option value="gpt-4o">gpt-4o</option>
@@ -35,9 +36,28 @@
                                     <label for="example-text-input" class="col-form-label">Prompt custom
                                         <i class="bx bx-info-circle" title="Orientation de l'AI pour customiser les alalyses et retours"></i>
                                     </label>
-                                        <textarea [value]="params.customPrompt"  (input)="onPromptChange($event)" name="params.customPrompt" formControlName="textarea" class="form-control" rows="5"></textarea>
+                                        <textarea [value]="params.chat.customPrompt"  (input)="onPromptChange($event)" name="params.customPrompt" formControlName="textarea" class="form-control" rows="5"></textarea>
                                 </div>
                             </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-6">
+                            <div class="mb-3">
+                        
+                                <label for="example-text-input" class="col-form-label">Proposer des questions
+                                    <i class="bx bx-info-circle" title="Votre dialogue est hostorisé de façon a ce que l'IA puisse se souvenir des différentes échanges"></i>
+                                </label>
+                                <input type="checkbox" id="params.chat.promptAddQuestions" name="params.chat.promptAddQuestions"  [(ngModel)]="params.chat.promptAddQuestions" class="form-control form-check-input">
+                            </div>
+                          </div>
+                          <div class="col-6" *ngIf="params.chat.promptAddQuestions">
+                            <div class="mb-3">
+                                <label for="example-text-input" class="col-form-label">Nombre de questions
+                                    <i class="bx bx-info-circle" title="Votre dialogue est hostorisé de façon a ce que l'IA puisse se souvenir des différentes échanges"></i>
+                                </label>
+                                <input [(ngModel)]="params.chat.promptAddQuestionsNumber"   name="params.chat.promptAddQuestionsNumber" class="form-control" type="number" id="params.chat.promptAddQuestionsNumber" value="3">
+                            </div>
+                          </div>
                         </div>
                         <div class="row">
                             <div class="col-6">
@@ -45,7 +65,7 @@
                                     <label for="example-text-input" class="">Max docs
                                         <i class="bx bx-info-circle" title="Nombre d'extraits en relation avec votre recherche a remonter"></i>
                                     </label>
-                                        <input [(ngModel)]="params.k"   name="params.k" class="form-control" type="number" id="example-text-input">
+                                        <input [(ngModel)]="params.chat.k"   name="params.chat.k" class="form-control" type="number" id="example-text-input">
                                 </div>
                             </div>
                             <div class="col-6">
@@ -61,7 +81,7 @@
                         
                         <div class="row">
                             <div class="col-12">
-                        <button type="button"  (click)="validParams()" class="btn btn-success form-control w-sm"><i class="mdi mdi-content-save-outline d-block font-size-16"></i> Save </button>
+                        <button type="button"  (click)="validParamsChat()" class="btn btn-success form-control w-sm"><i class="mdi mdi-content-save-outline d-block font-size-16"></i> Save </button>
                             </div>
                         </div>
                     </form>
@@ -69,7 +89,7 @@
             </div>
             
         </tab>
-        <!--
+        
         <tab heading="Account">
           <div class="card">
             <div class="card-body">
@@ -80,7 +100,7 @@
                                 <label for="example-text-input" class="col-md-3 col-form-label">Name
                                     <i class="bx bx-info-circle" title="Permet de travailler sur son/ses propres DATASETS"></i>
                                 </label>
-                                <input [(ngModel)]="user.ownerUID"  name="user.ownerUID" class="form-control" type="text" id="example-text-input">
+                                <input [(ngModel)]="params.profile.name"  name="params.profile.name" class="form-control" type="text" id="example-text-input">
                             </div>
                         </div>
                         <div class="col-6">
@@ -88,7 +108,7 @@
                               <label for="example-text-input" class="col-md-3 col-form-label">Surname
                                 <i class="bx bx-info-circle" title="Permet de travailler sur son/ses propres DATASETS"></i>
                             </label>
-                            <input [(ngModel)]="user.ownerUID"  name="user.ownerUID" class="form-control" type="text" id="example-text-input">
+                            <input [(ngModel)]="params.profile.surn"  name="params.profile.surn" class="form-control" type="text" id="example-text-input">
                             </div>
                         </div>
                     </div>
@@ -101,7 +121,7 @@
             </div>
           </div>
         </tab>
-        
+        <!--
         <tab heading="Subscription">
             <div class="card">
                 <div class="card-body">
@@ -163,8 +183,8 @@
         </tab>
         <tab heading="Orders">
             
-        </tab>
-        -->
+        </tab>-->
+        
         <tab heading="Actions">
             <div class="card">
               <div class="card-body">

@@ -4,13 +4,14 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { User } from '../models/auth.models';
+import { Router } from '@angular/router';
 
 @Injectable({ providedIn: 'root' })
 export class AuthfakeauthenticationService {
     private currentUserSubject: BehaviorSubject<User>;
     public currentUser: Observable<User>;
 
-    constructor(private http: HttpClient) {
+    constructor(private http: HttpClient, private router:Router) {
         this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('currentUser')));
         this.currentUser = this.currentUserSubject.asObservable();
     }
@@ -35,6 +36,9 @@ export class AuthfakeauthenticationService {
     logout() {
         // remove user from local storage to log user out
         localStorage.removeItem('currentUser');
+        // remove config from local storage to log user out
+        localStorage.removeItem('chatParams');
         this.currentUserSubject.next(null);
+        this.router.navigate(['/account/login']);
     }
 }

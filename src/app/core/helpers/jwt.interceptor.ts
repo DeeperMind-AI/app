@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor, HttpResponse } from '@angular/common/http';
+import { catchError, map, Observable, throwError } from 'rxjs';
 
 import { AuthenticationService } from '../services/auth.service';
 import { AuthfakeauthenticationService } from '../services/authfake.service';
@@ -24,15 +24,30 @@ export class JwtInterceptor implements HttpInterceptor {
         } else {*/
         
         // add authorization header with jwt token if available
-        const currentUser = this.authfackservice.currentUserValue;
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
         if (currentUser && currentUser.token) {
             request = request.clone({
                 setHeaders: {
-                    Authorization: `Bearer ${JSON.parse(localStorage.currentUser).token}`
+                    Authorization: `Bearer ${currentUser.token}`
                 }
             });
         }
     //}
-    return next.handle(request);
+
+    return next.handle(request).pipe(
+        catchError((response: any) => {
+            
+            
+          if (response && (response === "Bad token or expired.")) {
+            this.authfackservice.logout();
+          }
+  
+          return throwError(response);
+        })
+      );
     }
+
+
+
+
 }

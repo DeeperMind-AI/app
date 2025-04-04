@@ -261,7 +261,7 @@
           </div>
         </div>
       </div>
-<!--
+
       <div class="dropdown d-none d-lg-inline-block ms-1">
         <button type="button" class="btn header-item noti-icon" data-toggle="fullscreen" (click)="fullscreen()">
           <i class="bx bx-fullscreen"></i>
@@ -271,8 +271,8 @@
       <div class="dropdown d-inline-block" dropdown>
         <button type="button" class="btn header-item noti-icon" id="page-header-notifications-dropdown"
           dropdownToggle>
-          <i class="bx bx-bell bx-tada"></i>
-          <span class="badge bg-danger rounded-pill">3</span>
+          <i [ngClass]="(configService.notifications.length>0?'bx-tada':'')" class="bx bx-bell"></i>
+          <span *ngIf="configService.notifications.length>0" class="badge bg-danger rounded-pill">{{configService.notifications.length}}</span>
         </button>
         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end p-0"
           aria-labelledby="page-header-notifications-dropdown" *dropdownMenu>
@@ -287,7 +287,7 @@
             </div>
           </div>
           <ngx-simplebar style="position: relative; height: 230px;">
-            <a href="javascript: void(0);" class="text-reset notification-item">
+            <a href="javascript: void(0);" [id]="notif.processUID"  *ngFor="let notif of configService.notifications" class="text-reset notification-item">
               <div class="d-flex">
                 <div class="avatar-xs me-3">
                   <span class="avatar-title bg-primary rounded-circle font-size-16">
@@ -295,15 +295,13 @@
                   </span>
                 </div>
                 <div class="flex-grow-1">
-                  <h6 class="mb-1">{{ 'HEADER.NOTIFICATIONS.FIRST.TITLE' | translate}}</h6>
+                  <h6 class="mb-1">{{ notif.dataTitle }}</h6>
                   <div class="font-size-12 text-muted">
-                    <p class="mb-1">{{ 'HEADER.NOTIFICATIONS.FIRST.TEXT' | translate}}</p>
-                    <p class="mb-0"><i class="mdi mdi-clock-outline"></i>
-                      {{ 'HEADER.NOTIFICATIONS.FIRST.TIME' | translate}}</p>
+                    <p class="mb-1">{{ notif.msg }}</p>
                   </div>
                 </div>
               </div>
-            </a>
+            </a><!--
             <a href="javascript: void(0);" class="text-reset notification-item">
               <div class="d-flex">
                 <img src="assets/images/users/avatar-3.jpg" class="me-3 rounded-circle avatar-xs" alt="user-pic">
@@ -346,7 +344,7 @@
                   </div>
                 </div>
               </div>
-            </a>
+            </a>-->
           </ngx-simplebar>
           <div class="p-2 border-top d-grid">
             <a class="btn btn-sm btn-link font-size-14 text-center" href="javascript:void(0)">
@@ -356,7 +354,7 @@
           </div>
         </div>
       </div>
-    -->
+    
       <div class="dropdown d-inline-block" dropdown>
         <button type="button" class="btn header-item" dropdownToggle id="page-header-user-dropdown">
           <img class="rounded-circle header-profile-user" src="{{getUserProp('picture')}}" alt="Header Avatar">

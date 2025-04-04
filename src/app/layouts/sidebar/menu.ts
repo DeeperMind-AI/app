@@ -9,7 +9,7 @@ export const MENU: MenuItem[] = [
     },
     {
         id: 11,
-        label: 'MENUITEMS.DASHBOARDS.TEXT',
+        label: 'MENUITEMS.DASHBOARD.TEXT',
         icon: 'bx-home-circle',
         link: '/dashboard',
     },
@@ -21,7 +21,7 @@ export const MENU: MenuItem[] = [
     },
     {
         id: 13,
-        label: 'Paramètres',
+        label: 'MENUITEMS.SETTINGS.TEXT',
         icon: 'bx-wrench',
         link: '/settings',
     },
