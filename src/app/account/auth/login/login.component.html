@@ -70,18 +70,16 @@
                       <a href="javascript::void()" class="social-list-item bg-info text-white border-info">
                         <i class="mdi mdi-twitter"></i>
                       </a>
-                    </li>
+                    </li>-->
                     <li class="list-inline-item">
-                      <a id="googleLoginButton"  (click)="triggerGoogleSignIn()" class="social-list-item bg-danger text-white border-danger">
-                      <i class="mdi mdi-google"></i>
-                    </a>-->
-                      <button type="button" id="googleLoginButton" class="jobluu-button jobluu-button-google">
-                        
-                      </button>
+                      <app-google-signin (loginWithGoogle)="googleSignin($event)"></app-google-signin>
+                    </li>
+                    
                     
 
                       
                   </ul>
+              
                 </div>
                 <!--<div class="mt-4 text-center">
                   <a routerLink="/account/reset-password" class="text-muted"><i class="mdi mdi-lock mr-1"></i> Forgot

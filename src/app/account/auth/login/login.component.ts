@@ -11,6 +11,11 @@ import { HttpClient } from '@angular/common/http';
 import { throwError } from 'rxjs';
 import { Socket } from 'ngx-socket-io';
 
+declare global {
+  interface Window {
+    onGoogleSignIn: (response: any) => void;
+  }
+}
 
 declare const google: any;
 
@@ -48,6 +53,15 @@ export class LoginComponent implements OnInit {
       password: ['', [Validators.required]],
     });
 
+
+    const body = <HTMLDivElement>document.body;
+    const script = document.createElement('script');
+    script.src = 'https://accounts.google.com/gsi/client';
+    script.async = true;
+    script.defer = true;
+    body.appendChild(script);
+    window.onGoogleSignIn= this.onGoogleSignIn.bind(this);
+
     this.initializeGoogleSignIn();
 
     // reset login status
@@ -57,6 +71,24 @@ export class LoginComponent implements OnInit {
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/filemanager';
   }
 
+  onGoogleSignIn() {
+    //console.log(res);
+    google.accounts.id.initialize({
+      client_id: environment.googleConfig.apiKey,
+      callback: this.handleCredentialResponse.bind(this)
+    });
+    google.accounts.id.renderButton(
+      document.getElementById("googleLoginButton"),
+      { theme: "outline", size: "large", text: "continue_with" }
+    );
+    
+    google.accounts.id.prompt(); 
+  }
+
+
+  googleSignin(googleWrapper: any) {
+    googleWrapper.click();
+  }
 
   // convenience getter for easy access to form fields
   get f() { return this.loginForm.controls; }
@@ -80,7 +112,7 @@ export class LoginComponent implements OnInit {
       if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
         // Try manual rendering
         google.accounts.id.renderButton(
-          document.getElementById("googleLoginButton"),
+          document.getElementById("googleLoginButton2"),
           { theme: "outline", size: "large", text: "continue_with" }
         );
       }
@@ -89,20 +121,17 @@ export class LoginComponent implements OnInit {
 
 
   validGauth(res) {
-    
+    //Stockages paramètres
     localStorage.setItem('currentUser', JSON.stringify(res));
-    //this.authFackservice..next(data.user);
+    localStorage.setItem("chatParams",JSON.stringify(res.params)); 
+    localStorage.setItem("userParams",JSON.stringify(res.profile)); 
     //ON STORE LE SOCKET LIE AU CLIENT (x sockets pour 1 clients)
     this.socket.emit('storeClientInfo', { ownerUID:res.email });
-    //
-    
-    //
+    //Enter in app
     let gotoRoute;
     if (this.returnUrl) { gotoRoute = this.returnUrl; } else { gotoRoute = '/filemanager' }
-
-    
-
     this.router.navigate([gotoRoute]);
+    //
   }
   handleCredentialResponse(response: any) {
     console.log(response.credential);
@@ -130,7 +159,12 @@ export class LoginComponent implements OnInit {
         {
           if (data.success == true)
           {
+            console.log("data.user",data.user);
             localStorage.setItem('currentUser', JSON.stringify(data.user));
+
+            
+
+
             //this.authFackservice..next(data.user);
             let gotoRoute;
             if (this.returnUrl) { gotoRoute = this.returnUrl; } else { gotoRoute = '/filemanager' }

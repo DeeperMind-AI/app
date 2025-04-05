@@ -41,9 +41,10 @@ import { MarkdownModule } from 'ngx-markdown';
 
 import { TranslateModule } from '@ngx-translate/core';
 import { FileTextFilter } from './filemanager/pipes/fileTextFilter';
+import { SuggestionsComponent } from './filemanager/components/suggestions/suggestions.component';
 
 @NgModule({
-  declarations: [ChatComponent, FilemanagerComponent, SettingsComponent],
+  declarations: [ChatComponent, FilemanagerComponent, SettingsComponent, SuggestionsComponent],
   imports: [
     CommonModule,
     FormsModule,

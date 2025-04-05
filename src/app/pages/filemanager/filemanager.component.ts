@@ -11,6 +11,7 @@ import { ConfigService } from 'src/app/core/services/config.service';
 import { ToastrService } from 'ngx-toastr';
 import { Socket } from 'ngx-socket-io';
 import { AlertColor } from '../ui/alerts/alerts.model';
+import { SuggestionsComponent } from './components/suggestions/suggestions.component';
 
 @Component({
   selector: 'app-filemanager',
@@ -21,6 +22,7 @@ export class FilemanagerComponent implements OnInit {
   // bread crumb items
   @ViewChild('scrollEle') scrollEle;
   @ViewChild('scrollRef') scrollRef;
+  @ViewChild('suggestions') suggestions:SuggestionsComponent;
 
   uri = environment.tradBotServer;
   //uri = "http://saas.apis.ekoal.org";
@@ -39,6 +41,7 @@ export class FilemanagerComponent implements OnInit {
   question:string="";
 
   aiResponse:string = "";
+  aiQuestions:string[] = [];
   aiResponseContexts:any[] = [];
 
   chat_history = [];
@@ -67,7 +70,9 @@ export class FilemanagerComponent implements OnInit {
   chatSubmit: boolean;
 
   file:File;
-  constructor(private socket: Socket,public toastr:ToastrService,public sanitizer: DomSanitizer,private modalService: BsModalService,private http: HttpClient,public formBuilder: UntypedFormBuilder, public configService:ConfigService) { }
+  constructor(private socket: Socket,public toastr:ToastrService,
+    public sanitizer: DomSanitizer,private modalService: BsModalService,
+    private http: HttpClient,public formBuilder: UntypedFormBuilder, public configService:ConfigService) { }
   public isCollapsed = false;
   
   firstMessage = false;
@@ -110,6 +115,7 @@ export class FilemanagerComponent implements OnInit {
   categsList = [];
   loadingCategs = false;
   fetchCategs() {
+    
     this.loadingCategs = true;
     const ask$ = this.http.post(this.uri+"loadCategs",{ownerUID:this.params.ownerUID}).pipe(
       map((result:any) => {
@@ -299,6 +305,7 @@ export class FilemanagerComponent implements OnInit {
         this.disablePops = false;
         this.modalRef?.hide();
         this.fetchCategs();
+
         
       }), 
         catchError(err => throwError(err))
@@ -431,9 +438,11 @@ export class FilemanagerComponent implements OnInit {
       }, 500);
     }
   }
-  messageSave() {
-    const message = this.formData.get('message').value;
+  messageSave(question:string=null) {
+    let message = (question?question:this.formData.get('message').value);
     const currentDate = new Date();
+    this.suggestions.toggle(true)
+    this.suggestions.setLabels([]);
     if (this.formData.valid && message) {
       // Message Push in Chat
       this.chatMessagesData.push({
@@ -450,16 +459,17 @@ export class FilemanagerComponent implements OnInit {
       });
 
       this.loading = true;
+      
       const ask$ = this.http.post(this.uri+"askIASimilarity",{
         question:message,
         chat_history:this.chat_history,
         ownerUID:this.params.ownerUID,
-        prompt:this.params.customPrompt + this.params.fixedPromptParams + (this.params.promptAddQuestions?"At the end of each answer, add a delimiter '-------------' then on the line below write a list of "+this.params.promptAddQuestionsNumber+" questions that can help you deepen your answer.":""),
+        prompt:this.params.customPrompt + this.params.fixedPromptParams,
         k:this.params.k,
         metaUID:(this.filterOnFileUID?this.filterOnFileUID:null),
         model:this.params.model,
       }).pipe(
-        map((result:any) => {this.saveNuDir(result)}), catchError(err => throwError(err))
+        map((result:any) => {this.addMessage(result)}), catchError(err => throwError(err))
     )
       ask$.subscribe();
     }
@@ -475,10 +485,19 @@ export class FilemanagerComponent implements OnInit {
     return this.formData.controls;
   }
 
-  saveNuDir(result) {
+  onSelectSuggest($event) { 
+    this.messageSave($event.str);
+  }
+  updateSuggestions(res) {
+    this.suggestions.setLabels(res.kwargs.content.split("?"));
+  }
+
+  addMessage(result) {
     
     this.chat_history.push({human:this.question,ai:result.answer});
+    
     this.aiResponse = result.answer;
+    this.aiQuestions = result.questions;
     let found = false;
     this.aiResponseContexts = [];
     for (var reliC = 0;reliC < result.context.length;reliC++)
@@ -523,6 +542,26 @@ export class FilemanagerComponent implements OnInit {
     });
     this.onListScroll();
 
+    setTimeout(() => {
+      this.suggestions.setLabels(this.aiQuestions);
+      this.suggestions.toggle(false);  
+      //APPEL SUGGESTIONS
+      const ask$ = this.http.post(this.uri+"askIARagFromGivenContext",{
+        context:message,
+        chat_history:this.chat_history,
+        ownerUID:this.params.ownerUID,
+        prompt:this.params.customPrompt + this.params.fixedPromptParams,
+        k:this.params.k,
+        model:this.params.model,
+        promptAddQuestions:this.params.promptAddQuestions,
+        promptAddQuestionsNumber:this.params.promptAddQuestionsNumber,
+      }).pipe(
+        map((result:any) => {this.updateSuggestions(result)}), catchError(err => throwError(err))
+    )
+      ask$.subscribe();
+    }, (100));
+    
+
     // Set Form Data Reset
     this.formData = this.formBuilder.group({
       message: null
@@ -544,24 +583,9 @@ export class FilemanagerComponent implements OnInit {
     return throwError(() => new Error('Something bad happened; please try again later.'));
   }
   
-  searchKeyPress(event: KeyboardEvent) {
-    if(event.charCode==13) {
-      //alert(this.params.ownerUID);
-      this.loading = true;
-      const ask$ = this.http.post(this.uri+"askIASimilarity",{
-        question:this.question,
-        chat_history:this.chat_history,
-        ownerUID:this.params.ownerUID,
-        prompt:this.params.customPrompt + this.params.fixedPromptParams + (this.params.promptAddQuestions?"At the end of each answer, add a delimiter '-------------' then on the line below write a list of "+this.params.promptAddQuestionsNumber+" questions that can help you deepen your answer.":""),
-        k:this.params.k,
-      }).pipe(
-        map((result:any) => {this.saveNuDir(result)}), catchError(err => throwError(err))
-    )
-      ask$.subscribe();
-      
-      
-    }
-  }
+
+
+  
 
   filterOnFileUID:string;
   check(fil) {
@@ -594,7 +618,7 @@ export class FilemanagerComponent implements OnInit {
   loadingCurFile:boolean = false;
 
   showPreview(uri,f) {
-    //LOAD FULL METAS
+    //LOAD FULL METAS    
     this.maintabSelected = 1;
     this.loadingCurFile = true;
     const ask$ = this.http.post(this.uri+"getDoc",{metaUID:f._id}).pipe(

@@ -3,7 +3,6 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { BasicComponent } from './basic/basic.component';
 import { AdvancedtableComponent } from './advancedtable/advancedtable.component';
-import { EditableComponent } from "./editable/editable.component"
 
 const routes: Routes = [
     {
@@ -13,10 +12,6 @@ const routes: Routes = [
     {
         path: 'advanced',
         component: AdvancedtableComponent
-    },
-    {
-        path: "editable",
-        component:EditableComponent
     }
 ];
 

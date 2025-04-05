@@ -14,10 +14,9 @@ import { TablesRoutingModule } from './tables-routing.module';
 import { AdvancedSortableDirective } from './advancedtable/advanced-sortable.directive';
 import { BasicComponent } from './basic/basic.component';
 import { AdvancedtableComponent } from './advancedtable/advancedtable.component';
-import { EditableComponent } from './editable/editable.component';
 
 @NgModule({
-  declarations: [BasicComponent, AdvancedtableComponent, AdvancedSortableDirective, EditableComponent],
+  declarations: [BasicComponent, AdvancedtableComponent, AdvancedSortableDirective],
   imports: [
     CommonModule,
     TablesRoutingModule,

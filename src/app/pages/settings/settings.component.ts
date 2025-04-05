@@ -38,6 +38,8 @@ export class SettingsComponent {
   };
   pricingData: Pricing[];
 
+
+
   disableForSave:boolean = false;
 
   constructor(public configService:ConfigService,private http: HttpClient,

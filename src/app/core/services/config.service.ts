@@ -16,7 +16,7 @@ export class ConfigService {
   URL = 'assets/dashboard.json';
 
   //
-  
+  isPoc = environment.ispoc;
   
   userParams:any = {};
   chatParams:any = {};

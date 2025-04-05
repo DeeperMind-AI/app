@@ -9,6 +9,7 @@ import { MENU } from './menu';
 import { MenuItem } from './menu.model';
 import { TranslateService } from '@ngx-translate/core';
 import { DataService } from '../../core/services/data.service';
+import { ConfigService } from 'src/app/core/services/config.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -34,7 +35,9 @@ export class SidebarComponent implements OnInit, AfterViewInit, OnChanges {
 
   @ViewChild('sideMenu') sideMenu: ElementRef;
 
-  constructor(private eventService: EventService, private router: Router, public translate: TranslateService, private http: HttpClient, private dataService:DataService) {
+  constructor(private eventService: EventService, 
+    private router: Router, public translate: TranslateService, private http: HttpClient, 
+    private dataService:DataService, private configService:ConfigService) {
     router.events.forEach((event) => {
       if (event instanceof NavigationEnd) {
         this._activateMenuDropdown();
@@ -146,6 +149,14 @@ export class SidebarComponent implements OnInit, AfterViewInit, OnChanges {
    * Initialize
    */
   initialize(): void {
+    if (this.configService.isPoc) {
+      MENU.splice(MENU.length-1);
+      MENU.splice(1,1);
+      this.menuItems = MENU;
+      
+    }else{
+      this.menuItems = MENU;
+    }
     this.menuItems = MENU;
     //CHARGEMENT DES PROJETS
    

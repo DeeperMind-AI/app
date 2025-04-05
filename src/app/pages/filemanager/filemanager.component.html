@@ -1,5 +1,6 @@
 <div class="container-fluid">
     <app-page-title title="{{ 'FILEMANAGER.HEADER.TEXT' | translate}}"></app-page-title>
+    
     <div class="d-xl-flex">
         <div class="w-100">
             <div class="card" *ngIf="datasProcess.length>0">
@@ -134,7 +135,7 @@
                                     </div>
                                 </div>
 
-                                <div class="mb-3">
+                                <div class="mb-3" *ngIf="!configService.isPoc">
                                     <div  class="search-box mb-2 "><div  class="position-relative"><input  type="text" id="searchTableList" name="fileFilterTerm" [(ngModel)]="fileFilterTerm" placeholder="{{ 'FILEMANAGER.SIDEBARLEFT.TEXT_FILTER.TEXT' | translate}}" class="form-control ng-pristine ng-valid ng-touched"><i  class="bx bx-filter search-icon"></i></div></div>
                                 </div>
                                 <!--<input type="text"/>-->
@@ -375,7 +376,7 @@
                                       
                                     </div>
                                     <div class="p-3 chat-input-section">
-                          
+                                        <app-suggestions #suggestions (callParentFunc)="onSelectSuggest($event)"></app-suggestions>
                                       <form (ngSubmit)="messageSave()" [formGroup]="formData" class="row">
                                         <div class="col">
                                           <div class="position-relative">
