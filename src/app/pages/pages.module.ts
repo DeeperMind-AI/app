@@ -42,9 +42,11 @@ import { MarkdownModule } from 'ngx-markdown';
 import { TranslateModule } from '@ngx-translate/core';
 import { FileTextFilter } from './filemanager/pipes/fileTextFilter';
 import { SuggestionsComponent } from './filemanager/components/suggestions/suggestions.component';
+import { LeftlistitemComponent } from './filemanager/components/leftlistitem/leftlistitem/leftlistitem.component';
+import { LeftlistitemheaderComponent } from './filemanager/components/leftlistitem/leftlistitemheader/leftlistitemheader.component';
 
 @NgModule({
-  declarations: [ChatComponent, FilemanagerComponent, SettingsComponent, SuggestionsComponent],
+  declarations: [ChatComponent, FilemanagerComponent, SettingsComponent, SuggestionsComponent, LeftlistitemComponent, LeftlistitemheaderComponent],
   imports: [
     CommonModule,
     FormsModule,

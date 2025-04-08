@@ -1,0 +1,20 @@
+<li title="{{element.title}}"  >
+    <a class="text-body fw-medium py-2 d-flex align-items-center"
+        [attr.aria-expanded]="iscollapse" (click)="iscollapse = !iscollapse"    
+            data-toggle="collapse" href="javascript:void(0);" role="button"
+            aria-expanded="false" aria-controls="categories-collapse" title="{{ 'FILEMANAGER.SIDEBARLEFT.ALL_DATAS.TITLE' | translate}}">
+            <i [style.color]="element.color" class="mdi mdi-folder font-size-16 me-2"></i> {{element.title}}
+            <i *ngIf="element.childs && element.childs.length>0" [ngClass]="iscollapse?'mdi-chevron-up':'mdi-chevron-down'" 
+                class="mdi  accor-down-icon ms-auto"></i>
+        </a>  
+        
+        
+        <div class="collapse" id="categories-collapse"
+            [collapse]="false">
+            <div class="card border-0 shadow-none ps-2 mb-0">
+                <ul class="list-unstyled mb-0">
+                    <app-leftlistitem *ngFor="let el of element.childs" [element]="el"></app-leftlistitem>
+                </ul>
+            </div>
+        </div>
+</li>

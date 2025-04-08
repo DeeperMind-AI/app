@@ -57,6 +57,11 @@ export class FilemanagerComponent implements OnInit {
   datasProcess = [];
   disablePops = false;
   //
+  fileStructure = [
+    {title:$localize`All yours datas`,icon:'mdi-database',iconColor:"#1234ff",childs:[]},
+    {title:$localize`Ai preset`,icon:'mdi-robot',iconColor:"#ce6436",childs:[]}
+  ];
+  //
             maintabSelected = 1;
   //
   metas:any;
@@ -82,7 +87,7 @@ export class FilemanagerComponent implements OnInit {
   loadingDocs = false;
   fetchDocs() {
     this.loadingDocs = true;
-    const ask$ = this.http.post(this.uri+"loadDocs",{ownerUID:this.params.ownerUID}).pipe(
+    const ask$ = this.http.post(this.uri+"loadDocs",{ownerUID:JSON.parse(localStorage.getItem('currentUser'))["email"]}).pipe(
       map((result:any) => {
         this.filesList=result.ret;
         this.loadingDocs = false;
@@ -115,12 +120,12 @@ export class FilemanagerComponent implements OnInit {
   categsList = [];
   loadingCategs = false;
   fetchCategs() {
-    
     this.loadingCategs = true;
-    const ask$ = this.http.post(this.uri+"loadCategs",{ownerUID:this.params.ownerUID}).pipe(
+    const ask$ = this.http.post(this.uri+"loadCategs",{ownerUID:JSON.parse(localStorage.getItem('currentUser'))["email"]}).pipe(
       map((result:any) => {
         
         this.categsList=result.ret;
+        this.fileStructure[0].childs = result.ret;
         this.loadingCategs = false;
       }), 
         catchError(err => throwError(err))
@@ -177,7 +182,7 @@ export class FilemanagerComponent implements OnInit {
     
     //console.log(this.socket.connect());
     this.socket.on('connect', () => {
-      this.socket.emit('storeClientInfo', { ownerUID:this.params.ownerUID });
+      this.socket.emit('storeClientInfo', { ownerUID:JSON.parse(localStorage.getItem('currentUser'))["email"] });
       console.log("client connected");
       //this.socket.emit(message, { data: "I'm connected!" });
     });
@@ -295,7 +300,7 @@ export class FilemanagerComponent implements OnInit {
     
     this.disablePops = true;
     let categ={
-      ownerUID:this.params.ownerUID,
+      ownerUID:JSON.parse(localStorage.getItem('currentUser')).email,
       title:this.categ.name,
       color:this.categ.color
     }
@@ -329,7 +334,7 @@ export class FilemanagerComponent implements OnInit {
           //ON ENVOIE le nom modifié par l'utilisateur
           //formData.append("meta.name", this.tmpMetas.name);
           
-          formData.append("meta.ownerUID", this.params.ownerUID);
+          formData.append("meta.ownerUID", JSON.parse(localStorage.getItem('currentUser')).email);
           formData.append("processUID", processUID);
         
           const upload$ = this.http.post(this.uri+"upload", formData,{
@@ -372,7 +377,7 @@ export class FilemanagerComponent implements OnInit {
         const ask$ = this.http.post(this.uri+"uploadFree",{
           title:this.newSourcePop.freeTitle,
           content:this.newSourcePop.freeContent,
-          ownerUID:this.params.ownerUID,
+          ownerUID:JSON.parse(localStorage.getItem('currentUser')).email,
         }).pipe(
           map((result:any) => {
             this.modalRef?.hide();
@@ -463,7 +468,7 @@ export class FilemanagerComponent implements OnInit {
       const ask$ = this.http.post(this.uri+"askIASimilarity",{
         question:message,
         chat_history:this.chat_history,
-        ownerUID:this.params.ownerUID,
+        ownerUID:JSON.parse(localStorage.getItem('currentUser')).email,
         prompt:this.params.customPrompt + this.params.fixedPromptParams,
         k:this.params.k,
         metaUID:(this.filterOnFileUID?this.filterOnFileUID:null),
@@ -549,7 +554,7 @@ export class FilemanagerComponent implements OnInit {
       const ask$ = this.http.post(this.uri+"askIARagFromGivenContext",{
         context:message,
         chat_history:this.chat_history,
-        ownerUID:this.params.ownerUID,
+        ownerUID:JSON.parse(localStorage.getItem('currentUser')).email,
         prompt:this.params.customPrompt + this.params.fixedPromptParams,
         k:this.params.k,
         model:this.params.model,
@@ -589,7 +594,6 @@ export class FilemanagerComponent implements OnInit {
 
   filterOnFileUID:string;
   check(fil) {
-    
     for (var reliF = 0;reliF < this.filesList.length;reliF++)
     {
       if (this.filesList[reliF]._id == fil._id)
@@ -599,8 +603,7 @@ export class FilemanagerComponent implements OnInit {
           this.filterOnFileUID = this.filesList[reliF].uid;
         }else{
           this.filterOnFileUID = "";
-        }
-        
+        }        
       }
       else {
         this.filesList[reliF].checked = false;

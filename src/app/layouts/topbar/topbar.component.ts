@@ -101,18 +101,21 @@ export class TopbarComponent implements OnInit {
    * 
    */
   getUserProp(prop) {
+    if (this.locStor && this.locStor.getItem('currentUser')) {
+      return JSON.parse(this.locStor.getItem('currentUser'))[prop];
+    }
+    else {
+      return "";
+    }
     
-    return JSON.parse(this.locStor.getItem('currentUser'))[prop];
   }
   /**
    * Logout the user
    */
   logout() {
-    if (environment.defaultauth === 'firebase') {
-      this.authService.logout();
-    } else {
+    
       this.authFackservice.logout();
-    }
+    
     this.router.navigate(['/account/login']);
   }
 

@@ -37,7 +37,6 @@ export class AuthenticationService {
     }
 
     googleLogin(token: string): Observable<any> {
-        console.log("klm",token);
         return this.http.post<any>(environment.tradBotServer+"google-login", { token });
       }
 

@@ -10,6 +10,7 @@ import { environment } from '../../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { throwError } from 'rxjs';
 import { Socket } from 'ngx-socket-io';
+import { ConfigService } from 'src/app/core/services/config.service';
 
 declare global {
   interface Window {
@@ -43,7 +44,7 @@ export class LoginComponent implements OnInit {
   constructor(private socket: Socket,private http: HttpClient,
     private formBuilder: UntypedFormBuilder, private route: ActivatedRoute, 
     private router: Router, private authenticationService: AuthenticationService,
-    ) { }
+    public configService:ConfigService) { }
 
 
 
@@ -120,6 +121,15 @@ export class LoginComponent implements OnInit {
   }*/
 
 
+  enter() {
+    
+    
+    //alert(JSON.parse(this.locStor.getItem('currentUser'))["email"]);
+    this.configService.loadConfig(JSON.parse(localStorage.getItem('currentUser')).email,this.returnUrl);
+    
+  }
+
+
   validGauth(res) {
     //Stockages paramètres
     localStorage.setItem('currentUser', JSON.stringify(res));
@@ -128,17 +138,15 @@ export class LoginComponent implements OnInit {
     //ON STORE LE SOCKET LIE AU CLIENT (x sockets pour 1 clients)
     this.socket.emit('storeClientInfo', { ownerUID:res.email });
     //Enter in app
-    let gotoRoute;
-    if (this.returnUrl) { gotoRoute = this.returnUrl; } else { gotoRoute = '/filemanager' }
-    this.router.navigate([gotoRoute]);
+    this.enter();
     //
   }
   handleCredentialResponse(response: any) {
     console.log(response.credential);
     const ask$ = this.http.post(environment.tradBotServer+"auth/google",response).pipe(
-            map((result:any) => {this.validGauth(result)}), catchError(err => throwError(err))
-        )
-          ask$.subscribe();
+        map((result:any) => {this.validGauth(result)}), catchError(err => throwError(err))
+    )
+    ask$.subscribe();
     
 
   }
@@ -154,6 +162,31 @@ export class LoginComponent implements OnInit {
       return;
     } else {
 
+      if ((this.f.email.value == "poc@poc.poc") && (this.f.password.value == "poc")) {
+        const ask$ = this.http.post(environment.tradBotServer+"auth/custom",{email:this.f.email.value,pass:this.f.password.value}).pipe(
+          map((result:any) => {
+            localStorage.setItem('currentUser', JSON.stringify(result));
+            this.socket.emit('storeClientInfo', { ownerUID:this.f.email.value });
+              //this.authFackservice..next(data.user);
+              this.enter();
+              
+              
+          }), catchError(err => throwError(err))
+        )
+        ask$.subscribe();
+
+
+        
+        
+
+         
+
+
+            //this.authFackservice..next(data.user);
+        
+        
+      }
+      return;
     this.authenticationService.login(this.f.email.value, this.f.password.value)
       .subscribe((data:any) => 
         {

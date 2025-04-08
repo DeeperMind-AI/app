@@ -149,14 +149,14 @@ export class SidebarComponent implements OnInit, AfterViewInit, OnChanges {
    * Initialize
    */
   initialize(): void {
-    if (this.configService.isPoc) {
+    /*if (this.configService.isPoc) {
       MENU.splice(MENU.length-1);
       MENU.splice(1,1);
       this.menuItems = MENU;
       
     }else{
       this.menuItems = MENU;
-    }
+    }*/
     this.menuItems = MENU;
     //CHARGEMENT DES PROJETS
    

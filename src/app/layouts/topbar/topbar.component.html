@@ -13,11 +13,11 @@
         </a>
 
         <a routerLink="/" class="logo logo-light">
-          <span class="logo-sm">
+          <span *ngIf="!configService.isPoc" class="logo-sm">
             <img src="assets/images/dmind_logo_mind.png" alt="" height="22">
           </span>
           <span class="logo-lg">
-            <img src="assets/images/dmind_logo_mind.png" alt="" height="50">
+            <img *ngIf="!configService.isPoc" src="assets/images/dmind_logo_mind.png" alt="" height="50">
           </span>
         </a>
       </div>

@@ -74,7 +74,7 @@ export class SettingsComponent {
       this.params.chat = this.configService.chatParams;
       this.params.user = this.configService.userParams;
       this.params.profile = JSON.parse(this.locStor.getItem('currentUser'));
-      console.log(this.params.profile);
+      
         this.isLoading = false;
       
     });
