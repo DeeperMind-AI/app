@@ -1,20 +1,27 @@
-<li title="{{element.title}}"  >
-    <a class="text-body fw-medium py-2 d-flex align-items-center"
-        [attr.aria-expanded]="iscollapse" (click)="iscollapse = !iscollapse"    
-            data-toggle="collapse" href="javascript:void(0);" role="button"
-            aria-expanded="false" aria-controls="categories-collapse" title="{{ 'FILEMANAGER.SIDEBARLEFT.ALL_DATAS.TITLE' | translate}}">
-            <i [style.color]="element.color" class="mdi mdi-folder font-size-16 me-2"></i> {{element.title}}
-            <i *ngIf="element.childs && element.childs.length>0" [ngClass]="iscollapse?'mdi-chevron-up':'mdi-chevron-down'" 
-                class="mdi  accor-down-icon ms-auto"></i>
-        </a>  
+<li class="list-item-child" title="{{element.title}}"  >
+    <a *ngIf="type=='categ'" [ngClass]="(element.path==configService.selectedPath?'selected':'')" class="text-body fw-medium py-2 d-flex align-items-center"
+        [attr.aria-expanded]="iscollapse"    
+        data-toggle="collapse" href="javascript:void(0);" role="button"
+        aria-expanded="false" aria-controls="categories-collapse" title="{{ 'FILEMANAGER.SIDEBARLEFT.ALL_DATAS.TITLE' | translate}}">
+        <span (click)="selectCateg(element.path)" ><i [style.color]="element.color" class="mdi mdi-folder font-size-16 me-2"></i> {{element.name}} <i class="mdi mdi-wrench ms-auto listAction"><i class="mdi mdi-trash-can ms-auto listAction"></i></i></span>
+        <i *ngIf="(type=='categ' && element.childs && (element.childs.length>0)) || ((type=='categ') && configService.hasFileChilds(element.path))"  (click)="iscollapse=!iscollapse" [ngClass]="iscollapse?'mdi-chevron-up':'mdi-chevron-down'" 
+            class="mdi  accor-down-icon ms-auto"></i>
+    </a>  
+    
+    <a  *ngIf="type=='file'" href="javascript:void(0)"  class="d-flex align-items-center">
+        <i style="color:#524f4f" (click)="check(element)" [ngClass]="{'mdi-checkbox-marked-outline': element.checked==true,'mdi-checkbox-blank-outline': !element.checked || (element.checked==false)}" class="mdi  font-size-16 me-2"></i>
         
-        
-        <div class="collapse" id="categories-collapse"
-            [collapse]="false">
-            <div class="card border-0 shadow-none ps-2 mb-0">
-                <ul class="list-unstyled mb-0">
-                    <app-leftlistitem *ngFor="let el of element.childs" [element]="el"></app-leftlistitem>
-                </ul>
-            </div>
+        <i [style.color]="(element.source_type === 'file/pdf'?'#da3c33':'#339dda')" [ngClass]="{'mdi-file-pdf-box': element.source_type === 'file/pdf','mdi-note-text': !element.source_type || (element.source_type=='free')}" class="mdi mdi-file-pdf-box font-size-16 me-2"></i>
+        <span  (click)="showPreview(element.fname+'.pdf',element)" class="me-auto">{{element.original_fname}}</span>
+    </a>
+    
+    <div class="collapse" id="categories-collapse"
+        [collapse]="iscollapse">
+        <div class="card border-0 shadow-none ps-2 mb-0">
+            <ul class="list-unstyled mb-0">
+                <app-leftlistitem *ngFor="let el of element.childs" [type]="'categ'" [element]="el"></app-leftlistitem>
+                <app-leftlistitem *ngFor="let el of configService.filesList  | categListPathFilter:element.path"  [type]="'file'" [element]="el"></app-leftlistitem>
+            </ul>
         </div>
+    </div>
 </li>

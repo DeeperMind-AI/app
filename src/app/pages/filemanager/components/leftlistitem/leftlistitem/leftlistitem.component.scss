@@ -1,0 +1,22 @@
+li.list-item-child  {
+    a {
+        padding-bottom: 2px !important;
+        padding-top: 2px !important;
+        font-size: 12px;
+        span {
+            white-space:nowrap;
+        }
+    }
+    a:hover {
+        font-weight: 600;
+    }
+    a:hover i.mdi-wrench,a:hover i.mdi-trash {
+        opacity: 0.7;
+    }
+    a i.mdi-wrench,a i.mdi-trash{
+        opacity: 0;
+    }
+    a.selected {
+        font-weight: 800;
+    }
+}

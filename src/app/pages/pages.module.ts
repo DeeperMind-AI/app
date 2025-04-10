@@ -44,6 +44,7 @@ import { FileTextFilter } from './filemanager/pipes/fileTextFilter';
 import { SuggestionsComponent } from './filemanager/components/suggestions/suggestions.component';
 import { LeftlistitemComponent } from './filemanager/components/leftlistitem/leftlistitem/leftlistitem.component';
 import { LeftlistitemheaderComponent } from './filemanager/components/leftlistitem/leftlistitemheader/leftlistitemheader.component';
+import { CategListPathFilter } from './filemanager/pipes/categListPathFilter';
 
 @NgModule({
   declarations: [ChatComponent, FilemanagerComponent, SettingsComponent, SuggestionsComponent, LeftlistitemComponent, LeftlistitemheaderComponent],
@@ -52,6 +53,7 @@ import { LeftlistitemheaderComponent } from './filemanager/components/leftlistit
     FormsModule,
     TranslateModule,
     FileTextFilter,
+    CategListPathFilter,
     MarkdownModule.forRoot(),
     BsDropdownModule.forRoot(),
     ModalModule.forRoot(),

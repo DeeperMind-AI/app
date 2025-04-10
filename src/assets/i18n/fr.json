@@ -1,46 +1,58 @@
+@ -1,45 +1,45 @@
 {
   "HEADER": {
     "LOGIN": {
+      "LOGOUT":"Logout",
+      "SETTINGS":"Settings"
       "LOGOUT":"Déconection",
       "SETTINGS":"Paramètres"
     }
   },
   "MENUITEMS": {
     "FILEMANAGER": {
+      "TEXT":"Datas management"
       "TEXT":"Gestion des données"
     },
     "DASHBOARD": {
+      "TEXT":"Dashboard"
       "TEXT":"Tableau de bord"
     },
     "SETTINGS": {
+      "TEXT":"Settings"
       "TEXT":"Paramètres"
     }
   },
   "FILEMANAGER": {
     "HEADER": {
+      "TEXT": "Datas management"
       "TEXT": "Gestion des données"
     },
     "SIDEBARLEFT":{
       "TEXT_FILTER": 
       {
+        "TEXT": "File name filter...",
+        "TITLE": "All the content you add in your index (if you have a text filter the number can differ)"
         "TEXT": "Filtrer...",
         "TITLE": ""
       },
       "ALL_DATAS": 
       {
+        "TEXT": "All yours datas",
+        "TITLE": "All the content you add in your index (if you have a text filter the number can differ)"
         "TEXT": "Toutes les données",
         "TITLE": ""
       },
       "PRESET": 
       {
         "TEXT": "AI preset",
+        "TITLE": "Selected sources in relation whith your question/query."
         "TITLE": ""
       },
       "CATEGORIES": 
       {
         "TEXT": "Categories",
+        "TITLE": "Automatic categorization from AI"
         "TITLE": ""
       }
     }
   }
-}

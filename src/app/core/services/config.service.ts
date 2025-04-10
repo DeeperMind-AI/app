@@ -16,6 +16,10 @@ export class ConfigService {
 
   URL = 'assets/dashboard.json';
 
+
+  //CATEGS LIST
+  selectedPath:string = "/";
+  filesList:any[] = [];
   //
   isPoc = environment.ispoc;
   
@@ -35,6 +39,14 @@ export class ConfigService {
       //alert(JSON.parse(this.locStor.getItem('currentUser'))["email"]);
       //this.loadConfig(JSON.parse(this.locStor.getItem('currentUser'))["email"]);
     //}
+  }
+
+  hasFileChilds(path) {
+    for (var reliC = 0;reliC < this.filesList.length;reliC++) {
+      if (this.filesList[reliC].category == path) {
+        return true;
+      }
+    }
   }
 
   loadConfig(ownerUID:string,returnUrl:string) {

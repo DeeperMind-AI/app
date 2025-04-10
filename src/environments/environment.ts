@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  ispoc:true,
+  ispoc:false,
   defaultauth: 'fackbackend',
   googleConfig:{
     apiKey:"259564130297-f7m7uksgbe104go97525aaghsia9omm0.apps.googleusercontent.com"

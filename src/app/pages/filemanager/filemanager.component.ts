@@ -77,7 +77,8 @@ export class FilemanagerComponent implements OnInit {
   file:File;
   constructor(private socket: Socket,public toastr:ToastrService,
     public sanitizer: DomSanitizer,private modalService: BsModalService,
-    private http: HttpClient,public formBuilder: UntypedFormBuilder, public configService:ConfigService) { }
+    private http: HttpClient,public formBuilder: UntypedFormBuilder, 
+    public configService:ConfigService) { }
   public isCollapsed = false;
   
   firstMessage = false;
@@ -90,6 +91,7 @@ export class FilemanagerComponent implements OnInit {
     const ask$ = this.http.post(this.uri+"loadDocs",{ownerUID:JSON.parse(localStorage.getItem('currentUser'))["email"]}).pipe(
       map((result:any) => {
         this.filesList=result.ret;
+        this.configService.filesList = result.ret;
         this.loadingDocs = false;
         let message:string = ""
         if (!this.firstMessage) {
@@ -117,15 +119,15 @@ export class FilemanagerComponent implements OnInit {
     ask$.subscribe();
   }
   //Chargement des catégories
-  categsList = [];
+  categsList:any[] = [];
   loadingCategs = false;
   fetchCategs() {
     this.loadingCategs = true;
     const ask$ = this.http.post(this.uri+"loadCategs",{ownerUID:JSON.parse(localStorage.getItem('currentUser'))["email"]}).pipe(
       map((result:any) => {
         
-        this.categsList=result.ret;
-        this.fileStructure[0].childs = result.ret;
+        this.fileStructure[0].childs = this.generateCategTree(result.ret,"");;
+        console.log(this.categsList)
         this.loadingCategs = false;
       }), 
         catchError(err => throwError(err))
@@ -137,6 +139,24 @@ export class FilemanagerComponent implements OnInit {
   redo(str) {
 
   }
+
+  generateCategTree(categs,path):any[] {
+    let returnTree:any[] = [];
+    
+    for (var reli = 0;reli < categs.length;reli++) {
+      //console.log("path",path);
+      //console.log("this.categsList[reli].path",this.categsList[reli].path);
+      if (categs[reli].path == path + "/" + categs[reli].name) {
+        let el = categs[reli];
+        el.childs = this.generateCategTree(categs,categs[reli].path);
+        returnTree.push(el);
+      }
+    }
+
+    return returnTree;
+
+  }
+
   copy(str) {
     const selBox = document.createElement('textarea');
     selBox.style.position = 'fixed';
@@ -293,22 +313,38 @@ export class FilemanagerComponent implements OnInit {
     this.uploadStatus=val;
   }
 
-  categ:any = {
+  selectedCateg:string = "/";
+  categ:any = {};
 
-  };
-  saveCateg() {
+  selectCategElem(level,label) {
     
-    this.disablePops = true;
-    let categ={
-      ownerUID:JSON.parse(localStorage.getItem('currentUser')).email,
-      title:this.categ.name,
-      color:this.categ.color
+  }
+
+  selectCateg(path) {
+    let sCats = path.path.split("/");
+    console.log("scats",sCats);
+    this.selectedCateg = path.path;
+    for (var reli = 0;reli< this.categsList.length;reli++) {
+      if (this.categsList[reli].path == path.path) {
+        this.categsList[reli].selected = !this.categsList[reli].selected;
+      }
+      else {
+        this.categsList[reli].selected = false;
+      }
     }
+
+  }
+  saveCateg() {
+    this.disablePops = true;
+    let categ=this.categ;
+    categ.path = (this.configService.selectedPath=="/"?"/"+categ.name:this.configService.selectedPath+"/" + categ.name);
+    categ.ownerUID = JSON.parse(localStorage.getItem('currentUser')).email;
     const ask$ = this.http.post(this.uri+"addCateg",categ).pipe(
       map((result:any) => {
     
         this.disablePops = false;
         this.modalRef?.hide();
+        this.reset();
         this.fetchCategs();
 
         
@@ -336,7 +372,9 @@ export class FilemanagerComponent implements OnInit {
           
           formData.append("meta.ownerUID", JSON.parse(localStorage.getItem('currentUser')).email);
           formData.append("processUID", processUID);
-        
+          formData.append("categ", this.configService.selectedPath);
+    
+
           const upload$ = this.http.post(this.uri+"upload", formData,{
             reportProgress: true,
             observe: 'events'
@@ -378,6 +416,7 @@ export class FilemanagerComponent implements OnInit {
           title:this.newSourcePop.freeTitle,
           content:this.newSourcePop.freeContent,
           ownerUID:JSON.parse(localStorage.getItem('currentUser')).email,
+          categ:this.selectCateg
         }).pipe(
           map((result:any) => {
             this.modalRef?.hide();
@@ -628,7 +667,7 @@ export class FilemanagerComponent implements OnInit {
       map((result:any) => {
         this.curFile = result.ret;
         this.pdfPreviewURL = "https://medias.deepermind.ai/"+uri;
-        this.pdfMetas = JSON.stringify(f); 
+        this.pdfMetas = JSON.stringify(result.ret); 
         this.loadingCurFile = false;
         this.maintabSelected = 2;
       }), 
@@ -659,6 +698,8 @@ export class FilemanagerComponent implements OnInit {
   reset() {
     this.tmpMetas = [];
     this.uploadStatus = "";
+    this.categ = {};
+    this.newSourcePop = {sourceType:"file"};
   }
 
   // tslint:disable-next-line: no-shadowed-variable

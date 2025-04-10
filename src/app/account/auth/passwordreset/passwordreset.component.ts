@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { AuthenticationService } from '../../../core/services/auth.service';
 import { environment } from '../../../../environments/environment';
+import { ConfigService } from 'src/app/core/services/config.service';
 
 @Component({
   selector: 'app-passwordreset',
@@ -26,7 +27,9 @@ export class PasswordresetComponent implements OnInit, AfterViewInit {
   year: number = new Date().getFullYear();
 
   // tslint:disable-next-line: max-line-length
-  constructor(private formBuilder: UntypedFormBuilder, private route: ActivatedRoute, private router: Router, private authenticationService: AuthenticationService) { }
+  constructor(private formBuilder: UntypedFormBuilder, 
+    private route: ActivatedRoute, private router: Router, 
+    private authenticationService: AuthenticationService,public configService:ConfigService) { }
 
   ngOnInit() {
 

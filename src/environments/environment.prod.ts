@@ -4,7 +4,7 @@
 
 export const environment = {
   production: true,
-  ispoc:true,
+  ispoc:false,
   defaultauth: 'fackbackend',
   optimization:false,
   googleConfig:{
