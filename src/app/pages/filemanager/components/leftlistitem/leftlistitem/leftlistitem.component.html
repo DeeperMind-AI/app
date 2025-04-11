@@ -10,17 +10,16 @@
     
     <a  *ngIf="type=='file'" href="javascript:void(0)"  class="d-flex align-items-center">
         <i style="color:#524f4f" (click)="check(element)" [ngClass]="{'mdi-checkbox-marked-outline': element.checked==true,'mdi-checkbox-blank-outline': !element.checked || (element.checked==false)}" class="mdi  font-size-16 me-2"></i>
-        
         <i [style.color]="(element.source_type === 'file/pdf'?'#da3c33':'#339dda')" [ngClass]="{'mdi-file-pdf-box': element.source_type === 'file/pdf','mdi-note-text': !element.source_type || (element.source_type=='free')}" class="mdi mdi-file-pdf-box font-size-16 me-2"></i>
-        <span  (click)="showPreview(element.fname+'.pdf',element)" class="me-auto">{{element.original_fname}}</span>
+        <span  (click)="showPreview({'name':element.fname+'.pdf','el':element})" class="me-auto">{{element.original_fname}}</span>
     </a>
     
     <div class="collapse" id="categories-collapse"
         [collapse]="iscollapse">
         <div class="card border-0 shadow-none ps-2 mb-0">
             <ul class="list-unstyled mb-0">
-                <app-leftlistitem *ngFor="let el of element.childs" [type]="'categ'" [element]="el"></app-leftlistitem>
-                <app-leftlistitem *ngFor="let el of configService.filesList  | categListPathFilter:element.path"  [type]="'file'" [element]="el"></app-leftlistitem>
+                <app-leftlistitem (showPreviewEmitter)="showPreview($event)" *ngFor="let el of element.childs" [type]="'categ'" [element]="el"></app-leftlistitem>
+                <app-leftlistitem (showPreviewEmitter)="showPreview($event)" *ngFor="let el of configService.filesList  | categListPathFilter:element.path"  [type]="'file'" [element]="el"></app-leftlistitem>
             </ul>
         </div>
     </div>

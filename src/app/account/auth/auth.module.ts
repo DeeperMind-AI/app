@@ -8,8 +8,6 @@ import { CarouselModule } from 'ngx-owl-carousel-o';
 import { UIModule } from '../../shared/ui/ui.module';
 import { LoginComponent } from './login/login.component';
 import { SignupComponent } from './signup/signup.component';
-import { Register2Component } from './register2/register2.component';
-import { Recoverpwd2Component } from './recoverpwd2/recoverpwd2.component';
 
 import { AuthRoutingModule } from './auth-routing';
 import { PasswordresetComponent } from './passwordreset/passwordreset.component';
@@ -17,7 +15,7 @@ import { PasswordresetComponent } from './passwordreset/passwordreset.component'
 import { GoogleSigninComponent } from './google-signin/google-signin.component';
 
 @NgModule({
-  declarations: [LoginComponent, SignupComponent, PasswordresetComponent, Register2Component, Recoverpwd2Component,GoogleSigninComponent],
+  declarations: [LoginComponent, SignupComponent, PasswordresetComponent, GoogleSigninComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,

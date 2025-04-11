@@ -151,7 +151,7 @@
 
                                 
                                 <ul class="list-unstyled categories-list">
-                                    <app-leftlistitemheader (selectCategOutput)="selectCateg($event)" *ngFor="let el of fileStructure" [element]="el"></app-leftlistitemheader>
+                                    <app-leftlistitemheader (showPreviewEmitter)="showData($event)" (selectCategOutput)="selectCateg($event)" *ngFor="let el of fileStructure" [element]="el"></app-leftlistitemheader>
                                 </ul>
 
                                 <ul class="list-unstyled categories-list">

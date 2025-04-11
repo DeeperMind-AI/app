@@ -320,6 +320,11 @@ export class FilemanagerComponent implements OnInit {
     
   }
 
+  //Bridge parent/childs
+  showData(e) {
+    this.showPreview(eval.name,e.el);
+  }
+
   selectCateg(path) {
     let sCats = path.path.split("/");
     console.log("scats",sCats);

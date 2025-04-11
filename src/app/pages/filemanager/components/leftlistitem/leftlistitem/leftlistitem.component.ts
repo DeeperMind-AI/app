@@ -10,14 +10,15 @@ export class LeftlistitemComponent {
   @Input() element: any
   @Input() type: string
   @Output() selectCategOutput: EventEmitter<any> = new EventEmitter<any>();
+  @Output() showPreviewEmitter: EventEmitter<any> = new EventEmitter<any>();
 
   constructor(public configService:ConfigService) { }
 
   iscollapse:boolean=true;
 
 
-  showPreview(z,e) {
-
+  showPreview(ev) {
+    this.showPreviewEmitter.emit(ev);
   }
   check(z) {
     

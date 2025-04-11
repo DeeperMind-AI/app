@@ -19,7 +19,7 @@
             [collapse]="iscollapse">
             <div class="card border-0 shadow-none ps-2 mb-0">
                 <ul class="list-unstyled mb-0">
-                    <app-leftlistitem (selectCategOutput)="selectCateg($event)" [type]="'categ'" *ngFor="let el of element.childs" [element]="el"></app-leftlistitem>
+                    <app-leftlistitem  (showPreviewEmitter)="showPreview($event)" (selectCategOutput)="selectCateg($event)" [type]="'categ'" *ngFor="let el of element.childs" [element]="el"></app-leftlistitem>
                 </ul>
             </div>
         </div>
