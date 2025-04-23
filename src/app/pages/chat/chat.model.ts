@@ -7,6 +7,7 @@ export interface ChatUser {
 }
 
 export interface ChatMessage {
+    welcome?:boolean,
     align?: string;
     name?: string;
     message: string;

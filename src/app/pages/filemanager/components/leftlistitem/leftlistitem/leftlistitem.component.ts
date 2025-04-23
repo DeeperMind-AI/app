@@ -11,21 +11,24 @@ export class LeftlistitemComponent {
   @Input() type: string
   @Output() selectCategOutput: EventEmitter<any> = new EventEmitter<any>();
   @Output() showPreviewEmitter: EventEmitter<any> = new EventEmitter<any>();
+  @Output() checkEmitter: EventEmitter<any> = new EventEmitter<any>();
 
   constructor(public configService:ConfigService) { }
 
   iscollapse:boolean=true;
 
 
-  showPreview(ev) {
-    this.showPreviewEmitter.emit(ev);
+  check(ev) {
+    console.log("item.check",ev);
+    this.checkEmitter.emit(ev);
   }
-  check(z) {
-    
+  showPreview(ev) {
+    console.log("item.showPreview",ev);
+    this.showPreviewEmitter.emit(ev);
   }
 
   selectCateg(path) {
-    
+    console.log("item.selectCateg",path);
     if (this.configService.selectedPath == path) {
       this.configService.selectedPath = "/";  
     }

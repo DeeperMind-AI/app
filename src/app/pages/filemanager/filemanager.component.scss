@@ -1,9 +1,9 @@
 .categories-list { 
-    max-height: 100%;
+    //max-height: 100%;
     overflow-y: auto;
     color: var(--bs-gray-700);
-    border: 1px solid var(--bs-input-border-color);
-    border-radius: 0.25rem;
+    //border: 1px solid var(--bs-input-border-color);
+    //border-radius: 0.25rem;
     li {
         ul {
             max-height: 500px;
@@ -20,3 +20,78 @@
         }
     }
 }
+
+
+.work-content {
+    height: 400px;
+    .pr-0 {
+        padding-right: 0;
+    }
+    .promptsCol {
+        max-width: 150px;
+    }
+    .user-chat {
+        overflow: hidden;
+        overflow-y: scroll;
+        position: relative;  
+        bottom: 0;
+        tabset {
+            position: absolute;
+                top:0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+        }
+    }
+    .filemanager-sidebar {
+        overflow: hidden;
+        overflow-y: scroll;
+        .sidebCtrlsContainer {
+          position: relative;
+            .addButton {
+                position: absolute;
+                top:0;
+                left: 0;
+                right: 0;
+            }
+            .filterTxtContainer {
+                position: absolute;
+                top:40px;
+                left: 0;
+                right: 0;
+            }
+            .fileManagerContainer {
+                position: absolute;
+                top:80px;
+                left: 0;
+                right: 0;
+            }
+      
+        }
+    }
+    .chat-conversation {
+        position: absolute;
+        left: 0;
+        bottom: 70px;
+        top:30px;
+        right: 0;
+    }
+    .chat-input-section {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        padding: 5px !important;
+    }
+    [data-layout-mode="dark"] {
+        .chat-input-section {
+            background-color: #262b3c;
+        }   
+    }
+    [data-layout-mode="light"] {
+        .chat-input-section {
+            background-color: #fff;
+        }   
+    }
+}
+

@@ -1,5 +1,5 @@
 import { HttpClient,HttpErrorResponse, HttpEvent, HttpEventType } from '@angular/common/http';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, HostListener, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { throwError } from 'rxjs';
@@ -12,6 +12,8 @@ import { ToastrService } from 'ngx-toastr';
 import { Socket } from 'ngx-socket-io';
 import { AlertColor } from '../ui/alerts/alerts.model';
 import { SuggestionsComponent } from './components/suggestions/suggestions.component';
+import { HelperService } from 'src/app/core/services/helper.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-filemanager',
@@ -22,7 +24,26 @@ export class FilemanagerComponent implements OnInit {
   // bread crumb items
   @ViewChild('scrollEle') scrollEle;
   @ViewChild('scrollRef') scrollRef;
+  @ViewChild('workContent') workContent;
   @ViewChild('suggestions') suggestions:SuggestionsComponent;
+  
+  @HostListener('window:resize', ['$event'])
+  onResize(event) {
+    //console.log(event.target.innerHeight);
+    //alert("onResize");
+    //const newHeight = event.target.innerWidth > 600 ? '300px' : '150px';
+    //this.changeHeight(this.myDiv.nativeElement, newHeight);
+    //if (this.workContent) {
+    
+      this.changeHeight(this.workContent.nativeElement,(window.innerHeight -200).toString());
+    //}
+    
+  }
+
+  changeHeight(element: HTMLElement, newHeight: string) {
+    console.log(newHeight,element);
+    this.renderer.setStyle(element, 'height', newHeight + "px");
+  }
 
   uri = environment.tradBotServer;
   //uri = "http://saas.apis.ekoal.org";
@@ -42,14 +63,12 @@ export class FilemanagerComponent implements OnInit {
 
   aiResponse:string = "";
   aiQuestions:string[] = [];
-  aiResponseContexts:any[] = [];
-
+  
   chat_history = [];
   loading = false;
   chatMessagesData: ChatMessage[];
   pdfPreviewURL;
   pdfMetas="";
-  fileFilterTerm:string="";
   isColapseFilesAll:boolean = false;
   isColapseFilesIa:boolean = false;
   isColapseFilesClass:boolean = false;
@@ -57,16 +76,19 @@ export class FilemanagerComponent implements OnInit {
   datasProcess = [];
   disablePops = false;
   //
+  
+  
+  //
   fileStructure = [
-    {title:$localize`All yours datas`,icon:'mdi-database',iconColor:"#1234ff",childs:[]},
-    {title:$localize`Ai preset`,icon:'mdi-robot',iconColor:"#ce6436",childs:[]}
+    {uid:1,title: "FILEMANAGER.SIDEBARLEFT.ALL_DATAS.TEXT",icon:'mdi-database',iconColor:"#1234ff",childs:[]},
+    {uid:2,title:"FILEMANAGER.SIDEBARLEFT.PRESET.TEXT",icon:'mdi-robot',iconColor:"#ce6436",childs:[]}
   ];
   //
             maintabSelected = 1;
   //
   metas:any;
   //Paramètres des uploads/requetes
-  params:any;
+  params:any= {};
   newSourcePop:any = {sourceType:"file"};
 
   tmpMetas = [];
@@ -78,7 +100,8 @@ export class FilemanagerComponent implements OnInit {
   constructor(private socket: Socket,public toastr:ToastrService,
     public sanitizer: DomSanitizer,private modalService: BsModalService,
     private http: HttpClient,public formBuilder: UntypedFormBuilder, 
-    public configService:ConfigService) { }
+    public configService:ConfigService,private renderer: Renderer2, 
+    private helper: HelperService,public translate: TranslateService) { }
   public isCollapsed = false;
   
   firstMessage = false;
@@ -86,6 +109,11 @@ export class FilemanagerComponent implements OnInit {
   //Chargement des données
   filesList = [];
   loadingDocs = false;
+
+  
+
+
+
   fetchDocs() {
     this.loadingDocs = true;
     const ask$ = this.http.post(this.uri+"loadDocs",{ownerUID:JSON.parse(localStorage.getItem('currentUser'))["email"]}).pipe(
@@ -96,15 +124,16 @@ export class FilemanagerComponent implements OnInit {
         let message:string = ""
         if (!this.firstMessage) {
           if (this.filesList.length > 0){
-            message = "What do you want to find in your datas ?";
+            message = "FILEMANAGER.CHAT.WELCOME.TEXT";
           }
           else {
-            message = "There is no datas, start by adding some by clicking on add in left panel!";
+            message = "FILEMANAGER.CHAT.WELCOMENODATA.TEXT";
           }
           const currentDate = new Date();
           this.chatMessagesData.push({
+            welcome:true,
             align: 'left',
-            name: 'Assistant',
+            name: 'FILEMANAGER.CHAT.MESSAGE.IANAME',
             message,
             time: currentDate.getHours() + ':' + currentDate.getMinutes()
           });
@@ -137,7 +166,7 @@ export class FilemanagerComponent implements OnInit {
   }
 
   redo(str) {
-
+    this.messageSave(str);
   }
 
   generateCategTree(categs,path):any[] {
@@ -192,9 +221,13 @@ export class FilemanagerComponent implements OnInit {
    
   }
 
+  ngAfterViewInit(): void {
+    this.changeHeight(this.workContent.nativeElement,(window.innerHeight -200).toString());
+  }
   ngOnInit(): void {
     this.breadCrumbItems = [{ label: 'Apps' }, { label: 'File Manager', active: true }];
     this.chatMessagesData = [];
+    
     this.formData = this.formBuilder.group({
       message: ['', [Validators.required]],
     });
@@ -219,9 +252,27 @@ export class FilemanagerComponent implements OnInit {
 */
     //AJOUT MESSAGE BONJOUR
     
+    this.params.chat =  JSON.parse(this.locStor.getItem('chatParams'));
+    if (!this.params.chat) {
+      this.params.chat = this.configService.defChatParams;
+    }
+    this.params.prompts =  (this.locStor.getItem('prompts')!="undefined"?JSON.parse(this.locStor.getItem('prompts')):[]);
+    if (!this.params.prompts || (this.params.prompts.length==0)) {
+      this.params.prompts = [
+        {
+          uid:-1,
+          title:"Default RAG prompt",
+          customPrompt:"You are an assistant for question-answering tasks based on retrieved context and person description. If you don't know the answer, just say that you don't know. "
+        }
+      ];
+    }
 
-    this.params = this.configService.chatParams;
-
+    this.selectedPrompt = this.params.prompts[0];
+    console.log("this.selectedPrompt",this.selectedPrompt);
+    //this.params.chat =  JSON.parse(this.locStor.getItem('chatParams'));
+    //if (!this.params.chat) {
+      //this.params.chat = this.configService.defChatParams;
+    //}
     this.fetchCategs();
     this.fetchDocs();
 
@@ -269,7 +320,19 @@ export class FilemanagerComponent implements OnInit {
       labels: ['Storage'],
     }
   }
-  
+  //
+  selectedPrompt:any;
+  selectPromptVal = "-1";
+  selectPromptChange(e,val) {
+    for (var reliP=0;reliP<this.params.prompts.length;reliP++) {
+      if (this.params.prompts[reliP].uid==val)
+      {
+        this.selectedPrompt = this.params.prompts[reliP];
+        break;
+      }
+    }
+  }
+  //
   /**
    * Open modal
    * @param content modal content
@@ -327,7 +390,6 @@ export class FilemanagerComponent implements OnInit {
 
   selectCateg(path) {
     let sCats = path.path.split("/");
-    console.log("scats",sCats);
     this.selectedCateg = path.path;
     for (var reli = 0;reli< this.categsList.length;reli++) {
       if (this.categsList[reli].path == path.path) {
@@ -361,7 +423,7 @@ export class FilemanagerComponent implements OnInit {
   }
 
   saveFile() {
-    let processUID = "p_"+this.generateGuid();
+    let processUID = "p_"+this.helper.generateGuid();
     //CHECK CBO DATA TYPE
     switch (this.newSourcePop.sourceType) {
       case "file":
@@ -453,13 +515,6 @@ export class FilemanagerComponent implements OnInit {
     //this.upload();
   }
 
-  generateGuid() : string {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-      var r = Math.random() * 16 | 0,
-        v = c == 'x' ? r : (r & 0x3 | 0x8);
-      return v.toString(16);
-    });
-  }
 
    // Delete Message
    deleteMessage(event:any){
@@ -496,7 +551,7 @@ export class FilemanagerComponent implements OnInit {
       // Message Push in Chat
       this.chatMessagesData.push({
         align: 'right',
-        name: 'You',
+        name: 'FILEMANAGER.CHAT.MESSAGE.USERNAME',
         message,
         time: currentDate.getHours() + ':' + currentDate.getMinutes()
       });
@@ -513,8 +568,8 @@ export class FilemanagerComponent implements OnInit {
         question:message,
         chat_history:this.chat_history,
         ownerUID:JSON.parse(localStorage.getItem('currentUser')).email,
-        prompt:this.params.customPrompt + this.params.fixedPromptParams,
-        k:this.params.k,
+        prompt:this.selectedPrompt.customPrompt + this.params.chat.fixedPromptParams,
+        k:this.params.chat.k,
         metaUID:(this.filterOnFileUID?this.filterOnFileUID:null),
         model:this.params.model,
       }).pipe(
@@ -534,6 +589,7 @@ export class FilemanagerComponent implements OnInit {
     return this.formData.controls;
   }
 
+  
   onSelectSuggest($event) { 
     this.messageSave($event.str);
   }
@@ -548,14 +604,14 @@ export class FilemanagerComponent implements OnInit {
     this.aiResponse = result.answer;
     this.aiQuestions = result.questions;
     let found = false;
-    this.aiResponseContexts = [];
+    this.configService.aiResponseContexts = [];
     for (var reliC = 0;reliC < result.context.length;reliC++)
     {
       found = false;
-      for (var reliC2 = 0;reliC2 < this.aiResponseContexts.length;reliC2++)
+      for (var reliC2 = 0;reliC2 < this.configService.aiResponseContexts.length;reliC2++)
       {
         
-          if (result.context[reliC].metadata.fname == this.aiResponseContexts[reliC2].metadata.fname) {
+          if (result.context[reliC].metadata.fname == this.configService.aiResponseContexts[reliC2].metadata.fname) {
             
             found = true;
             break;
@@ -564,14 +620,18 @@ export class FilemanagerComponent implements OnInit {
       if (!found) {
         
         result.context[reliC].occurs=0;
-        this.aiResponseContexts.push(result.context[reliC]);
+
+        //this.aiResponseContexts.push(result.context[reliC]);
+        this.configService.aiResponseContexts.push(result.context[reliC]);
+        this.configService.aiResponseFiles.push(result.context[reliC].metadata);
       }
       else {
-        for (var reliC2 = 0;reliC2 < this.aiResponseContexts.length;reliC2++)
+        for (var reliC2 = 0;reliC2 < this.configService.aiResponseContexts.length;reliC2++)
           {
             
-              if (result.context[reliC].metadata.fname == this.aiResponseContexts[reliC2].metadata.fname) {
-                this.aiResponseContexts[reliC2].occurs+=1;
+              if (result.context[reliC].metadata.fname == this.configService.aiResponseContexts[reliC2].metadata.fname) {
+                //this.aiResponseContexts[reliC2].occurs+=1;
+                this.configService.aiResponseContexts[reliC2].occurs+=1;
                 break;
               }
           }
@@ -579,18 +639,22 @@ export class FilemanagerComponent implements OnInit {
       }
     }
     //this.aiResponseContexts = result.context;
+
+    this.configService.aiResponseContexts.push(result.context[reliC]);
+
     this.loading = false;
 
     const currentDate = new Date();
     let message :string= this.aiResponse.toString();
     this.chatMessagesData.push({
       align: 'left',
-      name: 'Assistant',
+      name: 'FILEMANAGER.CHAT.MESSAGE.IANAME',
       message,
       time: currentDate.getHours() + ':' + currentDate.getMinutes()
     });
     this.onListScroll();
 
+    //ASK FOR SUGGECTIONS QUESTIONS
     setTimeout(() => {
       this.suggestions.setLabels(this.aiQuestions);
       this.suggestions.toggle(false);  
@@ -638,6 +702,7 @@ export class FilemanagerComponent implements OnInit {
 
   filterOnFileUID:string;
   check(fil) {
+    //console.log(fil);
     for (var reliF = 0;reliF < this.filesList.length;reliF++)
     {
       if (this.filesList[reliF]._id == fil._id)
@@ -665,21 +730,54 @@ export class FilemanagerComponent implements OnInit {
   loadingCurFile:boolean = false;
 
   showPreview(uri,f) {
+    console.log(f);
     //LOAD FULL METAS    
     this.maintabSelected = 1;
     this.loadingCurFile = true;
-    const ask$ = this.http.post(this.uri+"getDoc",{metaUID:f._id}).pipe(
-      map((result:any) => {
-        this.curFile = result.ret;
-        this.pdfPreviewURL = "https://medias.deepermind.ai/"+uri;
-        this.pdfMetas = JSON.stringify(result.ret); 
+    if (f._id) {
+      const ask$ = this.http.post(this.uri+"getDoc",{metaUID:f._id}).pipe(
+        map((result:any) => {
+          this.curFile = result.ret;
+          switch (this.curFile.source_type) {
+            case "image/png":
+              this.pdfPreviewURL = "https://medias.deepermind.ai/"+f.fname+".png";
+              break;
+            case "image/jpeg":
+              this.pdfPreviewURL = "https://medias.deepermind.ai/"+f.fname+".jpg";
+              break;
+            case "file/pdf":
+              this.pdfPreviewURL = "https://medias.deepermind.ai/"+f.fname+".pdf";
+              break;
+          }
+          
+          this.pdfMetas = JSON.stringify(result.ret); 
+          this.loadingCurFile = false;
+          this.maintabSelected = 2;
+        }), 
+          catchError(err => throwError(err))
+      )
+        
+      ask$.subscribe();
+    }
+    else {
+      this.curFile = f;
+        switch (this.curFile.source_type) {
+          case "image/png":
+            this.pdfPreviewURL = "https://medias.deepermind.ai/"+f.fname+".png";
+            break;
+          case "image/jpeg":
+            this.pdfPreviewURL = "https://medias.deepermind.ai/"+f.fname+".jpg";
+            break;
+          case "file/pdf":
+            this.pdfPreviewURL = "https://medias.deepermind.ai/"+f.fname+".pdf";
+            break;
+        }
+        
+        this.pdfMetas = JSON.stringify(f); 
         this.loadingCurFile = false;
         this.maintabSelected = 2;
-      }), 
-        catchError(err => throwError(err))
-    )
-      
-    ask$.subscribe();
+    }
+    
     
     //return;
     

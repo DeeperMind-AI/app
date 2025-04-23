@@ -9,28 +9,27 @@
                         <i class="mdi mdi-alert-circle-outline me-2"></i>
                         {{pro.msg}}: <strong>{{pro.dataTitle}}</strong>
                     </alert>
-                    
                 </div>
             </div>
                     
-            <div class="d-md-flex">
+            <div #workContent class="d-md-flex work-content">
                 <div class="card filemanager-sidebar me-md-2">
                     <div class="m-1">
 
-                        <div class="d-flex flex-column h-100">
-                            <div class="mb-4">
-                                <div class="mb-3">
+                        <div class="d-flex flex-column h-100 ">
+                            <div class="mb-4 sidebCtrlsContainer" >
+                                <div class="mb-3 addButton">
                                     
                                     <div class="dropdown" dropdown>
                                         <button class="btn btn-light w-100 "  data-toggle="dropdown" dropdownToggle
                                         aria-haspopup="true" aria-expanded="false"
                                             type="button" >
-                                            <i class="mdi mdi-plus me-1"></i> ADD
+                                            <i class="mdi mdi-plus me-1"></i> {{ 'FILEMANAGER.SIDEBARLEFT.ACTIONS.ADD.TEXT' | translate}}
                                         </button>
                                         
                                         <div class="dropdown-menu" *dropdownMenu>
                                             <a class="dropdown-item" href="javascript: void(0);" data-bs-toggle="modal" data-bs-target="#myModal" (click)="openModal(contentNuDr)"><i
-                                                    class="bx bx-folder me-1"></i> Category</a>
+                                                    class="bx bx-folder me-1"></i> {{ 'FILEMANAGER.SIDEBARLEFT.ACTIONS.ADD.CAT.TEXT' | translate}}</a>
                                             <ng-template #contentNuDr role="document" let-modal>
                                                 <div class="modal-header">
                                                     <h5 class="modal-title" id="myModalLabel">Add/edit category</h5>
@@ -62,7 +61,7 @@
                                             
                                             
                                             <a class="dropdown-item" href="javascript: void(0);" data-bs-toggle="modal" data-bs-target="#myModal" (click)="openModal(contentNuFile)"><i
-                                            class="bx bx-file me-1"></i> Data</a>
+                                            class="bx bx-file me-1"></i> {{ 'FILEMANAGER.SIDEBARLEFT.ACTIONS.ADD.DATA.TEXT' | translate}}</a>
                                             <ng-template #contentNuFile role="document" let-modal>
                                                 <div class="modal-header">
                                                     <h5 class="modal-title" id="myModalLabel">Add/edit data</h5>
@@ -79,13 +78,13 @@
                                                                 <option value="sem" >Semantic</option>
                                                                 <option value="rec" selected>Recursive</option>
                                                             </select>
-                                                        </div>
+                                                        </div>-->
                                                         <div class="mb-3">
                                                             <label for="fsAutoCat">Auto. categorization
                                                                 <i class="bx bx-info-circle" title="..."></i>
                                                             </label>
                                                             <input  [disabled]="disablePops" type="checkbox" id="fsAutoCat" class="form-control form-check-input">
-                                                        </div>-->
+                                                        </div>
                                                         <div class="mb-3">
                                                             <label  for="formrow-firstname-input">Path</label>
                                                             <input [disabled]="true" type="text" class="form-control" name="selectedCateg" [(ngModel)]="configService.selectedPath">
@@ -93,6 +92,9 @@
                                                         <div class="mb-3">
                                                             <label for="chunkMode">Data type
                                                                 <i class="bx bx-info-circle" title="..."></i>
+
+
+
                                                             </label>
                                                             <select [disabled]="disablePops" class="form-select"  name="newSourcePop.sourceType" [(ngModel)]="newSourcePop.sourceType" >
                                                                 <option value="file" selected>File</option>
@@ -104,7 +106,7 @@
                                                             <label for="fileinp">File
                                                                 <i class="bx bx-info-circle" title="..."></i>
                                                             </label>
-                                                            <input  [disabled]="disablePops" type="file" class="form-control" accept=".pdf,.zip"  name="fileinp" (change)="onFileSelected($event)"/>
+                                                            <input  [disabled]="disablePops" type="file" class="form-control" accept=".pdf,.zip,.jpg,.png"  name="fileinp" (change)="onFileSelected($event)"/>
                                                         </div>
                                                         <div class="mb-3" *ngIf="newSourcePop.sourceType==='free'">
                                                             <label for="freeTitle">Title
@@ -144,17 +146,17 @@
                                     </div>
                                 </div>
 
-                                <div class="mb-3" *ngIf="!configService.isPoc">
-                                    <div  class="search-box mb-2 "><div  class="position-relative"><input  type="text" id="searchTableList" name="fileFilterTerm" [(ngModel)]="fileFilterTerm" placeholder="{{ 'FILEMANAGER.SIDEBARLEFT.TEXT_FILTER.TEXT' | translate}}" class="form-control ng-pristine ng-valid ng-touched"><i  class="bx bx-filter search-icon"></i></div></div>
+                                <div class="mb-3 filterTxtContainer"  *ngIf="!configService.isPoc">
+                                    <div  class="search-box mb-2 "><div  class="position-relative"><input  type="text" id="searchTableList" name="configService.fileFilterTerm" [(ngModel)]="configService.fileFilterTerm" placeholder="{{ 'FILEMANAGER.SIDEBARLEFT.TEXT_FILTER.TEXT' | translate}}" class="form-control ng-pristine ng-valid ng-touched"><i  class="bx bx-filter search-icon"></i></div></div>
                                 </div>
                                 <!--<input type="text"/>-->
 
                                 
-                                <ul class="list-unstyled categories-list">
-                                    <app-leftlistitemheader (showPreviewEmitter)="showData($event)" (selectCategOutput)="selectCateg($event)" *ngFor="let el of fileStructure" [element]="el"></app-leftlistitemheader>
+                                <ul class="list-unstyled categories-list fileManagerContainer">
+                                    <app-leftlistitemheader (checkEmitter)="check($event)" (showPreviewEmitter)="showData($event)" (selectCategOutput)="selectCateg($event)" *ngFor="let el of fileStructure" [element]="el"></app-leftlistitemheader>
                                 </ul>
-
-                                <ul class="list-unstyled categories-list">
+<!--
+                                <ul style="display:none;" class="list-unstyled categories-list">
                                     
                                     <li>
                                         <div class="custom-accordion">
@@ -280,7 +282,7 @@
                                                 class="me-auto">Dropbox</span>
                                         </a>
                                     </li>
-                                    <!--<li>
+                                    <li>
                                         <a href="javascript: void(0);" class="text-body d-flex align-items-center">
                                             <i class="mdi mdi-share-variant font-size-16 me-2"></i> <span
                                                 class="me-auto">Shared</span> <i
@@ -305,8 +307,8 @@
                                                 class="me-auto">Setting</span><span
                                                 class="badge bg-success rounded-pill ms-2">01</span>
                                         </a>
-                                    </li>-->
-                                </ul>
+                                    </li>
+                                </ul>-->
                             </div>
 <!--
                             <div class="mt-auto">
@@ -333,26 +335,23 @@
                             </div>
                             -->
                         </div>
-
                     </div>
                 </div>
                 <!-- filemanager-leftsidebar -->
-
-
                     <div class="w-100 user-chat card">
                         
                           <tabset class="nav-tabs nav-tabs-custom tab-container">
-                            <tab [active]="maintabSelected==1"  [heading]="'AI search '+(filterOnFileUID?'(Filtré sur le fichier sélectionné)':'')">
+                            <tab [active]="maintabSelected==1"  heading="{{ ('FILEMANAGER.TABSHEADERS.CHAT.MAIN' | translate)+ ' ' + (filterOnFileUID?'('+('FILEMANAGER.TABSHEADERS.CHAT.FILTERED' | translate)+')':'')}}">
                                 <div>
                                     <div class="chat-conversation p-3">
-                                      <ngx-simplebar style="height: 470px;" #scrollRef>
+                                      <ngx-simplebar style="height: 100%" #scrollRef>
                                         <ul class="list-unstyled">
                                           <li *ngFor="let data of chatMessagesData" [ngClass]="
                                         {
                                           'right': data.align === 'right'
                                         }">
                                             <div class="conversation-list">
-                                              <div class="dropdown" dropdown>
+                                              <!--<div class="dropdown" dropdown>
                           
                                                 <a class="dropdown-toggle" href="javascript: void(0);" role="button" dropdownToggle>
                                                   <i class="bx bx-dots-vertical-rounded"></i>
@@ -363,17 +362,19 @@
                                                   <a class="dropdown-item" href="javascript: void(0);">Forward</a>
                                                   <a class="dropdown-item" href="javascript: void(0);" (click)="deleteMessage($event)">Delete</a>
                                                 </div>
-                                              </div>
+                                              </div>-->
                                               <div class="ctext-wrap">
-                                                <div class="conversation-name">{{ data.name }}</div>
-                                                <markdown [data]="data.message">
+                                                <div class="conversation-name">{{ data.name | translate}}</div>
+                                                <markdown  *ngIf="!data.welcome" [data]="data.message" >
                                                     
                                                 </markdown>
-                                                
-                                                <p class="chat-time mb-0">
+                                                <markdown  *ngIf="data.welcome" data="{{ data.message | translate}}" >
+                                                    
+                                                </markdown>
+                                                <p *ngIf="!data.welcome" class="chat-time mb-0">
                                                     <!--<i class="bx bx-time-five align-middle me-1"></i> {{ data.time }}-->
-                                                    <a title="redo" href="javascript:void(0)" (click)="redo(data.message)"><i class="bx bx bx-redo align-middle me-1"></i></a>
-                                                    <a title="copy" href="javascript:void(0)" (click)="copy(data.message)"><i class="bx bx-copy align-middle me-1"></i></a>
+                                                    <a title="{{ 'FILEMANAGER.CHAT.MESSAGE.REDO' | translate}}" href="javascript:void(0)" (click)="redo(data.message)"><i class="bx bx bx-redo align-middle me-1"></i></a>
+                                                    <a title="{{ 'FILEMANAGER.CHAT.MESSAGE.COPY' | translate}}" href="javascript:void(0)" (click)="copy(data.message)"><i class="bx bx-copy align-middle me-1"></i></a>
                                                 </p>
                                                 <!--<div class="actions" style="float:right;">
                                                     <i class="mdi mdi-thumb-up-outline"></i>
@@ -393,17 +394,25 @@
                                     <div class="p-3 chat-input-section">
                                         <app-suggestions #suggestions (callParentFunc)="onSelectSuggest($event)"></app-suggestions>
                                       <form (ngSubmit)="messageSave()" [formGroup]="formData" class="row">
-                                        <div class="col">
+
+                                        
+                                        <div class="col-auto pr-0 promptsCol" >
+                                            <select #promptsList [disabled]="disablePops" class="form-select" (change)="selectPromptChange($event,promptsList.value)" >
+                                                <option  *ngFor="let prpt of params.prompts" [selected]="prpt.uid==selectedPrompt" [value]="prpt.uid">{{prpt.title}}</option>
+                                            </select>
+                                        </div>
+                                        <div class="col pr-0">
                                           <div class="position-relative">
-                                            <input type="text" class="form-control chat-input" placeholder="Recherche..."
+                                            
+                                            <input type="text" class="form-control chat-input" placeholder="{{ 'FILEMANAGER.CHAT.SEARCHBAR.SEARCHTEXTPLACEHOLDER' | translate}}"
                                               formControlName="message" [ngClass]="{'is-invalid': chatSubmit && form.message.errors}"
                                               >
                                             <div *ngIf="chatSubmit && form.message.errors" class="invalid-feedback">
-                                              <span *ngIf="form.message.errors.required">This value is required.</span>
+                                              <span *ngIf="form.message.errors.required">{{ 'FORMS.REQUIREDVAL' | translate}}</span>
                                             </div>
-                                            <div class="chat-input-links">
+                                            <!--<div class="chat-input-links">
                                               <ul class="list-inline mb-0">
-                                                <!--<li class="list-inline-item"><a href="javascript: void(0);" class="emoji-btn"
+                                                <li class="list-inline-item"><a href="javascript: void(0);" class="emoji-btn"
                                                     data-toggle="tooltip" placement="top" tooltip="Emoji" id="emoji-btn"
                                                     ><i class="mdi mdi-emoticon-happy-outline"></i></a>
                                                 </li>
@@ -418,14 +427,14 @@
                                                 <li class="list-inline-item"><a href="javascript: void(0);" data-toggle="tooltip" placement="top"
                                                     tooltip="Add Files"><i class="mdi mdi-file-document-outline"></i></a>
                                                 </li>
-                                                -->
+                                                
                                               </ul>
-                                            </div>
+                                            </div>-->
                                           </div>
                                         </div>
                                         <div class="col-auto">
-                                          <button type="submit" class="btn btn-primary btn-rounded chat-send w-md"><span
-                                              class="d-none d-sm-inline-block me-2">Go</span> <i class="mdi mdi-send"></i></button>
+                                          <button type="submit" class="btn btn-primary chat-send w-md"><span
+                                              class="d-none d-sm-inline-block me-2">{{ 'FILEMANAGER.CHAT.SEARCHBAR.SEARCHBUTTON' | translate}}</span> <i class="mdi mdi-send"></i></button>
                                         </div>
                                       </form>
                                     </div>
@@ -433,8 +442,7 @@
                                 
                             </tab>
                             <tab *ngIf="loadingCurFile">
-                                <ng-template tabHeading><i style="color:#4682ad;margin-left:3px;" class="bx bx-hourglass bx-spin font-size-14 align-middle"></i></ng-template>
-                                
+                                <ng-template tabHeading><i style="color:#4682ad;margin-left:3px;" class="bx bx-hourglass bx-spin font-size-14 align-middle"></i></ng-template>  
                             </tab>
                             <tab [active]="maintabSelected==2" *ngIf="!loadingCurFile && pdfPreviewURL" class="disabled">
                                 <ng-template tabHeading>
@@ -450,23 +458,28 @@
                                             <button type="button" class="btn btn-secondary" (click)="docTabSelected=2" [ngClass]="{'active':docTabSelected==2}">Métadatas</button>
                                             <button type="button" class="btn btn-secondary" (click)="docTabSelected=3" [ngClass]="{'active':docTabSelected==3}">Chat</button>
                                         </div>
-                                        <iframe [src]="sanitizer.bypassSecurityTrustResourceUrl(pdfPreviewURL)" *ngIf="(docTabSelected==1) && pdfPreviewURL"
-                                            width="100%"
-                                            height="500px"
-                                            webkitallowfullscreen
-                                            mozallowfullscreen
-                                            allowfullscreen></iframe>
+                                        
+                                        <div class="row"  *ngIf="(docTabSelected==1)">
+                                            <div class="card">
+                                                <iframe [src]="sanitizer.bypassSecurityTrustResourceUrl(pdfPreviewURL)" *ngIf="(curFile.source_type=='file/pdf') && pdfPreviewURL"
+                                                    width="100%"
+                                                    height="500px"
+                                                    webkitallowfullscreen
+                                                    mozallowfullscreen
+                                                    allowfullscreen></iframe>
+                                                <img [src]="sanitizer.bypassSecurityTrustResourceUrl(pdfPreviewURL)" *ngIf="((curFile.source_type=='image/jpeg') || (curFile.source_type=='image/png')) && pdfPreviewURL"
+                                                    />
+                                            </div>
+                                        </div>
+                                        
                                         <div class="row"  *ngIf="(docTabSelected==2) && pdfPreviewURL">
                                             <div class="card">
                                                 <div class="card-body">
                                                     <code>
-                                                        {{curFile}}
+                                                        {{pdfMetas}}
                                                     </code>
                                                 </div>    
                                             </div>
-                                                
-                                            
-                                            
                                         </div>
                                         <div class="row">
                                             <div class="card">

@@ -10,7 +10,7 @@
                         <div class="row">
                             <div class="col-6">
                                 <div class="mb-3">
-                                    <label for="example-text-input" class="col-md-3 col-form-label">Owner UID
+                                    <label for="example-text-input" class="col-md-3 col-form-label">{{ 'SETTINGS.OWNERUID' | translate}}
                                         <i class="bx bx-info-circle" title="Permet de travailler sur son/ses propres DATASETS"></i>
                                     </label>
                                     <input disabled [(ngModel)]="params.chat.ownerUID"  name="params.chat.ownerUID" class="form-control" type="text" id="example-text-input">
@@ -18,7 +18,7 @@
                             </div>
                             <div class="col-6">
                                 <div class="mb-3">
-                                    <label for="example-text-input" class="col-md-3 col-form-label">Modèle
+                                    <label for="example-text-input" class="col-md-3 col-form-label">{{ 'SETTINGS.MODEL' | translate}}
                                         <i class="bx bx-info-circle" title="Modèle IA a utiliser"></i>
                                     </label>
                                     
@@ -30,7 +30,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
+                        <!--<div class="row">
                             <div class="col-12">
                                 <div class="mb-3">
                                     <label for="example-text-input" class="col-form-label">Prompt custom
@@ -39,12 +39,12 @@
                                         <textarea [value]="params.chat.customPrompt"  (input)="onPromptChange($event)" name="params.customPrompt" formControlName="textarea" class="form-control" rows="5"></textarea>
                                 </div>
                             </div>
-                        </div>
+                        </div>-->
                         <div class="row">
                           <div class="col-6">
                             <div class="mb-3">
                         
-                                <label for="example-text-input" class="col-form-label">Proposer des questions
+                                <label for="example-text-input" class="col-form-label">{{ 'SETTINGS.PURPOSEQUESTION' | translate}}
                                     <i class="bx bx-info-circle" title="Votre dialogue est hostorisé de façon a ce que l'IA puisse se souvenir des différentes échanges"></i>
                                 </label>
                                 <input type="checkbox" id="params.chat.promptAddQuestions" name="params.chat.promptAddQuestions"  [(ngModel)]="params.chat.promptAddQuestions" class="form-control form-check-input">
@@ -52,7 +52,7 @@
                           </div>
                           <div class="col-6" *ngIf="params.chat.promptAddQuestions">
                             <div class="mb-3">
-                                <label for="example-text-input" class="col-form-label">Nombre de questions
+                                <label for="example-text-input" class="col-form-label">{{ 'SETTINGS.QUESTIONSNUMBER' | translate}}
                                     <i class="bx bx-info-circle" title="Votre dialogue est hostorisé de façon a ce que l'IA puisse se souvenir des différentes échanges"></i>
                                 </label>
                                 <input [(ngModel)]="params.chat.promptAddQuestionsNumber"   name="params.chat.promptAddQuestionsNumber" class="form-control" type="number" id="params.chat.promptAddQuestionsNumber" value="3">
@@ -62,7 +62,7 @@
                         <div class="row">
                             <div class="col-6">
                                 <div class="mb-3">
-                                    <label for="example-text-input" class="">Max docs
+                                    <label for="example-text-input" class="">{{ 'SETTINGS.MAXDOC' | translate}}
                                         <i class="bx bx-info-circle" title="Nombre d'extraits en relation avec votre recherche a remonter"></i>
                                     </label>
                                         <input [(ngModel)]="params.chat.k"   name="params.chat.k" class="form-control" type="number" id="example-text-input">
@@ -71,7 +71,7 @@
                             <div class="col-6">
                                 <div class="mb-3">
                             
-                                    <label for="example-text-input" class="col-form-label">Histo. conversation
+                                    <label for="example-text-input" class="col-form-label">{{ 'SETTINGS.USEHISTO' | translate}}
                                         <i class="bx bx-info-circle" title="Votre dialogue est hostorisé de façon a ce que l'IA puisse se souvenir des différentes échanges"></i>
                                     </label>
                                     <input type="checkbox" id="flexSwitchCheckDefault" class="form-control form-check-input">
@@ -89,7 +89,64 @@
             </div>
             
         </tab>
-        
+        <tab heading="Prompts">
+          <div class="card">
+              <div class="card-body">
+                <div>
+                  <a (click)="openModal(contentNuPrompt)" class="btn btn-primary"><i class="bx bx-plus align-middle"></i> Add Prompt</a>
+                </div>
+                <div class="table-responsive">
+                  <table id="basic-datatable"
+                    class="table table-bordered dt-responsive nowrap datatables no-footer dtr-inline">
+                    <thead>
+                      <tr>
+                        <th>Titre</th>
+                        <th>Valeur</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody *ngFor="let p of params.prompts">
+                      <tr>
+                        <td>{{p.title}}</td>
+                        <td>{{p.customPrompt}} </td>
+                        <td>
+                            <a href="javascript: void(0);" (click)="openModal(contentNuPrompt)"><i class="mdi mdi-plus"></i>Add</a>
+                              <a href="javascript: void(0);"><i
+                                  class="mdi mdi-account-edit"></i>Edit</a>
+                          
+                        </td>
+                      </tr>
+      
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+          </div>
+          <ng-template #contentNuPrompt role="document" let-modal>
+            <div class="modal-header">
+                <h5 class="modal-title" id="myModalLabel">Add/edit prompt</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="modalRef?.hide()"></button>
+            </div>
+            <div class="modal-body">
+              <form>
+                  <div class="mb-3">
+                      <label  for="formrow-firstname-input">Titre</label>
+                      <input [disabled]="disablePops" type="text" class="form-control" name="curPrompt.title" [(ngModel)]="curPrompt.title">
+                  </div>
+                  <div class="mb-3">
+                      <label for="formrow-firstname-input">Prompt</label>
+                      <textarea [value]="curPrompt.customPrompt" [disabled]="disablePops"  (input)="onPopPromptChange($event)" name="params.customPrompt" formControlName="textarea" class="form-control" rows="5"></textarea>
+                  </div>
+              </form>
+              
+          </div>
+          <div class="modal-footer">
+            <button type="button" [disabled]="disablePops" class="btn btn-secondary waves-effect" data-bs-dismiss="modal" (click)="modalRef?.hide()">Close</button>
+            <button type="button" [disabled]="disablePops" class="btn btn-primary waves-effect waves-light" (click)="savePrompt()" >Save</button>
+          </div>
+      </ng-template>
+                
+      </tab>
         <tab heading="Account">
           <div class="card">
             <div class="card-body">
@@ -121,7 +178,7 @@
             </div>
           </div>
         </tab>
-        <!--
+        
         <tab heading="Subscription">
             <div class="card">
                 <div class="card-body">
@@ -183,7 +240,7 @@
         </tab>
         <tab heading="Orders">
             
-        </tab>-->
+        </tab>
         
         <tab heading="Actions">
             <div class="card">

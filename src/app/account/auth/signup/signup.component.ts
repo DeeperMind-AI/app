@@ -4,9 +4,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { AuthenticationService } from '../../../core/services/auth.service';
 import { environment } from '../../../../environments/environment';
-import { first } from 'rxjs/operators';
+import { catchError, first, map } from 'rxjs/operators';
 import { UserProfileService } from '../../../core/services/user.service';
 import { ConfigService } from 'src/app/core/services/config.service';
+import { HttpClient } from '@angular/common/http';
+import { throwError } from 'rxjs';
 
 @Component({
   selector: 'app-signup',
@@ -25,7 +27,7 @@ export class SignupComponent implements OnInit {
 
   // tslint:disable-next-line: max-line-length
   constructor(private formBuilder: UntypedFormBuilder, private route: ActivatedRoute, private router: Router, private authenticationService: AuthenticationService,
-    private userService: UserProfileService,public configService:ConfigService) { }
+    private userService: UserProfileService,public configService:ConfigService,private http: HttpClient) { }
 
   ngOnInit() {
     this.signupForm = this.formBuilder.group({
@@ -48,30 +50,19 @@ export class SignupComponent implements OnInit {
     if (this.signupForm.invalid) {
       return;
     } else {
-      if (environment.defaultauth === 'firebase') {
-        this.authenticationService.register(this.f.email.value, this.f.password.value).then((res: any) => {
-          this.successmsg = true;
-          if (this.successmsg) {
-            this.router.navigate(['/dashboard']);
+      //console.log(this.f);
+      //return;
+      const ask$ = this.http.post(environment.tradBotServer+"auth/register",{email:this.f.email.value,username:this.f.username.value,pass:this.f.password.value}).pipe(
+        map((result:any) => {
+          
+          console.log(result);
+          if (result.register == true) {
+            this.router.navigate(["/account/login"]);
           }
-        })
-          .catch(error => {
-            this.error = error ? error : '';
-          });
-      } else {
-        this.userService.register(this.signupForm.value)
-          .pipe(first())
-          .subscribe(
-            data => {
-              this.successmsg = true;
-              if (this.successmsg) {
-                this.router.navigate(['/account/login']);
-              }
-            },
-            error => {
-              this.error = error ? error : '';
-            });
-      }
+            
+        }), catchError(err => throwError(err))
+      )
+      ask$.subscribe();
     }
   }
 }

@@ -1,58 +1,100 @@
-@ -1,45 +1,45 @@
 {
   "HEADER": {
     "LOGIN": {
-      "LOGOUT":"Logout",
-      "SETTINGS":"Settings"
-      "LOGOUT":"Déconection",
+      "LOGOUT":"Se déconnecter",
       "SETTINGS":"Paramètres"
+    },
+    "COLORMODE": {
+      "TEXT":"Mode sombre"
     }
+  },
+  "FORMS":{
+    "REQUIREDVAL":"Cette valeur est requise.",
+    "SAVE":"Sauvegarder",
+    "CLOSE":"Fermer"
   },
   "MENUITEMS": {
     "FILEMANAGER": {
-      "TEXT":"Datas management"
       "TEXT":"Gestion des données"
     },
     "DASHBOARD": {
-      "TEXT":"Dashboard"
       "TEXT":"Tableau de bord"
     },
     "SETTINGS": {
-      "TEXT":"Settings"
       "TEXT":"Paramètres"
     }
   },
+  "SETTINGS": {
+    "OWNERUID":"UID propriétaire",
+    "MODEL":"Modèle",
+    "PURPOSEQUESTION":"Suggérer des questions",
+    "QUESTIONSNUMBER":"Nombre de questions",
+    "MAXDOC":"Nombre de sources",
+    "USEHISTO":"Prise en compte de l'historique"
+  },
   "FILEMANAGER": {
     "HEADER": {
-      "TEXT": "Datas management"
       "TEXT": "Gestion des données"
+    },
+    "TABSHEADERS": {
+      "CHAT": {
+        "MAIN":"Recherche IA",
+        "FILTERED":"Filtré sur les fichiers sélectionnés"
+      }
+    },
+    "CHAT": {
+      "WELCOME":{
+        "TEXT":"Que voulez-vous trouver dans vos données ?"
+      },
+      "WELCOMENODATA":{
+        "TEXT":"Il n'y a pas de données dans votre index, commencez par en ajouter en cliquant sur le bouton 'Ajouter'"
+      },
+      "MESSAGE": {
+        "IANAME":"Assistant",
+        "USERNAME":"Vous",
+        "REDO":"Recommencer",
+        "COPY":"Copier"
+      },
+      "SEARCHBAR":{
+        "PROMPTSTITLE":"Liste de vos invites disponibles",
+        "SEARCHTEXTPLACEHOLDER":"Votre requête",
+        "SEARCHBUTTON":"Chercher"
+      }
     },
     "SIDEBARLEFT":{
       "TEXT_FILTER": 
       {
-        "TEXT": "File name filter...",
-        "TITLE": "All the content you add in your index (if you have a text filter the number can differ)"
-        "TEXT": "Filtrer...",
-        "TITLE": ""
+        "TEXT": "Filtre de nom de fichier...",
+        "TITLE": "Tout le contenu que vous ajoutez dans votre index (si vous appliquez un filtre, le nombre peut différer)"
+      },
+      "ACTIONS": {
+        "ADD": {
+          "TEXT": "AJOUTER",
+          "CAT": {
+            "TEXT": "CATÉGORIE",
+            "TITLE": "..."
+          },
+          "DATA": {
+            "TEXT": "DONNÉE",
+            "TITLE": "..."
+          } 
+        }
       },
       "ALL_DATAS": 
       {
-        "TEXT": "All yours datas",
-        "TITLE": "All the content you add in your index (if you have a text filter the number can differ)"
-        "TEXT": "Toutes les données",
-        "TITLE": ""
+        "TEXT": "Toutes vos données",
+        "TITLE": "Tout le contenu que vous ajoutez dans votre index (si vous appliquez un filtre, le nombre peut différer)"
       },
       "PRESET": 
       {
-        "TEXT": "AI preset",
-        "TITLE": "Selected sources in relation whith your question/query."
-        "TITLE": ""
+        "TEXT": "Préréglage IA",
+        "TITLE": "Sources sélectionnées en rapport avec votre question/requête."
       },
       "CATEGORIES": 
       {
-        "TEXT": "Categories",
-        "TITLE": "Automatic categorization from AI"
-        "TITLE": ""
+        "TEXT": "Catégories",
+        "TITLE": "Catégorisation automatique par l'IA"
       }
     }
   }
+}

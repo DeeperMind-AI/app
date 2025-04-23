@@ -15,6 +15,8 @@ import { environment } from 'src/environments/environment';
 import Swal from 'sweetalert2';
 import { ActivatedRoute } from '@angular/router';
 import { LoaderService } from 'src/app/core/services/loader.service';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { HelperService } from 'src/app/core/services/helper.service';
 
 interface IStripeSession {
   id: string;
@@ -26,26 +28,25 @@ interface IStripeSession {
   styleUrls: ['./settings.component.scss']
 })
 export class SettingsComponent {
-  
-  public stripe!: StripeInstance;
-  public stripeAmount!: number;
+  //
   isLoading: boolean = true;
-
+  modalRef?: BsModalRef;
   locStor = localStorage;
   params:any = {
     chat:{},
-    profile:{}
+    profile:{},
+    prompts:[]
   };
+  //
   pricingData: Pricing[];
-
-
-
   disableForSave:boolean = false;
-
+  //
   constructor(public configService:ConfigService,private http: HttpClient,
     private stripeFactory: StripeFactoryService,
     private route: ActivatedRoute,
-    private loaderService:LoaderService) {
+    private loaderService:LoaderService,
+    private modalService: BsModalService,
+  private helper:HelperService) {
       this.route.queryParams.subscribe(params => {
         switch (params["status"]) {
           case "stripe-successful-payment":
@@ -57,104 +58,152 @@ export class SettingsComponent {
         }
     });
   }
-
-  
+  //
   ngOnInit(): void {
-    
     //this.loaderService.isLoading = true;
     this.loaderService.isLoading.subscribe((v) => {
-
-
-      this.stripe=
-      this.stripeFactory.create(environment.stripe.stripePublicKey);
+      this.stripe=this.stripeFactory.create(environment.stripe.stripePublicKey);
       this.stripeAmount = 100;
-
       this.pricingData = pricingData;
 
-      this.params.chat = this.configService.chatParams;
-      this.params.user = this.configService.userParams;
+      this.params.chat =  JSON.parse(this.locStor.getItem('chatParams'));
+      if (!this.params.chat) {
+        this.params.chat = this.configService.defChatParams;
+      }
+      this.params.prompts =  (this.locStor.getItem('prompts')!="undefined"?JSON.parse(this.locStor.getItem('prompts')):[]);
+      if (!this.params.prompts || (this.params.prompts.length==0)) {
+        
+        this.params.prompts = [
+          {
+            uid:-1,
+            title:"Default RAG prompt",
+            customPrompt:"You are an assistant for question-answering tasks based on retrieved context and person description. If you don't know the answer, just say that you don't know. "
+          }
+        ];
+      }
       this.params.profile = JSON.parse(this.locStor.getItem('currentUser'));
-      
-        this.isLoading = false;
+      this.isLoading = false;
       
     });
-    
-    
+  }
+  ///
+  disablePops:boolean = false;
+  curPrompt:any = {
+    customPrompt:""
+  };
+  //
+  savePrompt() {
+    this.disablePops = true;
+    this.curPrompt.uid = this.helper.generateGuid();
+    this.params.prompts.push(this.curPrompt);
 
-    
-    }
+    localStorage.setItem('prompts', JSON.stringify(this.params.prompts));
 
-    cleanIndex() {
-      const ask$ = this.http.post(environment.tradBotServer+"cleanES",{ownerUID:this.params.chat.ownerUID}).pipe(
-              map((result:any) => {}), catchError(err => throwError(err))
-          )
-      ask$.subscribe();
-      const ask2$ = this.http.post(environment.tradBotServer+"cleanMDB",{ownerUID:this.params.chat.ownerUID}).pipe(
-        map((result:any) => {}), catchError(err => throwError(err))
+    const ask$ = this.http.post(environment.tradBotServer+"updatePrompt",{ownerUID:this.params.chat.ownerUID,prompt:this.curPrompt}).pipe(
+      map((result:any) => {
+        console.log(result);
+    
+        //this.disablePops = false;
+        //this.modalRef?.hide();
+        //this.fetchCategs();
+        
+      }), 
+        catchError(err => throwError(err))
     )
-      ask2$.subscribe();
-    }
+      
+    ask$.subscribe();
 
-    buy(amount) {
-      this.http.post(environment.tradBotServer + 'stripe/create-checkout-session', { data: { amount: amount } }, { observe: 'response' })
-        .pipe(
-          switchMap((response: HttpResponse<Object>) => {
-            const session: IStripeSession = response.body as IStripeSession;
-            console.log(session.id);
-            return this.stripe.redirectToCheckout({ sessionId: session.id });
-          })
-        )
-        .subscribe(result => {
-          // If `redirectToCheckout` fails due to a browser or network
-          if (result.error) {
-            console.log(result.error)
-          }
-        });
-    }
     
-    //SAUVEGARDE DONNEES PROFIL
-    validUser (){
-      this.disableForSave = true;
-      this.locStor.setItem("userParams",JSON.stringify(this.params.profile));
-      this.configService.userParams = this.params.profile;
-      const ask$ = this.http.post(environment.tradBotServer+"updateUser",this.params.profile).pipe(
-            map((result:any) => {
-          
-              //this.disablePops = false;
-              //this.modalRef?.hide();
-              //this.fetchCategs();
-              
-            }), 
-              catchError(err => throwError(err))
-          )
-            
-          ask$.subscribe();
-
-
-    }
-    //Changement parmètre contenu prompt custom
-    public onPromptChange(event: Event): void {
-    
-      this.params.chat.customPrompt = (event.target as any).value ;
-    }
-    //sauvegarde paramètres glbaux -> chat
-    validParamsChat (){
-      this.disableForSave = true;
-      this.locStor.setItem("chatParams",JSON.stringify(this.params.chat));
-      this.configService.chatParams = this.params.chat;
-      this.params.chat.ownerUID = this.params.chat.ownerUID;
-      const ask$ = this.http.post(environment.tradBotServer+"updateUserParams",this.params.chat).pipe(
-            map((result:any) => {
-          
-              //this.disablePops = false;
-              //this.modalRef?.hide();
-              //this.fetchCategs();
-              
-            }), 
-              catchError(err => throwError(err))
-          )
-            
-          ask$.subscribe();
-    }
+    this.curPrompt = {customPrompt:""};
+    this.modalRef?.hide();
+    this.disablePops = false;
+  }
+  /**
+  * Open modal
+  * @param content modal content
+  */
+  openModal(content: any) {
+    this.disablePops = false;
+    this.modalRef = this.modalService.show(content);
+  }
+  public onPopPromptChange(event: Event): void {
   
+    this.curPrompt.customPrompt = (event.target as any).value ;
+  }
+  //APPEL DU VIDAGE DE L'INDEX COTE SERVEUR
+  cleanIndex() {
+    const ask$ = this.http.post(environment.tradBotServer+"cleanES",{ownerUID:this.params.chat.ownerUID}).pipe(
+            map((result:any) => {}), catchError(err => throwError(err))
+        )
+    ask$.subscribe();
+    const ask2$ = this.http.post(environment.tradBotServer+"cleanMDB",{ownerUID:this.params.chat.ownerUID}).pipe(
+      map((result:any) => {}), catchError(err => throwError(err))
+  )
+    ask2$.subscribe();
+  }
+  //
+  public stripe!: StripeInstance;
+  public stripeAmount!: number;
+  //PAIEMENT SOUSCRIPTION
+  buy(amount) {
+    this.http.post(environment.tradBotServer + 'stripe/create-checkout-session', { data: { amount: amount } }, { observe: 'response' })
+      .pipe(
+        switchMap((response: HttpResponse<Object>) => {
+          const session: IStripeSession = response.body as IStripeSession;
+          console.log(session.id);
+          return this.stripe.redirectToCheckout({ sessionId: session.id });
+        })
+      )
+      .subscribe(result => {
+        // If `redirectToCheckout` fails due to a browser or network
+        if (result.error) {
+          console.log(result.error)
+        }
+      });
+  }
+  //SAUVEGARDE DONNEES PROFIL UTILISATEUR
+  validUser (){
+    this.disableForSave = true;
+    this.locStor.setItem("userParams",JSON.stringify(this.params.profile));
+
+    const ask$ = this.http.post(environment.tradBotServer+"updateUser",{ownerUID:this.params.chat.ownerUID,name: this.params.profile.name,surn:this.params.profile.surn,}).pipe(
+          map((result:any) => {
+            //this.disablePops = false;
+            //this.modalRef?.hide();
+            //this.fetchCategs();
+            
+          }), 
+            catchError(err => throwError(err))
+        )
+          
+        ask$.subscribe();
+
+
+  }
+  //Changement parmètre contenu prompt custom
+  public onPromptChange(event: Event): void {
+  
+    this.params.chat.customPrompt = (event.target as any).value ;
+  }
+  //sauvegarde paramètres glbaux -> chat
+  validParamsChat (){
+    this.disableForSave = true;
+    this.locStor.setItem("chatParams",JSON.stringify(this.params.chat));
+    this.params.chat.ownerUID = this.params.chat.ownerUID;
+    //delete this.params.chat._id;
+    const ask$ = this.http.post(environment.tradBotServer+"updateUserParams",this.params.chat).pipe(
+          map((result:any) => {
+            console.log(result);
+        
+            //this.disablePops = false;
+            //this.modalRef?.hide();
+            //this.fetchCategs();
+            
+          }), 
+            catchError(err => throwError(err))
+        )
+          
+        ask$.subscribe();
+  }
+  //
 }

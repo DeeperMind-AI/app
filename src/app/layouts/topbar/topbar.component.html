@@ -29,7 +29,7 @@
       <div  class="dropdown d-inline-block m-l-10"  style="margin-left:20px;" dropdown>
         <div class="form-check form-switch form-switch-md  header-item" style="padding:20px;">
           <input class="form-check-input" (click)="changeColorMode()" type="checkbox" id="SwitchCheckSizemd">
-          <label class="form-check-label" for="SwitchCheckSizemd">Dark mode</label>
+          <label class="form-check-label" for="SwitchCheckSizemd">{{'HEADER.COLORMODE.TEXT' | translate}}</label>
       </div>
     </div>
       <!-- App Search
@@ -211,7 +211,7 @@
         </div>
       </div>
     
-      <div  *ngIf="!configService.isPoc" class="dropdown d-none d-lg-inline-block ms-1" dropdown>
+      <!--<div  *ngIf="!configService.isPoc" class="dropdown d-none d-lg-inline-block ms-1" dropdown>
         <button type="button" class="btn header-item noti-icon" dropdownToggle>
           <i class="bx bx-customize"></i>
         </button>
@@ -260,7 +260,7 @@
             </div>
           </div>
         </div>
-      </div>
+      </div>-->
 
       <div  *ngIf="!configService.isPoc" class="dropdown d-none d-lg-inline-block ms-1">
         <button type="button" class="btn header-item noti-icon" data-toggle="fullscreen" (click)="fullscreen()">

@@ -1,45 +1,99 @@
 {
   "HEADER": {
     "LOGIN": {
-      "LOGOUT":"Déconection",
-      "SETTINGS":"Paramètres"
+      "LOGOUT":"Logout",
+      "SETTINGS":"Settings"
+    },
+    "COLORMODE": {
+      "TEXT":"Dark mode"
     }
+  },
+  "FORMS":{
+    "REQUIREDVAL":"This value is required.",
+    "SAVE":"Save",
+    "CLOSE":"Close"
   },
   "MENUITEMS": {
     "FILEMANAGER": {
-      "TEXT":"Gestion des données"
+      "TEXT":"Datas management"
     },
     "DASHBOARD": {
-      "TEXT":"Tableau de bord"
+      "TEXT":"Dashboard"
     },
     "SETTINGS": {
-      "TEXT":"Paramètres"
+      "TEXT":"Settings"
     }
+  },
+  "SETTINGS": {
+    "OWNERUID":"Owner UID",
+    "MODEL":"Model",
+    "PURPOSEQUESTION":"Suggest questions",
+    "QUESTIONSNUMBER":"Number of questions",
+    "MAXDOC":"Number of sources",
+    "USEHISTO":"Taking history into account"
   },
   "FILEMANAGER": {
     "HEADER": {
-      "TEXT": "Gestion des données"
+      "TEXT": "Datas management"
+    },
+    "TABSHEADERS": {
+      "CHAT": {
+        "MAIN":"AI search",
+        "FILTERED":"Filtered on selected files"
+      }
+    },
+    "CHAT": {
+      "WELCOME":{
+        "TEXT":"What do you want to find in your data ?"
+      },
+      "WELCOMENODATA":{
+        "TEXT":"Il n'ya pas de données dans votre index, commencez par en ajouter en cliquant sur le bouton 'Ajouter'"
+      },
+      "MESSAGE": {
+        "IANAME":"Assistant",
+        "USERNAME":"You",
+        "REDO":"Redo",
+        "COPY":"Copy"
+      },
+      "SEARCHBAR":{
+        "PROMPTSTITLE":"List of your available prompts",
+        "SEARCHTEXTPLACEHOLDER":"Your request",
+        "SEARCHBUTTON":"Start"
+      }
     },
     "SIDEBARLEFT":{
       "TEXT_FILTER": 
       {
-        "TEXT": "Filtrer...",
-        "TITLE": ""
+        "TEXT": "File name filter...",
+        "TITLE": "All the content you add in your index (if you have a text filter the number can differ)"
+      },
+      "ACTIONS": {
+        "ADD": {
+          "TEXT": "ADD",
+          "CAT": {
+            "TEXT": "CATEGORY",
+            "TITLE": "..."
+          },
+          "DATA": {
+            "TEXT": "DATA",
+            "TITLE": "..."
+          } 
+        }
       },
       "ALL_DATAS": 
       {
-        "TEXT": "Toutes les données",
-        "TITLE": ""
+        "TEXT": "All yours datas",
+        "TITLE": "All the content you add in your index (if you have a text filter the number can differ)"
       },
       "PRESET": 
       {
         "TEXT": "AI preset",
-        "TITLE": ""
+        "TITLE": "Selected sources in relation whith your question/query."
       },
       "CATEGORIES": 
       {
         "TEXT": "Categories",
-        "TITLE": ""
+        "TITLE": "Automatic categorization from AI"
       }
     }
   }

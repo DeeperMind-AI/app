@@ -124,19 +124,24 @@ export class LoginComponent implements OnInit {
 
 
   enter() {
-    
-    
-    //alert(JSON.parse(this.locStor.getItem('currentUser'))["email"]);
-    this.configService.loadConfig(JSON.parse(localStorage.getItem('currentUser')).email,this.returnUrl);
-    
+    let gotoRoute ="";
+    if (this.returnUrl) { gotoRoute = this.returnUrl; } else { gotoRoute = '/filemanager' }
+    this.router.navigate([gotoRoute]);
   }
 
 
   validGauth(res) {
     //Stockages paramètres
+    console.log("res.params",res.params);
+    //
+    localStorage.setItem('chatParams', JSON.stringify(res.params));
+    delete res.params;
+    localStorage.setItem('prompts', JSON.stringify(res.prompts));
+    delete res.prompts;
     localStorage.setItem('currentUser', JSON.stringify(res));
-    localStorage.setItem("chatParams",JSON.stringify(res.params)); 
-    localStorage.setItem("userParams",JSON.stringify(res.profile)); 
+    //
+    //localStorage.setItem("chatParams",JSON.stringify(res.params)); 
+    //localStorage.setItem("userParams",JSON.stringify(res.profile)); 
     //ON STORE LE SOCKET LIE AU CLIENT (x sockets pour 1 clients)
     this.socket.emit('storeClientInfo', { ownerUID:res.email });
     //Enter in app
@@ -164,15 +169,13 @@ export class LoginComponent implements OnInit {
       return;
     } else {
 
-      if ((this.f.email.value == "poc@poc.poc") && (this.f.password.value == "poc")) {
+      //if ((this.f.email.value == "poc@poc.poc") && (this.f.password.value == "poc")) {
         const ask$ = this.http.post(environment.tradBotServer+"auth/custom",{email:this.f.email.value,pass:this.f.password.value}).pipe(
           map((result:any) => {
             localStorage.setItem('currentUser', JSON.stringify(result));
             this.socket.emit('storeClientInfo', { ownerUID:this.f.email.value });
               //this.authFackservice..next(data.user);
               this.enter();
-              
-              
           }), catchError(err => throwError(err))
         )
         ask$.subscribe();
@@ -187,7 +190,7 @@ export class LoginComponent implements OnInit {
             //this.authFackservice..next(data.user);
         
         
-      }
+      //}
       return;
     this.authenticationService.login(this.f.email.value, this.f.password.value)
       .subscribe((data:any) => 
