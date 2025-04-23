@@ -15,7 +15,7 @@
             <div #workContent class="d-md-flex work-content">
                 <div class="card filemanager-sidebar me-md-2">
                     <div class="m-1">
-
+                        
                         <div class="d-flex flex-column h-100 ">
                             <div class="mb-4 sidebCtrlsContainer" >
                                 <div class="mb-3 addButton">
@@ -146,7 +146,7 @@
                                     </div>
                                 </div>
 
-                                <div class="mb-3 filterTxtContainer"  *ngIf="!configService.isPoc">
+                                <div class="mb-3 filterTxtContainer" >
                                     <div  class="search-box mb-2 "><div  class="position-relative"><input  type="text" id="searchTableList" name="configService.fileFilterTerm" [(ngModel)]="configService.fileFilterTerm" placeholder="{{ 'FILEMANAGER.SIDEBARLEFT.TEXT_FILTER.TEXT' | translate}}" class="form-control ng-pristine ng-valid ng-touched"><i  class="bx bx-filter search-icon"></i></div></div>
                                 </div>
                                 <!--<input type="text"/>-->

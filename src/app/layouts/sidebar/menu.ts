@@ -7,12 +7,12 @@ export const MENU: MenuItem[] = [
         label: 'DeeperMind',
         isTitle: true
     },
-    {
+    /*{
         id: 11,
         label: 'MENUITEMS.DASHBOARD.TEXT',
         icon: 'bx-home-circle',
         link: '/dashboard',
-    },
+    },*/
     {
         id: 12,
         label: 'MENUITEMS.FILEMANAGER.TEXT',

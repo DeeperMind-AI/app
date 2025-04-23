@@ -123,16 +123,21 @@ export class LoginComponent implements OnInit {
   
 
 
-  enter() {
-    let gotoRoute ="";
-    if (this.returnUrl) { gotoRoute = this.returnUrl; } else { gotoRoute = '/filemanager' }
-    this.router.navigate([gotoRoute]);
-  }
-
-
-  validGauth(res) {
+  enter(res) {
     //Stockages paramètres
-    console.log("res.params",res.params);
+    if (!res.params) {
+      res.params = this.configService.defChatParams;
+    }
+    if (!res.prompts) {
+      res.prompts = [
+        {
+          uid:-1,
+          title:"Default RAG prompt",
+          customPrompt:"You are an assistant for question-answering tasks based on retrieved context and person description. If you don't know the answer, just say that you don't know. "
+        }
+      ]
+    }
+    res.params.ownerUID = res.email;
     //
     localStorage.setItem('chatParams', JSON.stringify(res.params));
     delete res.params;
@@ -144,8 +149,20 @@ export class LoginComponent implements OnInit {
     //localStorage.setItem("userParams",JSON.stringify(res.profile)); 
     //ON STORE LE SOCKET LIE AU CLIENT (x sockets pour 1 clients)
     this.socket.emit('storeClientInfo', { ownerUID:res.email });
+    let gotoRoute ="";
+    
+    
+    
+    if (this.returnUrl) { gotoRoute = this.returnUrl; } else { gotoRoute = '/filemanager' }
+    //HARDCODE
+    this.router.navigate(['/filemanager']);
+  }
+
+
+  validGauth(res) {
+    
     //Enter in app
-    this.enter();
+    this.enter(res);
     //
   }
   handleCredentialResponse(response: any) {
@@ -171,11 +188,8 @@ export class LoginComponent implements OnInit {
 
       //if ((this.f.email.value == "poc@poc.poc") && (this.f.password.value == "poc")) {
         const ask$ = this.http.post(environment.tradBotServer+"auth/custom",{email:this.f.email.value,pass:this.f.password.value}).pipe(
-          map((result:any) => {
-            localStorage.setItem('currentUser', JSON.stringify(result));
-            this.socket.emit('storeClientInfo', { ownerUID:this.f.email.value });
-              //this.authFackservice..next(data.user);
-              this.enter();
+          map((res:any) => {
+              this.enter(res);
           }), catchError(err => throwError(err))
         )
         ask$.subscribe();

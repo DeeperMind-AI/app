@@ -4,7 +4,7 @@ import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { throwError } from 'rxjs';
 import { catchError, finalize,last,map, tap } from 'rxjs/operators';
-import { ChatMessage } from '../chat/chat.model';
+import { ChatMessage } from './models/chat.model';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { environment } from 'src/environments/environment';
 import { ConfigService } from 'src/app/core/services/config.service';

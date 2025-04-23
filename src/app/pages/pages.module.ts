@@ -31,7 +31,6 @@ import { FormModule } from './form/form.module';
 import { TablesModule } from './tables/tables.module';
 import { IconsModule } from './icons/icons.module';
 import { ChartModule } from './chart/chart.module';
-import { ChatComponent } from './chat/chat.component';
 import { AccordionModule } from 'ngx-bootstrap/accordion';
 
 import { FilemanagerComponent } from './filemanager/filemanager.component';
@@ -47,7 +46,7 @@ import { LeftlistitemheaderComponent } from './filemanager/components/leftlistit
 import { CategListPathFilter } from './filemanager/pipes/categListPathFilter';
 
 @NgModule({
-  declarations: [ChatComponent, FilemanagerComponent, SettingsComponent, SuggestionsComponent, LeftlistitemComponent, LeftlistitemheaderComponent],
+  declarations: [FilemanagerComponent, SettingsComponent, SuggestionsComponent, LeftlistitemComponent, LeftlistitemheaderComponent],
   imports: [
     CommonModule,
     FormsModule,

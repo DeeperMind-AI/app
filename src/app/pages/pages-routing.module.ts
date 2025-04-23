@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { ChatComponent } from './chat/chat.component';
 import { JobsComponent } from './dashboards/jobs/jobs.component';
 import { FilemanagerComponent } from './filemanager/filemanager.component';
 import { SettingsComponent } from './settings/settings.component';
@@ -10,7 +9,7 @@ const routes: Routes = [
   // { path: '', redirectTo: 'dashboard' },
   {
     path: "",
-    component: JobsComponent
+    component: FilemanagerComponent
   },
   { path: 'dashboard', component: JobsComponent },
   //{ path: 'chat', component: ChatComponent },

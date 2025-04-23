@@ -32,7 +32,7 @@ export class ConfigService {
     fixedPromptParams:`\nQuestion: {question}\nContext: {context}\nAnswer:`,
     promptAddQuestions:true,
     promptAddQuestionsNumber:3,
-    k:10,
+    k:50,
     model:"gpt-4o-mini",
     histo:true
   };
