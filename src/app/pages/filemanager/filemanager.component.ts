@@ -262,7 +262,7 @@ export class FilemanagerComponent implements OnInit {
         {
           uid:-1,
           title:"Default RAG prompt",
-          customPrompt:"You are an assistant for question-answering tasks based on retrieved context and person description. If you don't know the answer, just say that you don't know. "
+          customPrompt:"You are an assistant for question-answering tasks. Use only the following pieces of retrieved context to answer the question. If you don't know the answer, just say that you don't know. Please be as detailed as possible in your answers. "
         }
       ];
     }
@@ -563,7 +563,6 @@ export class FilemanagerComponent implements OnInit {
       });
 
       this.loading = true;
-      
       const ask$ = this.http.post(this.uri+"askIASimilarity",{
         question:message,
         chat_history:this.chat_history,
@@ -641,6 +640,7 @@ export class FilemanagerComponent implements OnInit {
     //this.aiResponseContexts = result.context;
 
     this.configService.aiResponseContexts.push(result.context[reliC]);
+
 
     this.loading = false;
 
