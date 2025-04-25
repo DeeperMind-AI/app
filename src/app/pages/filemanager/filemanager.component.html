@@ -270,7 +270,7 @@
                                 <button type="button" class="btn btn-secondary" (click)="docTabSelected=2" [ngClass]="{'active':docTabSelected==2}">Métadatas</button>
                                 <button type="button" class="btn btn-secondary" (click)="docTabSelected=3" [ngClass]="{'active':docTabSelected==3}">Chat</button>
                             </div>
-                            <div class="card"  *ngIf="(docTabSelected==1)">
+                            <div class="card docContent"  *ngIf="(docTabSelected==1)">
                                 <div class="card-body">
                                     <iframe [src]="sanitizer.bypassSecurityTrustResourceUrl(pdfPreviewURL)" *ngIf="(curFile.source_type=='file/pdf') && pdfPreviewURL"
                                         width="100%"

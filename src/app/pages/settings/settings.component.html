@@ -109,11 +109,9 @@
                       <tr>
                         <td>{{p.title}}</td>
                         <td>{{p.customPrompt}} </td>
-                        <td>
-                            <a href="javascript: void(0);" (click)="openModal(contentNuPrompt)"><i class="mdi mdi-plus"></i>Add</a>
-                              <a href="javascript: void(0);"><i
-                                  class="mdi mdi-account-edit"></i>Edit</a>
-                          
+                        <td *ngIf="p.uid!='-1'">
+                            <a href="javascript: void(0);" (click)="editPrompt(p,contentNuPrompt)"><i class="mdi mdi-book-edit-outline"></i></a>
+                            <a href="javascript: void(0);" (click)="deletePrompt(p.uid)"><i class="mdi mdi-trash-can-outline"></i></a>
                         </td>
                       </tr>
       
@@ -138,7 +136,6 @@
                       <textarea [value]="curPrompt.customPrompt" [disabled]="disablePops"  (input)="onPopPromptChange($event)" name="params.customPrompt" formControlName="textarea" class="form-control" rows="5"></textarea>
                   </div>
               </form>
-              
           </div>
           <div class="modal-footer">
             <button type="button" [disabled]="disablePops" class="btn btn-secondary waves-effect" data-bs-dismiss="modal" (click)="modalRef?.hide()">Close</button>

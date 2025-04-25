@@ -71,16 +71,6 @@ export class SettingsComponent {
         this.params.chat = this.configService.defChatParams;
       }
       this.params.prompts =  (this.locStor.getItem('prompts')!="undefined"?JSON.parse(this.locStor.getItem('prompts')):[]);
-      if (!this.params.prompts || (this.params.prompts.length==0)) {
-        
-        this.params.prompts = [
-          {
-            uid:-1,
-            title:"Default RAG prompt",
-            customPrompt:"You are an assistant for question-answering tasks. Use only the following pieces of retrieved context to answer the question. If you don't know the answer, just say that you don't know. Please be as detailed as possible in your answers. "
-          }
-        ];
-      }
       this.params.profile = JSON.parse(this.locStor.getItem('currentUser'));
       this.isLoading = false;
       
@@ -94,21 +84,28 @@ export class SettingsComponent {
   //
   savePrompt() {
     this.disablePops = true;
-    this.curPrompt.uid = this.helper.generateGuid();
-    this.params.prompts.push(this.curPrompt);
-
+    let isNew = false;
+    if (!this.curPrompt.uid) {
+      isNew = true;
+      this.curPrompt.uid = this.helper.generateGuid();
+      this.params.prompts.push(this.curPrompt);
+    }
+    else {
+      for (var reliP = 0;reliP < this.params.prompts.length;reliP++) {
+        if (this.params.prompts[reliP].uid == this.curPrompt.uid) {
+          this.params.prompts[reliP] = this.curPrompt;
+          break;
+        }
+      }
+    }
+    
     localStorage.setItem('prompts', JSON.stringify(this.params.prompts));
 
     const ask$ = this.http.post(environment.tradBotServer+"updatePrompt",{ownerUID:this.params.chat.ownerUID,prompt:this.curPrompt}).pipe(
       map((result:any) => {
-        console.log(result);
-    
-        //this.disablePops = false;
-        //this.modalRef?.hide();
-        //this.fetchCategs();
         
       }), 
-        catchError(err => throwError(err))
+      catchError(err => throwError(err))
     )
       
     ask$.subscribe();
@@ -126,6 +123,31 @@ export class SettingsComponent {
     this.disablePops = false;
     this.modalRef = this.modalService.show(content);
   }
+  editPrompt(prpt,content) {
+    this.curPrompt=JSON.parse(JSON.stringify(prpt));
+    this.modalRef = this.modalService.show(content);
+  }
+  deletePrompt(prpt) {
+    console.log("deletePrompt",prpt);
+    const ask$ = this.http.post(environment.tradBotServer+"removePrompt",{ownerUID:this.params.chat.ownerUID,uid:prpt}).pipe(
+      map((result:any) => {
+        console.log("result",result);
+        for (var reliP = 0;reliP < this.params.prompts.length;reliP++) {
+          if (this.params.prompts[reliP].uid == prpt) {
+            this.params.prompts.splice(reliP,1);
+            break;
+          }
+        }
+        //this.disablePops = false;
+        //this.modalRef?.hide();
+        //this.fetchCategs();
+        
+      }), 
+        catchError(err => throwError(err))
+    )
+    ask$.subscribe();
+  }
+
   public onPopPromptChange(event: Event): void {
   
     this.curPrompt.customPrompt = (event.target as any).value ;

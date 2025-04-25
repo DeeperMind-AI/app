@@ -10,7 +10,6 @@ import { Router } from '@angular/router';
 
 export class ConfigService {
 
-  locStor = localStorage;
 
   notifications:any[] = [];
 
@@ -56,6 +55,26 @@ export class ConfigService {
       }
     }
     return false;
+  }
+
+  clear() {
+    //CATEGS LIST
+    this.selectedPath = "/";
+    this.filesList = [];
+    this.aiResponseContexts = [];
+    this.aiResponseFiles = [];
+    this.fileFilterTerm = "";
+    //
+    this.defChatParams = {
+      customPrompt:`You are an assistant for question-answering tasks. Use only the following pieces of retrieved context to answer the question. If you don't know the answer, just say that you don't know. Please be as detailed as possible in your answers.`,
+      fixedPromptParams:`\nQuestion: {question}\nContext: {context}\nAnswer:`,
+      promptAddQuestions:true,
+      promptAddQuestionsNumber:3,
+      k:50,
+      model:"gpt-4o-mini",
+      histo:true
+    };
+    //
   }
 
   getConfig() : Observable<any> {

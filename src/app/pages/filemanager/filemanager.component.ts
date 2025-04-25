@@ -14,6 +14,7 @@ import { AlertColor } from '../ui/alerts/alerts.model';
 import { SuggestionsComponent } from './components/suggestions/suggestions.component';
 import { HelperService } from 'src/app/core/services/helper.service';
 import { TranslateService } from '@ngx-translate/core';
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-filemanager',
@@ -29,33 +30,18 @@ export class FilemanagerComponent implements OnInit {
   
   @HostListener('window:resize', ['$event'])
   onResize(event) {
-    //console.log(event.target.innerHeight);
-    //alert("onResize");
-    //const newHeight = event.target.innerWidth > 600 ? '300px' : '150px';
-    //this.changeHeight(this.myDiv.nativeElement, newHeight);
-    //if (this.workContent) {
-    
-      this.changeHeight(this.workContent.nativeElement,(window.innerHeight -200).toString());
-    //}
-    
+    this.changeHeight(this.workContent.nativeElement,(window.innerHeight -200).toString()); 
   }
-
   changeHeight(element: HTMLElement, newHeight: string) {
-    console.log(newHeight,element);
     this.renderer.setStyle(element, 'height', newHeight + "px");
   }
-
+  //
   uri = environment.tradBotServer;
   //uri = "http://saas.apis.ekoal.org";
   //uri = "http://fileai.api.ekoal.org";
   //uri = "http://localhost:5002";
   locStor = localStorage;
-  
-  dirStructure:any[] = [
-              {uid:"filesAll",libelle:"Tous les fichiers",title:"Toutes vos ressources",icon:"mdi-folder-table",color:"#F8D775",isColapse:false},
-              {uid:"filesIaSel",libelle:"Sélection IA",title:"",icon:"mdi-folder-search",color:"#F8D775",isColapse:false},
-              {uid:"filesClassif",libelle:"Classification auto",title:"",icon:"mdi-folder-pound",color:"#F8D775",isColapse:false},
-            ];
+  //
   breadCrumbItems: Array<{}>;
   modalRef?: BsModalRef;
   radialoptions;
@@ -101,7 +87,8 @@ export class FilemanagerComponent implements OnInit {
     public sanitizer: DomSanitizer,private modalService: BsModalService,
     private http: HttpClient,public formBuilder: UntypedFormBuilder, 
     public configService:ConfigService,private renderer: Renderer2, 
-    private helper: HelperService,public translate: TranslateService) { }
+    private helper: HelperService,public translate: TranslateService,
+    private cookieService: CookieService) { }
   public isCollapsed = false;
   
   firstMessage = false;
@@ -228,6 +215,9 @@ export class FilemanagerComponent implements OnInit {
     this.breadCrumbItems = [{ label: 'Apps' }, { label: 'File Manager', active: true }];
     this.chatMessagesData = [];
     
+    this.configService.aiResponseContexts = [];
+    this.configService.aiResponseFiles = [];
+
     this.formData = this.formBuilder.group({
       message: ['', [Validators.required]],
     });
@@ -251,22 +241,13 @@ export class FilemanagerComponent implements OnInit {
       ask$.subscribe();
 */
     //AJOUT MESSAGE BONJOUR
-    
     this.params.chat =  JSON.parse(this.locStor.getItem('chatParams'));
     if (!this.params.chat) {
       this.params.chat = this.configService.defChatParams;
     }
+    //
     this.params.prompts =  (this.locStor.getItem('prompts')!="undefined"?JSON.parse(this.locStor.getItem('prompts')):[]);
-    if (!this.params.prompts || (this.params.prompts.length==0)) {
-      this.params.prompts = [
-        {
-          uid:-1,
-          title:"Default RAG prompt",
-          customPrompt:"You are an assistant for question-answering tasks. Use only the following pieces of retrieved context to answer the question. If you don't know the answer, just say that you don't know. Please be as detailed as possible in your answers. "
-        }
-      ];
-    }
-
+    //
     this.selectedPrompt = this.params.prompts[0];
     console.log("this.selectedPrompt",this.selectedPrompt);
     //this.params.chat =  JSON.parse(this.locStor.getItem('chatParams'));
@@ -547,6 +528,10 @@ export class FilemanagerComponent implements OnInit {
     const currentDate = new Date();
     this.suggestions.toggle(true)
     this.suggestions.setLabels([]);
+    //
+    this.configService.aiResponseContexts = [];
+    this.configService.aiResponseFiles = [];
+    //
     if (this.formData.valid && message) {
       // Message Push in Chat
       this.chatMessagesData.push({
@@ -556,13 +541,25 @@ export class FilemanagerComponent implements OnInit {
         time: currentDate.getHours() + ':' + currentDate.getMinutes()
       });
       this.onListScroll();
-
       // Set Form Data Reset
       this.formData = this.formBuilder.group({
         message: null
       });
-
+      //
       this.loading = true;
+
+
+      //A appliquer peut etre dans les suggestions
+      let langResp = "Reply in ";
+      switch (this.cookieService.get('lang')) {
+        case "fr":
+          langResp+="french."
+          break;  
+        case "en":
+          langResp+="english."
+          break;
+      }
+      
       const ask$ = this.http.post(this.uri+"askIASimilarity",{
         question:message,
         chat_history:this.chat_history,
@@ -695,14 +692,9 @@ export class FilemanagerComponent implements OnInit {
     // Return an observable with a user-facing error message.
     return throwError(() => new Error('Something bad happened; please try again later.'));
   }
-  
-
-
-  
 
   filterOnFileUID:string;
   check(fil) {
-    //console.log(fil);
     for (var reliF = 0;reliF < this.filesList.length;reliF++)
     {
       if (this.filesList[reliF]._id == fil._id)
@@ -730,7 +722,6 @@ export class FilemanagerComponent implements OnInit {
   loadingCurFile:boolean = false;
 
   showPreview(uri,f) {
-    console.log(f);
     //LOAD FULL METAS    
     this.maintabSelected = 1;
     this.loadingCurFile = true;

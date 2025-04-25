@@ -1,7 +1,5 @@
 <li class="list-item-head">
     <div class="custom-accordion">
-        
-        
         <a class="text-body fw-medium py-1 d-flex align-items-center"
             [attr.aria-expanded]="iscollapse" (click)="iscollapse = !iscollapse" 
             data-toggle="collapse" href="javascript:void(0);" role="button"
@@ -11,9 +9,7 @@
             <i class="mdi mdi-settings accor-down-icon ms-auto"></i>
             <i *ngIf="((element.uid==1) && (element.childs && element.childs.length>0)) || ((element.uid==2) && (configService.aiResponseFiles && configService.aiResponseFiles.length>0))" [ngClass]="iscollapse?'mdi-chevron-up':'mdi-chevron-down'" 
                 class="mdi  accor-down-icon ms-auto"></i>
-        </a>  
-        
-        
+        </a>
         <div class="collapse" id="categories-collapse"
             [collapse]="iscollapse">
             <!--ALL FILES-->
@@ -26,12 +22,9 @@
             <!--AI PRESET-->
             <div *ngIf="element.uid==2" class="card border-0 shadow-none ps-2 mb-0">
                 <ul class="list-unstyled mb-0">
-                    <app-leftlistitem (checkEmitter)="check($event)" (showPreviewEmitter)="showPreview($event)" *ngFor="let el of configService.aiResponseFiles | filterTextFilter:configService.fileFilterTerm"  [type]="'file'" [element]="el"></app-leftlistitem>
+                    <app-leftlistitem (checkEmitter)="check($event)" (showPreviewEmitter)="showPreview($event)" *ngFor="let el of configService.aiResponseFiles"  [type]="'file'" [element]="el"></app-leftlistitem>
                 </ul>
             </div>
         </div>
-        
-        
-        
     </div>
 </li>

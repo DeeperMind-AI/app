@@ -24,6 +24,12 @@
 
 .work-content {
     height: 400px;
+    .docContent {
+        position: absolute;
+        inset: 70px 0 0px;
+        overflow: hidden;
+        overflow-y: scroll;
+    }
     .pr-0 {
         padding-right: 0;
     }

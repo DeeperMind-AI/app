@@ -54,6 +54,7 @@ export class LoginComponent implements OnInit {
       password: ['', [Validators.required]],
     });
 
+    this.configService.clear();
 
     const body = <HTMLDivElement>document.body;
     const script = document.createElement('script');
@@ -127,15 +128,6 @@ export class LoginComponent implements OnInit {
     //Stockages paramètres
     if (!res.params) {
       res.params = this.configService.defChatParams;
-    }
-    if (!res.prompts) {
-      res.prompts = [
-        {
-          uid:-1,
-          title:"Default RAG prompt",
-          customPrompt:"You are an assistant for question-answering tasks. Use only the following pieces of retrieved context to answer the question. If you don't know the answer, just say that you don't know. Please be as detailed as possible in your answers. "
-        }
-      ]
     }
     res.params.ownerUID = res.email;
     //
