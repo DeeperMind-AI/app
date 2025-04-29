@@ -26,9 +26,11 @@
     height: 400px;
     .docContent {
         position: absolute;
-        inset: 70px 0 0px;
+        top: 70px;
+        bottom: 0px;
         overflow: hidden;
         overflow-y: scroll;
+        width: 100%;
     }
     .pr-0 {
         padding-right: 0;

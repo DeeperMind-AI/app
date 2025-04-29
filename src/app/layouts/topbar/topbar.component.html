@@ -195,21 +195,7 @@
         </div>
       </div>
 
-      <div class="dropdown d-inline-block" dropdown>
-        <button type="button" class="btn header-item" id="page-header-user-dropdown" dropdownToggle>
-          <img *ngIf="flagvalue !== undefined" src="{{flagvalue}}" alt="Header Language" height="16"> 
-          <img *ngIf="flagvalue === undefined" src="{{valueset}}" alt="Header Language" height="16">
-        </button>
-        <div class="dropdown-menu dropdown-menu-end" *dropdownMenu>
-          
-          <a href="javascript:void(0);" class="dropdown-item notify-item" *ngFor="let item of listLang"
-            (click)="setLanguage(item.text, item.lang, item.flag)" [ngClass]="{'active': cookieValue === item.lang}">
-            <img src="{{item.flag}}" alt="user-image" class="me-1" height="12"> <span
-              class="align-middle">{{item.text}}</span>
-          </a>
-          
-        </div>
-      </div>
+
     
       <!--<div  *ngIf="!configService.isPoc" class="dropdown d-none d-lg-inline-block ms-1" dropdown>
         <button type="button" class="btn header-item noti-icon" dropdownToggle>
@@ -262,11 +248,6 @@
         </div>
       </div>-->
 
-      <div  *ngIf="!configService.isPoc" class="dropdown d-none d-lg-inline-block ms-1">
-        <button type="button" class="btn header-item noti-icon" data-toggle="fullscreen" (click)="fullscreen()">
-          <i class="bx bx-fullscreen"></i>
-        </button>
-      </div>
 
       <div  *ngIf="!configService.isPoc" class="dropdown d-inline-block" dropdown>
         <button type="button" class="btn header-item noti-icon" id="page-header-notifications-dropdown"
@@ -290,8 +271,11 @@
             <a href="javascript: void(0);" [id]="notif.processUID"  *ngFor="let notif of configService.notifications" class="text-reset notification-item">
               <div class="d-flex">
                 <div class="avatar-xs me-3">
-                  <span class="avatar-title bg-primary rounded-circle font-size-16">
-                    <i class="bx bx-cart"></i>
+                  <span *ngIf="!(notif.msg=='done')" class="notifRoundIcon avatar-title bg-primary rounded-circle font-size-16">
+                    <i class="bx bx-hourglass bx-spin"></i>
+                  </span>
+                  <span *ngIf="notif.msg=='done'" class="notifRoundIcon avatar-title bg-success rounded-circle font-size-16">
+                    <i class="bx bx-certification"></i>
                   </span>
                 </div>
                 <div class="flex-grow-1">
@@ -352,6 +336,28 @@
                 'HEADER.NOTIFICATIONS.LOAD_MORE' | translate}}</span>
             </a>
           </div>
+        </div>
+      </div>
+
+      <div  *ngIf="!configService.isPoc" class="dropdown d-none d-lg-inline-block ms-1">
+        <button type="button" class="btn header-item noti-icon" data-toggle="fullscreen" (click)="fullscreen()">
+          <i class="bx bx-fullscreen"></i>
+        </button>
+      </div>
+
+      <div class="dropdown d-inline-block" dropdown>
+        <button type="button" class="btn header-item" id="page-header-user-dropdown" dropdownToggle>
+          <img *ngIf="flagvalue !== undefined" src="{{flagvalue}}" alt="Header Language" height="16"> 
+          <img *ngIf="flagvalue === undefined" src="{{valueset}}" alt="Header Language" height="16">
+        </button>
+        <div class="dropdown-menu dropdown-menu-end" *dropdownMenu>
+          
+          <a href="javascript:void(0);" class="dropdown-item notify-item" *ngFor="let item of listLang"
+            (click)="setLanguage(item.text, item.lang, item.flag)" [ngClass]="{'active': cookieValue === item.lang}">
+            <img src="{{item.flag}}" alt="user-image" class="me-1" height="12"> <span
+              class="align-middle">{{item.text}}</span>
+          </a>
+          
         </div>
       </div>
     

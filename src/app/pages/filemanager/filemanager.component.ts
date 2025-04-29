@@ -202,10 +202,13 @@ export class FilemanagerComponent implements OnInit {
   }
 
   onServerMessage(data) {
-    this.toastr.success('New file indexed !.', 'Information');
-    this.removertAlert(data.processUID);
+    //this.toastr.success('New file indexed !.', 'Information');
+    //this.removertAlert(data.processUID);
     
-   
+    this.configService.updateNotification(data);
+    //SI STATUS = DONE OR SUMARRIZING
+    this.fetchDocs();
+
   }
 
   ngAfterViewInit(): void {
@@ -405,6 +408,9 @@ export class FilemanagerComponent implements OnInit {
 
   saveFile() {
     let processUID = "p_"+this.helper.generateGuid();
+
+    
+
     //CHECK CBO DATA TYPE
     switch (this.newSourcePop.sourceType) {
       case "file":
@@ -421,7 +427,8 @@ export class FilemanagerComponent implements OnInit {
           formData.append("meta.ownerUID", JSON.parse(localStorage.getItem('currentUser')).email);
           formData.append("processUID", processUID);
           formData.append("categ", this.configService.selectedPath);
-    
+          formData.append("autoCat", this.newSourcePop.autoCat);
+              
 
           const upload$ = this.http.post(this.uri+"upload", formData,{
             reportProgress: true,
@@ -439,8 +446,7 @@ export class FilemanagerComponent implements OnInit {
               this.configService.notifications.push(
                 {
                   processUID:processUID,
-                  percent:0,
-                  msg:"Your data is being indexed",
+                  msg:"Working",
                   dataTitle: this.file.name
                 }
               );
@@ -585,6 +591,26 @@ export class FilemanagerComponent implements OnInit {
     return this.formData.controls;
   }
 
+
+  cleanVector() {
+    //recump des chunks ids pour suppression
+    alert("cleanVector");
+    console.log(JSON.parse(this.pdfMetas).chunksUids);
+    const ask$ = this.http.post(environment.tradBotServer+"deleteVectors",{ownerUID:this.params.chat.ownerUID,docsIds:JSON.parse(this.pdfMetas).chunksUids}).pipe(
+      map((result:any) => {
+        const ask2$ = this.http.post(environment.tradBotServer+"deleteDoc",{metaUID:this.curFile._id}).pipe(
+          map((result:any) => {
+            this.fetchDocs();
+          }), catchError(err => throwError(err))
+          
+      )
+        ask2$.subscribe();
+      }), 
+      catchError(err => throwError(err))
+    )
+    ask$.subscribe();
+    
+  }
   
   onSelectSuggest($event) { 
     this.messageSave($event.str);

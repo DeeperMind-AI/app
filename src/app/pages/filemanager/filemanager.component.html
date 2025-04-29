@@ -3,14 +3,14 @@
     
     <div class="d-xl-flex">
         <div class="w-100">
-            <div class="card" *ngIf="datasProcess.length>0">
+            <!--<div class="card" *ngIf="datasProcess.length>0">
                 <div class="card-body" >
                     <alert [id]="pro.processUID" (close)="close(pro.processUID)" *ngFor="let pro of datasProcess" type="info" [dismissible]="true"  role="alert">
                         <i class="mdi mdi-alert-circle-outline me-2"></i>
                         {{pro.msg}}: <strong>{{pro.dataTitle}}</strong>
                     </alert>
                 </div>
-            </div>
+            </div>-->
                     
             <div #workContent class="d-md-flex work-content">
                 <!-- filemanager-leftsidebar -->
@@ -78,12 +78,6 @@
                                                 </select>
                                             </div>-->
                                             <div class="mb-3">
-                                                <label for="fsAutoCat">Auto. categorization
-                                                    <i class="bx bx-info-circle" title="..."></i>
-                                                </label>
-                                                <input  [disabled]="disablePops" type="checkbox" id="fsAutoCat" class="form-control form-check-input">
-                                            </div>
-                                            <div class="mb-3">
                                                 <label  for="formrow-firstname-input">Path</label>
                                                 <input [disabled]="true" type="text" class="form-control" name="selectedCateg" [(ngModel)]="configService.selectedPath">
                                             </div>
@@ -117,6 +111,12 @@
                                                     <i class="bx bx-info-circle" title="..."></i>
                                                 </label>
                                                 <textarea  class="form-control" rows="5"  name="newSourcePop.freeContent" [(ngModel)]="newSourcePop.freeContent"></textarea>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="fsAutoCat">Auto. categorization
+                                                    <i class="bx bx-info-circle" title="..."></i>
+                                                </label>
+                                                <input  [disabled]="disablePops" type="checkbox" id="fsAutoCat" name="newSourcePop.autoCat" [(ngModel)]="newSourcePop.autoCat" class="form-control form-check-input">
                                             </div>
                                             <div class="mb-3">
                                                 <label for="fileinp">Metadatas
@@ -213,7 +213,7 @@
                                     
                                     <div class="col-auto pr-0 promptsCol" >
                                         <select #promptsList [disabled]="disablePops" class="form-select" (change)="selectPromptChange($event,promptsList.value)" >
-                                            <option  *ngFor="let prpt of params.prompts" [selected]="prpt.uid==selectedPrompt" [value]="prpt.uid">{{prpt.title}}</option>
+                                            <option  *ngFor="let prpt of params.prompts" [selected]="prpt.uid==selectedPrompt" [value]="prpt.uid">{{prpt.lib}}</option>
                                         </select>
                                     </div>
                                     <div class="col pr-0">
@@ -268,7 +268,7 @@
                                 <button type="button" class="btn btn-secondary" (click)="docTabSelected=4" [ngClass]="{'active':docTabSelected==4}">Summary</button>
                                 <button type="button" class="btn btn-secondary" (click)="docTabSelected=1" [ngClass]="{'active':docTabSelected==1}">Preview</button>
                                 <button type="button" class="btn btn-secondary" (click)="docTabSelected=2" [ngClass]="{'active':docTabSelected==2}">Métadatas</button>
-                                <button type="button" class="btn btn-secondary" (click)="docTabSelected=3" [ngClass]="{'active':docTabSelected==3}">Chat</button>
+                                <button type="button" class="btn btn-secondary" (click)="docTabSelected=3" [ngClass]="{'active':docTabSelected==3}">Actions</button>
                             </div>
                             <div class="card docContent"  *ngIf="(docTabSelected==1)">
                                 <div class="card-body">
@@ -281,24 +281,23 @@
                                     <img [src]="sanitizer.bypassSecurityTrustResourceUrl(pdfPreviewURL)" *ngIf="((curFile.source_type=='image/jpeg') || (curFile.source_type=='image/png')) && pdfPreviewURL"/>
                                 </div>
                             </div>
-                            <div class="card"  *ngIf="(docTabSelected==2) && pdfPreviewURL">
+                            <div class="card docContent"  *ngIf="(docTabSelected==2) && pdfPreviewURL">
                                 <div class="card-body">
                                     <code>
                                         {{pdfMetas}}
                                     </code>
                                 </div>    
                             </div>
-                            <div class="card"   *ngIf="(docTabSelected==4)" >
+                            <div class="card docContent"   *ngIf="(docTabSelected==4)" >
                                 <div class="card-body">
-                                    <markdown [data]="curFile.summary">
+                                    <span *ngIf="!curFile.summary" >Summary in progress <i *ngIf="!curFile.summary" style="color:#4682ad;margin-left:3px;" class="bx bx-hourglass bx-spin font-size-14 align-middle"></i></span>
+                                    <markdown *ngIf="curFile.summary" [data]="curFile.summary">
                                     </markdown>
                                 </div>    
                             </div>
-                                    
-                                
-                            <div class="card"   *ngIf="(docTabSelected==3)">
-                                <div class="card-body overflow-hidden">
-                                    
+                            <div class="card docContent"   *ngIf="(docTabSelected==3)">
+                                <div class="card-body">
+                                    <button type="button" class="btn btn-danger form-control w-sm"><i class="mdi mdi-trash-can d-block font-size-16" (click)="cleanVector()"></i> Delete file </button>
                                 </div>
                             </div>
                             

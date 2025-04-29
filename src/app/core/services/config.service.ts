@@ -48,6 +48,17 @@ export class ConfigService {
     //}
   }
 
+  updateNotification(data) {
+    for (var reliP=0;reliP<this.notifications.length;reliP++) {
+      if (this.notifications[reliP].processUID == data.processUID) 
+      {
+        this.notifications[reliP].msg = data.status;
+        break;;
+      }
+    }
+  }
+
+
   hasFileChilds(path) {
     for (var reliC = 0;reliC < this.filesList.length;reliC++) {
       if (!this.filesList[reliC].category || (this.filesList[reliC].category == path)) {

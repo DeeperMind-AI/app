@@ -45,7 +45,7 @@
                             <div class="mb-3">
                         
                                 <label for="example-text-input" class="col-form-label">{{ 'SETTINGS.PURPOSEQUESTION' | translate}}
-                                    <i class="bx bx-info-circle" title="Votre dialogue est hostorisé de façon a ce que l'IA puisse se souvenir des différentes échanges"></i>
+                                    <i class="bx bx-info-circle" title="Votre dialogue est historisé de façon a ce que l'IA puisse se souvenir des différentes échanges"></i>
                                 </label>
                                 <input type="checkbox" id="params.chat.promptAddQuestions" name="params.chat.promptAddQuestions"  [(ngModel)]="params.chat.promptAddQuestions" class="form-control form-check-input">
                             </div>
@@ -107,7 +107,7 @@
                     </thead>
                     <tbody *ngFor="let p of params.prompts">
                       <tr>
-                        <td>{{p.title}}</td>
+                        <td>{{p.lib}}</td>
                         <td>{{p.customPrompt}} </td>
                         <td *ngIf="p.uid!='-1'">
                             <a href="javascript: void(0);" (click)="editPrompt(p,contentNuPrompt)"><i class="mdi mdi-book-edit-outline"></i></a>
@@ -129,11 +129,11 @@
               <form>
                   <div class="mb-3">
                       <label  for="formrow-firstname-input">Titre</label>
-                      <input [disabled]="disablePops" type="text" class="form-control" name="curPrompt.title" [(ngModel)]="curPrompt.title">
+                      <input type="text" class="form-control" name="curPrompt.lib" [(ngModel)]="curPrompt.lib">
                   </div>
                   <div class="mb-3">
                       <label for="formrow-firstname-input">Prompt</label>
-                      <textarea [value]="curPrompt.customPrompt" [disabled]="disablePops"  (input)="onPopPromptChange($event)" name="params.customPrompt" formControlName="textarea" class="form-control" rows="5"></textarea>
+                      <textarea [value]="curPrompt.customPrompt"  name="curPrompt.customPrompt" (input)="onPopPromptChange($event)" class="form-control" rows="5"></textarea>
                   </div>
               </form>
           </div>

@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { DOCUMENT } from '@angular/common';
 import { AuthenticationService } from '../../core/services/auth.service';
 import { AuthfakeauthenticationService } from '../../core/services/authfake.service';
-import { environment } from '../../../environments/environment';
 import { CookieService } from 'ngx-cookie-service';
 import { LanguageService } from '../../core/services/language.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -45,9 +44,9 @@ export class TopbarComponent implements OnInit {
     { text: 'Russian', flag: 'assets/images/flags/russia.jpg', lang: 'ru' },
   */
 
-
+  
   listLang = [
-    { text: 'English', flag: 'assets/images/flags/us.jpg', lang: 'en' },
+    { text: 'English', flag: (this.configService.isPoc?'assets/images/flags/en.jpg':'assets/images/flags/us.jpg'), lang: 'en' },
     { text: 'French', flag: 'assets/images/flags/french.jpg', lang: 'fr' },
     
   ];

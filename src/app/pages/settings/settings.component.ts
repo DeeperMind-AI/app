@@ -79,12 +79,14 @@ export class SettingsComponent {
   ///
   disablePops:boolean = false;
   curPrompt:any = {
+    lib:"",
     customPrompt:""
   };
   //
   savePrompt() {
     this.disablePops = true;
     let isNew = false;
+    console.log("this.curPrompt",this.curPrompt);
     if (!this.curPrompt.uid) {
       isNew = true;
       this.curPrompt.uid = this.helper.generateGuid();
@@ -111,7 +113,7 @@ export class SettingsComponent {
     ask$.subscribe();
 
     
-    this.curPrompt = {customPrompt:""};
+    this.curPrompt = {lib:"",customPrompt:""};
     this.modalRef?.hide();
     this.disablePops = false;
   }

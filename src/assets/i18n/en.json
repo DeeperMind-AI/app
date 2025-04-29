@@ -15,7 +15,7 @@
   },
   "MENUITEMS": {
     "FILEMANAGER": {
-      "TEXT":"Datas management"
+      "TEXT":"Data management"
     },
     "DASHBOARD": {
       "TEXT":"Dashboard"
@@ -34,7 +34,7 @@
   },
   "FILEMANAGER": {
     "HEADER": {
-      "TEXT": "Datas management"
+      "TEXT": "Data management"
     },
     "TABSHEADERS": {
       "CHAT": {
@@ -82,7 +82,7 @@
       },
       "ALL_DATAS": 
       {
-        "TEXT": "All yours datas",
+        "TEXT": "All your data",
         "TITLE": "All the content you add in your index (if you have a text filter the number can differ)"
       },
       "PRESET": 
