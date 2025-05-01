@@ -17,6 +17,7 @@ import { ActivatedRoute } from '@angular/router';
 import { LoaderService } from 'src/app/core/services/loader.service';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { HelperService } from 'src/app/core/services/helper.service';
+import { ToastrService } from 'ngx-toastr';
 
 interface IStripeSession {
   id: string;
@@ -46,7 +47,7 @@ export class SettingsComponent {
     private route: ActivatedRoute,
     private loaderService:LoaderService,
     private modalService: BsModalService,
-  private helper:HelperService) {
+    private helper:HelperService,public toastr:ToastrService) {
       this.route.queryParams.subscribe(params => {
         switch (params["status"]) {
           case "stripe-successful-payment":
@@ -192,9 +193,7 @@ export class SettingsComponent {
 
     const ask$ = this.http.post(environment.tradBotServer+"updateUser",{ownerUID:this.params.chat.ownerUID,name: this.params.profile.name,surn:this.params.profile.surn,}).pipe(
           map((result:any) => {
-            //this.disablePops = false;
-            //this.modalRef?.hide();
-            //this.fetchCategs();
+            this.toastr.success('Saved !', 'Success');
             
           }), 
             catchError(err => throwError(err))
@@ -217,7 +216,7 @@ export class SettingsComponent {
     //delete this.params.chat._id;
     const ask$ = this.http.post(environment.tradBotServer+"updateUserParams",this.params.chat).pipe(
           map((result:any) => {
-            console.log(result);
+            this.toastr.success('Saved !', 'Success');
         
             //this.disablePops = false;
             //this.modalRef?.hide();

@@ -59,7 +59,6 @@ export class FilemanagerComponent implements OnInit {
   isColapseFilesIa:boolean = false;
   isColapseFilesClass:boolean = false;
   docTabSelected:number = 4;
-  datasProcess = [];
   disablePops = false;
   //
   
@@ -189,17 +188,7 @@ export class FilemanagerComponent implements OnInit {
     this.toastr.success('Copied to clipboard !', 'Success');
   }
 
-  removertAlert(processUID) {
-    for (var reliP=0;reliP<this.datasProcess.length;reliP++) {
-      if (this.datasProcess[reliP].processUID == processUID) 
-      {
-        this.datasProcess.splice(reliP,1);
-        
-        break;;
-      }
-    }
-    this.fetchDocs();
-  }
+  
 
   onServerMessage(data) {
     //this.toastr.success('New file indexed !.', 'Information');
@@ -207,7 +196,29 @@ export class FilemanagerComponent implements OnInit {
     
     this.configService.updateNotification(data);
     //SI STATUS = DONE OR SUMARRIZING
-    this.fetchDocs();
+
+    switch (data.status)
+    {
+      case "sumarizing":
+        //ON PEUT DEJA LOADER LE DOC POUR QUESTIONNER
+        this.fetchDocs();
+        break;
+      case "done":
+        //ON RELOAD LE RESUME DU CURDOC
+        if (!this.curFile.summary) {
+          const ask$ = this.http.post(this.uri+"getDoc",{metaUID:this.curFile._id}).pipe(
+            map((result:any) => {
+              this.curFile.summary = result.ret.summary;
+            }), 
+              catchError(err => throwError(err))
+          )
+          ask$.subscribe();
+        }
+        break;
+    }
+    
+
+    
 
   }
 
@@ -450,12 +461,7 @@ export class FilemanagerComponent implements OnInit {
                   dataTitle: this.file.name
                 }
               );
-              this.datasProcess.push({
-                processUID:processUID,
-                percent:0,
-                msg:"Your data is being indexed",
-                dataTitle: this.file.name
-              });
+              
               this.reset();
               //this.toastr.info('Your data is being indexed, a message will be displayed when it is available.', 'Information');
               }
@@ -485,12 +491,6 @@ export class FilemanagerComponent implements OnInit {
                 dataTitle: this.file.name
               }
             );
-            this.datasProcess.push({
-              processUID:processUID,
-              percent:0,
-              msg:"Your data is being indexed",
-              dataTitle: this.newSourcePop.freeTitle
-            });
           }), catchError(err => throwError(err))
       )
         ask$.subscribe();
@@ -822,10 +822,7 @@ export class FilemanagerComponent implements OnInit {
     this.newSourcePop = {sourceType:"file"};
   }
 
-  // tslint:disable-next-line: no-shadowed-variable
-  close(processUID:string) {
-    this.removertAlert(processUID);
-  }
+  
 }
 
 

@@ -6,6 +6,9 @@
     },
     "COLORMODE": {
       "TEXT":"Dark mode"
+    },
+    "NOTIFICATIONS": {
+      "TITLE":"Status of integrations"
     }
   },
   "FORMS":{

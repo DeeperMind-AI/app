@@ -98,7 +98,8 @@
                                                 <label for="fileinp">File
                                                     <i class="bx bx-info-circle" title="..."></i>
                                                 </label>
-                                                <input  [disabled]="disablePops" type="file" class="form-control" accept=".pdf,.zip,.jpg,.png"  name="fileinp" (change)="onFileSelected($event)"/>
+                                                <!--.zip-->
+                                                <input  [disabled]="disablePops" type="file" class="form-control" accept=".pdf,.jpg,.png"  name="fileinp" (change)="onFileSelected($event)"/>
                                             </div>
                                             <div class="mb-3" *ngIf="newSourcePop.sourceType==='free'">
                                                 <label for="freeTitle">Title
@@ -295,7 +296,8 @@
                                     </markdown>
                                 </div>    
                             </div>
-                            <div class="card docContent"   *ngIf="(docTabSelected==3)">
+                            
+                            <div class="card"   *ngIf="(docTabSelected==3)">
                                 <div class="card-body">
                                     <button type="button" class="btn btn-danger form-control w-sm"><i class="mdi mdi-trash-can d-block font-size-16" (click)="cleanVector()"></i> Delete file </button>
                                 </div>

@@ -7,7 +7,7 @@
             <i [style.color]="element.iconColor" [ngClass]="element.icon" class="mdi font-size-16 me-2"></i> {{element.title | translate}} {{!loading?"("+0+")":""}}
             <!--<i *ngIf="loading" style="color:#4682ad;margin-left:3px;"  class="bx bx-hourglass bx-spin font-size-14 align-middle"></i>-->
             <i class="mdi mdi-settings accor-down-icon ms-auto"></i>
-            <i *ngIf="((element.uid==1) && (element.childs && element.childs.length>0)) || ((element.uid==2) && (configService.aiResponseFiles && configService.aiResponseFiles.length>0))" [ngClass]="iscollapse?'mdi-chevron-up':'mdi-chevron-down'" 
+            <i *ngIf="((element.uid==1) && (element.childs && element.childs.length>0)) || ((element.uid==1) && (configService.filesList && configService.filesList.length>0)) || ((element.uid==2) && (configService.aiResponseFiles && configService.aiResponseFiles.length>0))" [ngClass]="iscollapse?'mdi-chevron-up':'mdi-chevron-down'" 
                 class="mdi  accor-down-icon ms-auto"></i>
         </a>
         <div class="collapse" id="categories-collapse"

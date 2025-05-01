@@ -10,7 +10,7 @@
     
     <a  *ngIf="type=='file'" href="javascript:void(0)"  class="d-flex align-items-center">
         <i style="color:#524f4f" (click)="check(element)" [ngClass]="{'mdi-checkbox-marked-outline': element.checked==true,'mdi-checkbox-blank-outline': !element.checked || (element.checked==false)}" class="mdi  font-size-16 me-2"></i>
-        <i [style.color]="(element.source_type === 'file/pdf'?'#da3c33':'#339dda')" [ngClass]="{'mdi-file-pdf-box': element.source_type === 'file/pdf','mdi-file-image': element.source_type === 'image/jpeg','mdi-note-text': !element.source_type || (element.source_type=='free')}" class="mdi mdi-file-pdf-box font-size-16 me-2"></i>
+        <i [style.color]="(element.source_type === 'file/pdf'?'#da3c33':'#339dda')" [ngClass]="{'mdi-file-pdf-box': element.source_type === 'file/pdf','mdi-file-image': ((element.source_type === 'image/jpeg') || (element.source_type === 'image/png')),'mdi-note-text': !element.source_type || (element.source_type=='free')}" class="mdi mdi-file-pdf-box font-size-16 me-2"></i>
         <span  (click)="showPreview({'name':element.fname+'.pdf','el':element})" class="me-auto">{{element.original_fname}}</span>
     </a>
     
