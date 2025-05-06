@@ -1,0 +1,48 @@
+<div class="container-fluid">
+
+    <!-- start page title -->
+    <app-page-title title="{{ 'FEEDBACK.TITLE' | translate}}" ></app-page-title>
+    <!-- end page title -->
+  
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="card">
+          <div class="card-body">
+            <form (ngSubmit)="messageSave()" [formGroup]="formData" class="row">
+                <div class="row mb-4">
+                    <label  class="col-form-label col-lg-2">{{ 'FEEDBACK.SUJET' | translate}}</label>
+                    <div class="col-lg-10">
+                        <select class="form-select"  [ngClass]="{'is-invalid': messageSubmit && form.message.errors}"  formControlName="subject" >
+                            <option value="Suggérer une amélioration">{{ 'FEEDBACK.SUGGESTAMEL' | translate}}</option>
+                            <option value="Contact" selected>{{ 'FEEDBACK.CONTACT' | translate}}</option>
+                            <option value="Signaler un bug">{{ 'FEEDBACK.SIGNALBUG' | translate}}</option>
+                        </select>
+                        <div *ngIf="messageSubmit && form.message.errors" class="invalid-feedback">
+                            <span *ngIf="form.message.errors.required">{{ 'FORMS.REQUIREDVAL' | translate}}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-4">
+                    <label  class="col-form-label col-lg-2">{{ 'FEEDBACK.DESC' | translate}}</label>
+                    <div class="col-lg-10">
+                        <textarea  [ngClass]="{'is-invalid': messageSubmit && form.message.errors}"  (input)="onDescChange($event)" formControlName="message" class="form-control" rows="5"></textarea>
+                        <div *ngIf="messageSubmit && form.message.errors" class="invalid-feedback">
+                            <span *ngIf="form.message.errors.required">{{ 'FORMS.REQUIREDVAL' | translate}}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row justify-content-end">
+                    <div class="col-lg-10">
+                      <button type="submit" class="btn btn-primary">{{ 'FEEDBACK.SUBMIT' | translate}}</button>
+                    </div>
+                </div>
+            </form>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- end row -->
+  
+  </div> <!-- container-fluid -->
+  

@@ -1,74 +1,106 @@
 {
   "HEADER": {
     "LOGIN": {
-      "LOGOUT":"Logout",
-      "SETTINGS":"Settings"
+      "LOGOUT": "Log out",
+      "SETTINGS": "Settings"
     },
     "COLORMODE": {
-      "TEXT":"Dark mode"
+      "TEXT": "Dark mode"
     },
     "NOTIFICATIONS": {
-      "TITLE":"Status of integrations"
+      "TITLE": "Integration status"
     }
   },
-  "FORMS":{
-    "REQUIREDVAL":"This value is required.",
-    "SAVE":"Save",
-    "CLOSE":"Close"
+  "FORMS": {
+    "REQUIREDVAL": "This value is required.",
+    "SAVE": "Save",
+    "CLOSE": "Close"
   },
   "MENUITEMS": {
     "FILEMANAGER": {
-      "TEXT":"Data management"
+      "TEXT": "Data manager"
     },
     "DASHBOARD": {
-      "TEXT":"Dashboard"
+      "TEXT": "Dashboard"
     },
     "SETTINGS": {
-      "TEXT":"Settings"
+      "TEXT": "Settings"
+    },
+    "HOWTO": {
+      "TEXT": "Help"
+    },
+    "FEEDBACK": {
+      "TEXT": "Feedback/contact"
     }
   },
+  "HOWTO": {
+    "ADDDATA": {
+      "TITLE": "Add a data source",
+      "CONTENT": "To add a file or free content<br/>-Click the Add button then Data<br/>-Select the type of data (free content or PDF file)<br/>-Click Validate, the indexing status will be displayed in the bell icon at the top<br/>-The file will appear in All your data in the left sidebar"
+    },
+    "ADDCAT": {
+      "TITLE": "Add a category (BETA)",
+      "CONTENT": "To add a category or free content<br/>-Select the parent category in the left panel<br/>-Click the Add button then Category<br/>-Enter the category title<br/>-Click Validate<br/>-The category will appear in All your data in the left sidebar"
+    },
+    "SEARCH": {
+      "TITLE": "Ask/search data",
+      "CONTENT": "Click on the AI Search tab in the right panel, then:<br/>-To search the entire database, uncheck the files (if any) then enter your query in the search box at the bottom of the right panel<br/>-To search a specific file, check the desired file then enter your query in the search box at the bottom of the right panel<br/>Documents related to your query will be displayed in the AI selection menu in the left panel."
+    },
+    "ADDPROMPT": {
+      "TITLE": "Create/edit a prompt",
+      "CONTENT": "Click on the Settings tab in the left menu then:<br/>-Select the prompts tab<br/>-Add or edit a prompt using the add or edit specific row button.<br/>A default prompt is defined, it cannot be modified<br/>You can select the desired prompt in AI Search in the list to the left of the search box."
+    }
+  },
+  "FEEDBACK": {
+    "TITLE": "Suggest an improvement / Report a bug / Contact",
+    "SUGGESTAMEL": "Suggest an improvement",
+    "CONTACT": "Contact",
+    "SIGNALBUG": "Report a bug",
+    "SUJET": "Subject",
+    "DESC": "Description",
+    "SUBMIT": "Submit"
+  },
   "SETTINGS": {
-    "OWNERUID":"Owner UID",
-    "MODEL":"Model",
-    "PURPOSEQUESTION":"Suggest questions",
-    "QUESTIONSNUMBER":"Number of questions",
-    "MAXDOC":"Number of sources",
-    "USEHISTO":"Taking history into account"
+    "OWNERUID": "Owner UID",
+    "MODEL": "Model",
+    "PURPOSEQUESTION": "Suggest questions",
+    "QUESTIONSNUMBER": "Number of questions",
+    "MAXDOC": "Number of sources",
+    "USEHISTO": "Use history"
   },
   "FILEMANAGER": {
     "HEADER": {
-      "TEXT": "Data management"
+      "TEXT": "Data manager"
     },
     "TABSHEADERS": {
       "CHAT": {
-        "MAIN":"AI search",
-        "FILTERED":"Filtered on selected files"
+        "MAIN": "AI search",
+        "FILTERED": "Filtered on selected files"
       }
     },
     "CHAT": {
-      "WELCOME":{
-        "TEXT":"What do you want to find in your data ?"
+      "WELCOME": {
+        "TEXT": "What do you want to find in your data?"
       },
-      "WELCOMENODATA":{
-        "TEXT":"Il n'ya pas de données dans votre index, commencez par en ajouter en cliquant sur le bouton 'Ajouter'"
+      "WELCOMENODATA": {
+        "TEXT": "There is no data in your index, start by adding some by clicking the 'Add' button"
       },
       "MESSAGE": {
-        "IANAME":"Assistant",
-        "USERNAME":"You",
-        "REDO":"Redo",
-        "COPY":"Copy"
+        "IANAME": "Assistant",
+        "USERNAME": "You",
+        "REDO": "Redo",
+        "COPY": "Copy"
       },
-      "SEARCHBAR":{
-        "PROMPTSTITLE":"List of your available prompts",
-        "SEARCHTEXTPLACEHOLDER":"Your request",
-        "SEARCHBUTTON":"Start"
+      "SEARCHBAR": {
+        "PROMPTSTITLE": "Your available prompts list",
+        "SEARCHTEXTPLACEHOLDER": "Your query",
+        "SEARCHBUTTON": "Search"
       }
     },
-    "SIDEBARLEFT":{
-      "TEXT_FILTER": 
-      {
+    "SIDEBARLEFT": {
+      "TEXT_FILTER": {
         "TEXT": "File name filter...",
-        "TITLE": "All the content you add in your index (if you have a text filter the number can differ)"
+        "TITLE": "All the content you add to your index (if a filter is applied, the count may differ)"
       },
       "ACTIONS": {
         "ADD": {
@@ -80,23 +112,20 @@
           "DATA": {
             "TEXT": "DATA",
             "TITLE": "..."
-          } 
+          }
         }
       },
-      "ALL_DATAS": 
-      {
+      "ALL_DATAS": {
         "TEXT": "All your data",
-        "TITLE": "All the content you add in your index (if you have a text filter the number can differ)"
+        "TITLE": "All the content you add to your index (if a filter is applied, the count may differ)"
       },
-      "PRESET": 
-      {
+      "PRESET": {
         "TEXT": "AI selection",
-        "TITLE": "Selected sources in relation whith your question/query."
+        "TITLE": "Sources selected related to your question/query."
       },
-      "CATEGORIES": 
-      {
+      "CATEGORIES": {
         "TEXT": "Categories",
-        "TITLE": "Automatic categorization from AI"
+        "TITLE": "Automatic categorization by AI"
       }
     }
   }

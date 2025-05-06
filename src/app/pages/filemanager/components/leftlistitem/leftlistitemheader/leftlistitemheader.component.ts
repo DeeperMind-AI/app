@@ -15,7 +15,7 @@ export class LeftlistitemheaderComponent {
   constructor(public configService:ConfigService) { }
 
   loading:boolean=true;
-  iscollapse:boolean=true;
+  iscollapse:boolean=false;
 
   showPreview(ev) {
     console.log("header.showPreview",ev);

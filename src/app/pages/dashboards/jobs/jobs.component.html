@@ -1,3 +1,4 @@
+<!--<app-loader></app-loader>-->
 <div class="container-fluid">    
     <div class="row mb-4">
         <div class="col-lg-12">
@@ -8,7 +9,7 @@
                     <p class="text-muted mb-0">Ready to jump back in?</p>
                 </div>
                 <div>
-                    <a routerLink="/filemanager" class="btn btn-primary"><i class="bx bx-plus align-middle"></i> Add Ressource</a>
+                    <a routerLink="/filemanager" class="btn btn-primary"><i class="bx bx-plus align-middle"></i> Add Resource</a>
                 </div>
             </div>
         </div><!--end col-->
@@ -20,20 +21,20 @@
                 <div class="card-body">
                     <div class="d-flex">
                         <div class="flex-grow-1">
-                            <p class="text-muted fw-medium">Ressources</p>
-                            <h4 class="mb-0">14,487</h4>
+                            <p class="text-muted fw-medium">{{ressourcesChart.name}}</p>
+                            <h4 class="mb-0">{{ressourcesChart.count}}</h4>
                         </div>
             
                         <div class="flex-shrink-0 align-self-center">
-                            <apx-chart class="apex-charts" dir="ltr" [series]="jobViewChart.series"
-                            [chart]="jobViewChart.chart" [stroke]="jobViewChart.stroke"
-                            [colors]="jobViewChart.colors" [fill]="jobViewChart.fill"
-                            [tooltip]="jobViewChart.tooltip"></apx-chart>
+                            <apx-chart class="apex-charts" dir="ltr" [series]="ressourcesChart.series"
+                            [chart]="ressourcesChart.chart" [stroke]="ressourcesChart.stroke"
+                            [colors]="ressourcesChart.colors" [fill]="ressourcesChart.fill"
+                            [tooltip]="ressourcesChart.tooltip"></apx-chart>
                         </div>
                     </div>
                 </div>
                 <div class="card-body border-top py-3">
-                    <p class="mb-0"> <span class="badge badge-soft-success me-1"><i class="bx bx-trending-up align-bottom me-1"></i> 18.89%</span> Increase last month</p>
+                    <p class="mb-0"> <span class="badge badge-soft-success me-1"></span> All kind of ressource you store</p>
                 </div>
             </div>
         </div><!--end col-->
@@ -42,20 +43,20 @@
                 <div class="card-body">
                     <div class="d-flex">
                         <div class="flex-grow-1">
-                            <p class="text-muted fw-medium">Requetes</p>
-                            <h4 class="mb-0">7,402</h4>
+                            <p class="text-muted fw-medium">{{QueriesChart.name}}</p>
+                            <h4 class="mb-0">{{QueriesChart.count}}</h4>
                         </div>
         
                         <div class="flex-shrink-0 align-self-center">
-                            <apx-chart class="apex-charts" dir="ltr" [series]="ApplicationChart.series"
-                            [chart]="ApplicationChart.chart" [stroke]="ApplicationChart.stroke"
-                            [colors]="ApplicationChart.colors" [fill]="ApplicationChart.fill"
-                            [tooltip]="ApplicationChart.tooltip"></apx-chart>
+                            <apx-chart class="apex-charts" dir="ltr" [series]="QueriesChart.series"
+                            [chart]="QueriesChart.chart" [stroke]="QueriesChart.stroke"
+                            [colors]="QueriesChart.colors" [fill]="QueriesChart.fill"
+                            [tooltip]="QueriesChart.tooltip"></apx-chart>
                         </div>
                     </div>
                 </div>
                 <div class="card-body border-top py-3">
-                    <p class="mb-0"> <span class="badge badge-soft-success me-1"><i class="bx bx-trending-up align-bottom me-1"></i> 24.07%</span> Increase last month</p>
+                    <p class="mb-0"> <span class="badge badge-soft-success me-1"></span> AI queries made on your data</p>
                 </div>
             </div>
         </div><!--end col-->
@@ -64,20 +65,21 @@
                 <div class="card-body">
                     <div class="d-flex">
                         <div class="flex-grow-1">
-                            <p class="text-muted fw-medium">Requetes Approved</p>
-                            <h4 class="mb-0">12,487</h4>
+                            <p class="text-muted fw-medium">{{SizeOnDiskChart.name}}</p>
+                            <h4 class="mb-0">{{SizeOnDiskChart.count}}</h4>
                         </div>
         
                         <div class="flex-shrink-0 align-self-center">
-                            <apx-chart class="apex-charts" dir="ltr" [series]="jobViewChart.series"
-                            [chart]="jobViewChart.chart" [stroke]="jobViewChart.stroke"
-                            [colors]="jobViewChart.colors" [fill]="jobViewChart.fill"
-                            [tooltip]="jobViewChart.tooltip"></apx-chart>
+                            <apx-chart class="apex-charts" dir="ltr" [series]="SizeOnDiskChart.series"
+                            [chart]="SizeOnDiskChart.chart" [stroke]="SizeOnDiskChart.stroke"
+                            [colors]="SizeOnDiskChart.colors" [fill]="SizeOnDiskChart.fill"
+                            [tooltip]="SizeOnDiskChart.tooltip"></apx-chart>
                         </div>
                     </div>
                 </div>
                 <div class="card-body border-top py-3">
-                    <p class="mb-0"> <span class="badge badge-soft-success me-1"><i class="bx bx-trending-up align-bottom me-1"></i> 8.41%</span> Increase last month</p>
+                    <!--<p class="mb-0"> <span class="badge badge-soft-success me-1"><i class="bx bx-trending-up align-bottom me-1"></i> 8.41%</span> Increase last month</p>-->
+                    <p class="mb-0"> <span class="badge badge-soft-success me-1"></span> File system use</p>
                 </div>
             </div>
         </div><!--end col-->
@@ -86,8 +88,8 @@
                 <div class="card-body">
                     <div class="d-flex">
                         <div class="flex-grow-1">
-                            <p class="text-muted fw-medium">Requetes Rejected</p>
-                            <h4 class="mb-0">12,487</h4>
+                            <p class="text-muted fw-medium">{{RejectedChart.name}}</p>
+                            <h4 class="mb-0">N/A</h4>
                         </div>
         
                         <div class="flex-shrink-0 align-self-center">
@@ -99,19 +101,20 @@
                     </div>
                 </div>
                 <div class="card-body border-top py-3">
-                    <p class="mb-0"> <span class="badge badge-soft-danger me-1"><i class="bx bx-trending-down align-bottom me-1"></i> 20.63%</span> Decrease last month</p>
+                    <!--<p class="mb-0"> <span class="badge badge-soft-danger me-1"><i class="bx bx-trending-down align-bottom me-1"></i> 20.63%</span> Decrease last month</p>-->
+                    <p class="mb-0"> <span class="badge badge-soft-success me-1"></span> Vectorized index data size</p>
                 </div>
             </div>
         </div><!--end col-->
     </div><!--end row-->
 
     <div class="row">
-        <div class="col-lg-8">
+        <div class="col-lg-4">
             <div class="card">
                 <div class="card-body">
                     <div class="d-sm-flex flex-wrap">
-                        <h4 class="card-title mb-4">Statistics Applications</h4>
-                        <div class="ms-auto">
+                        <h4 class="card-title mb-4">Resources by type</h4>
+                        <!--<div class="ms-auto">
                             <ul class="nav nav-pills">
                                 <li class="nav-item">
                                     <a class="nav-link" href="javascript:void(0);">Week</a>
@@ -123,7 +126,7 @@
                                     <a class="nav-link active" href="javascript:void(0);">Year</a>
                                 </li>
                             </ul>
-                        </div>
+                        </div>-->
                     </div>
                     <apx-chart dir="ltr" class="apex-charts" [series]="emailSentBarChart.series"
                         [chart]="emailSentBarChart.chart" [legend]="emailSentBarChart.legend"
@@ -141,7 +144,7 @@
                     <div class="d-flex">
                         <div>
                             <h4 class="card-title mb-3">Invite your friends to DeeperMind</h4>
-                            <p class="text-muted">Nor again is there anyone who loves or pursues or desires to obtain pain of itself, because it is pain, but because occasionally.</p>
+                            <p class="text-muted">Please feel free to share this tool. If you like its features, please share it will help for future evolutions :).</p>
                             <div>
                                 <a href="javascript:void(0);" class="btn btn-primary btn-sm"><i class='bx bx-user-plus align-middle'></i> Invite Friends</a>
                             </div>

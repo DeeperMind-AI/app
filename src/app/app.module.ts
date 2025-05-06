@@ -7,21 +7,14 @@ import { environment } from '../environments/environment';
 
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
-import { AccordionModule } from 'ngx-bootstrap/accordion';
 
-import { CarouselModule } from 'ngx-owl-carousel-o';
 import { ScrollToModule } from '@nicky-lenaers/ngx-scroll-to';
 
-
-import { SharedModule } from './cyptolanding/shared/shared.module';
-
-import { ExtrapagesModule } from './extrapages/extrapages.module';
 
 import { LayoutsModule } from './layouts/layouts.module';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { initFirebaseBackend } from './authUtils';
-import { CyptolandingComponent } from './cyptolanding/cyptolanding.component';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
@@ -29,9 +22,6 @@ import { ErrorInterceptor } from './core/helpers/error.interceptor';
 import { JwtInterceptor } from './core/helpers/jwt.interceptor';
 import { FakeBackendInterceptor } from './core/helpers/fake-backend';
 import { ToastrModule } from 'ngx-toastr';
-
-import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
-import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 
@@ -57,7 +47,6 @@ const config: SocketIoConfig = { url: environment.tradBotServer, options: {trans
 @NgModule({
   declarations: [
     AppComponent,
-    CyptolandingComponent,
   ],
   imports: [
     BrowserModule,
@@ -75,13 +64,8 @@ const config: SocketIoConfig = { url: environment.tradBotServer, options: {trans
     }),
     LayoutsModule,
     AppRoutingModule,
-    ExtrapagesModule,
-    CarouselModule,
-    
-    AccordionModule.forRoot(),
     TabsModule.forRoot(),
     TooltipModule.forRoot(),
-    SharedModule,
     ScrollToModule.forRoot(),
     ToastrModule.forRoot(),
     
@@ -91,8 +75,6 @@ const config: SocketIoConfig = { url: environment.tradBotServer, options: {trans
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: FakeBackendInterceptor, multi: true },
-    provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
-    provideFirestore(() => getFirestore()),
     // LoaderService,
     // { provide: HTTP_INTERCEPTORS, useClass: LoaderInterceptorService, multi: true },
   ],

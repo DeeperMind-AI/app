@@ -25,7 +25,40 @@
     },
     "SETTINGS": {
       "TEXT":"Paramètres"
+    },
+    "HOWTO": {
+      "TEXT":"Aide"
+    },
+    "FEEDBACK": {
+      "TEXT":"Commentaires/contact"
     }
+  },
+  "HOWTO": {
+    "ADDDATA":{
+      "TITLE":"Ajouter une source de données",
+      "CONTENT":"Pour ajouter un fichier ou un contenu libre<br/>-cliquer sur le bouton Ajouter puis donnée<br/>-Sélectionner le type de données (contenu libre ou fichier pdf)<br/>-Cliquer sur valider, dans la cloche en haut, le status de l'indexation sera affiché<br/>-Le fichier apparaitra dans Toutes vos données dans la bare de gauche"
+    },
+    "ADDCAT":{
+      "TITLE":"Ajouter une catégorie (BETA)",
+      "CONTENT":"Pour ajouter une catégorie ou un contenu libre<br/>-Sélectionnez la catégorie parente dans le panneau de gauche<br/>-cliquer sur le bouton Ajouter puis Catégorie<br/>-Saisissez le titre de la catégorie<br/>-Cliquer sur valider<br/>-La catégorie apparaitra dans Toutes vos données dans la bare de gauche"
+    },
+    "SEARCH":{
+      "TITLE":"Questionner/rechercher des données",
+      "CONTENT":"Cliquer sur l'onglet Recherche IA dans le panneau de droits, puis :<br/>-Pour rechercher dans toute la base, décocher les fichiers (s'il y en a) puis saisissez votre demande dans la zone de recherche en bas du panneau de droite<br/>-Pour rechercher dans un fichier spécifique, cocher le fichier désieé puis saisissez votre demande dans la zone de recherche en bas du panneau de droite<br/>Les documents en lien avec votre demande seront affichés dans Le menu sélection IA de le panneau de gauche."
+    },
+    "ADDPROMPT":{
+      "TITLE":"Créer/modifier un prompt",
+      "CONTENT":"Cliquer sur l'onglet Paramètres dans le menu de gauche puis:<br/>-Sélectionner l'onglet prompts<br/>-Ajouter ou modifier un prompt en utilisant le bouton ajouter ou éditer une ligne spécifique.<br/>Un prompt par défaut est défini, ce dernier n'est pas modifiable<br/>Vous pourrez sélectionner le prompt désiré dans la recherche IA dans la liste a gauche de la zone de recherche."
+    }
+  },
+  "FEEDBACK": {
+    "TITLE":"Proposer une amélioration/signaler un bug/contact",
+    "SUGGESTAMEL":"Suggérer une amélioration",
+    "CONTACT":"Contact",
+    "SIGNALBUG":"Signaler un bug",
+    "SUJET":"Sujet",
+    "DESC":"Description",
+    "SUBMIT":"Soumettre"
   },
   "SETTINGS": {
     "OWNERUID":"UID propriétaire",

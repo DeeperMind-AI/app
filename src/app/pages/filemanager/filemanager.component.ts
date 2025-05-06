@@ -15,6 +15,7 @@ import { SuggestionsComponent } from './components/suggestions/suggestions.compo
 import { HelperService } from 'src/app/core/services/helper.service';
 import { TranslateService } from '@ngx-translate/core';
 import { CookieService } from 'ngx-cookie-service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-filemanager',
@@ -420,13 +421,13 @@ export class FilemanagerComponent implements OnInit {
   saveFile() {
     let processUID = "p_"+this.helper.generateGuid();
 
-    
-
     //CHECK CBO DATA TYPE
     switch (this.newSourcePop.sourceType) {
       case "file":
         if (this.file) {
-          
+          if (this.filesList.length <= 0){ 
+            this.firstMessage = false;
+          }
           //return;
           this.disablePops = true;
           const formData = new FormData();
@@ -472,11 +473,17 @@ export class FilemanagerComponent implements OnInit {
         break;
       case "free":
         //ENVOI DU CONTENU LIBRE
+
+        if (this.filesList.length <= 0){ 
+          this.firstMessage = false;
+        }
+
         const ask$ = this.http.post(this.uri+"uploadFree",{
           title:this.newSourcePop.freeTitle,
           content:this.newSourcePop.freeContent,
           ownerUID:JSON.parse(localStorage.getItem('currentUser')).email,
-          categ:this.selectCateg
+          categ:this.selectCateg,
+          autoCat:this.newSourcePop.autoCat
         }).pipe(
           map((result:any) => {
             this.modalRef?.hide();
@@ -530,6 +537,21 @@ export class FilemanagerComponent implements OnInit {
     }
   }
   messageSave(question:string=null) {
+
+    if (this.filesList.length <= 0){ 
+      Swal.fire({
+        title: 'Error',
+        text: 'First you need to add data!',
+        icon: 'error',
+        showCancelButton: false,
+        confirmButtonColor: '#34c38f',
+        cancelButtonColor: '#f46a6a',
+        confirmButtonText: 'Close'
+      })
+      return;
+    }
+
+
     let message = (question?question:this.formData.get('message').value);
     const currentDate = new Date();
     this.suggestions.toggle(true)
@@ -594,21 +616,31 @@ export class FilemanagerComponent implements OnInit {
 
   cleanVector() {
     //recump des chunks ids pour suppression
-    alert("cleanVector");
-    console.log(JSON.parse(this.pdfMetas).chunksUids);
-    const ask$ = this.http.post(environment.tradBotServer+"deleteVectors",{ownerUID:this.params.chat.ownerUID,docsIds:JSON.parse(this.pdfMetas).chunksUids}).pipe(
-      map((result:any) => {
-        const ask2$ = this.http.post(environment.tradBotServer+"deleteDoc",{metaUID:this.curFile._id}).pipe(
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'You won\'t be able to revert this!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#34c38f',
+      cancelButtonColor: '#f46a6a',
+      confirmButtonText: 'Yes, delete it!'
+    }).then(result => {
+      if (result.value==true) {
+        const ask$ = this.http.post(environment.tradBotServer+"deleteVectors",{ownerUID:this.params.chat.ownerUID,docsIds:JSON.parse(this.pdfMetas).chunksUids}).pipe(
           map((result:any) => {
-            this.fetchDocs();
-          }), catchError(err => throwError(err))
-          
-      )
-        ask2$.subscribe();
-      }), 
-      catchError(err => throwError(err))
-    )
-    ask$.subscribe();
+            const ask2$ = this.http.post(environment.tradBotServer+"deleteDoc",{metaUID:this.curFile._id}).pipe(
+              map((result:any) => {
+                this.fetchDocs();
+              }), catchError(err => throwError(err))
+          )
+            ask2$.subscribe();
+          }), 
+          catchError(err => throwError(err))
+        )
+        ask$.subscribe();
+      }
+    });
+    
     
   }
   

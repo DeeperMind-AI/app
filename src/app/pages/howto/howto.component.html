@@ -1,0 +1,47 @@
+<!--<app-loader></app-loader>-->
+<div class="container-fluid">
+    <app-page-title title="How To" ></app-page-title>
+    <div class="card">
+        <div class="card-body">
+            <accordion [isAnimated]="true" [closeOthers]="true">
+                <accordion-group heading="{{ 'HOWTO.ADDDATA.TITLE' | translate}}" class="text-black">
+                  <!-- <ng-template ngbPanelTitle class="text-black">
+                                Accordion Item #1
+                              </ng-template> -->
+                  <!-- <ng-template ngbPanelContent> -->
+                  <div class="text-muted"  [innerHTML]="'HOWTO.ADDDATA.CONTENT' | translate">
+                  </div>
+                  <!-- </ng-template> -->
+                </accordion-group>
+                <accordion-group heading="{{ 'HOWTO.ADDCAT.TITLE' | translate}}">
+                  <!-- <ng-template ngbPanelTitle>
+                                Accordion Item #2
+                              </ng-template> -->
+                  <!-- <ng-template ngbPanelContent> -->
+                  <div class="text-muted"  [innerHTML]="'HOWTO.ADDCAT.CONTENT' | translate">
+                    
+                  </div>
+                  <!-- </ng-template> -->
+                </accordion-group>
+                <accordion-group heading="{{ 'HOWTO.SEARCH.TITLE' | translate}}">
+                  <!-- <ng-template ngbPanelTitle>
+                                Accordion Item #3
+                              </ng-template> -->
+                  <!-- <ng-template ngbPanelContent> -->
+                  <div class="text-muted" [innerHTML]="'HOWTO.SEARCH.CONTENT' | translate">
+                  </div>
+                  <!-- </ng-template> -->
+                </accordion-group>
+                <accordion-group heading="{{ 'HOWTO.ADDPROMPT.TITLE' | translate}}">
+                    <!-- <ng-template ngbPanelTitle>
+                                  Accordion Item #2
+                                </ng-template> -->
+                    <!-- <ng-template ngbPanelContent> -->
+                    <div class="text-muted" [innerHTML]="'HOWTO.ADDPROMPT.CONTENT' | translate">
+                    </div>
+                    <!-- </ng-template> -->
+                  </accordion-group>
+              </accordion>
+        </div>
+    </div>
+</div>

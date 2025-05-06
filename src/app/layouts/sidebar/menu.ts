@@ -7,12 +7,12 @@ export const MENU: MenuItem[] = [
         label: 'DeeperMind',
         isTitle: true
     },
-    /*{
+    {
         id: 11,
         label: 'MENUITEMS.DASHBOARD.TEXT',
         icon: 'bx-home-circle',
         link: '/dashboard',
-    },*/
+    },
     {
         id: 12,
         label: 'MENUITEMS.FILEMANAGER.TEXT',
@@ -25,5 +25,23 @@ export const MENU: MenuItem[] = [
         icon: 'bx-wrench',
         link: '/settings',
     },
+    {
+        id: 14,
+        label: 'MENUITEMS.HOWTO.TEXT',
+        icon: 'bx-help-circle',
+        link: '/howto',
+    },
+    {
+        id: 15,
+        label: 'MENUITEMS.FEEDBACK.TEXT',
+        icon: 'bx-message',
+        link: '/feedback',
+    },
+    /**{
+        id: 16,
+        label: 'MENUITEMS.FEEDBACK.TEXT',
+        icon: 'bx-message',
+        link: '/feedback',
+    },*/
 ];
 

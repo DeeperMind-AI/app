@@ -1,10 +1,8 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { AlertsComponent } from './alerts/alerts.component';
 import { ButtonsComponent } from './buttons/buttons.component';
 import { CardsComponent } from './cards/cards.component';
-import { CarouselComponent } from './carousel/carousel.component';
 import { DropdownsComponent } from './dropdowns/dropdowns.component';
 import { GridComponent } from './grid/grid.component';
 import { ImagesComponent } from './images/images.component';
@@ -27,20 +25,12 @@ import { UtilitiesComponent } from "./utilities/utilities.component";
 
 const routes: Routes = [
     {
-        path: 'alerts',
-        component: AlertsComponent
-    },
-    {
         path: 'buttons',
         component: ButtonsComponent
     },
     {
         path: 'cards',
         component: CardsComponent
-    },
-    {
-        path: 'carousel',
-        component: CarouselComponent
     },
     {
         path: 'dropdowns',

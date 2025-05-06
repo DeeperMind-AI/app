@@ -8,8 +8,6 @@ import { catchError, map, switchMap, throwError } from "rxjs";
 
 import { Pricing } from './pricing.model';
 
-
-
 import { pricingData } from './data';
 import { environment } from 'src/environments/environment';
 import Swal from 'sweetalert2';
@@ -30,7 +28,7 @@ interface IStripeSession {
 })
 export class SettingsComponent {
   //
-  isLoading: boolean = true;
+  //isLoading: boolean = true;
   modalRef?: BsModalRef;
   locStor = localStorage;
   params:any = {
@@ -61,8 +59,8 @@ export class SettingsComponent {
   }
   //
   ngOnInit(): void {
-    //this.loaderService.isLoading = true;
-    this.loaderService.isLoading.subscribe((v) => {
+    
+    //this.loaderService.isLoading.subscribe((v) => {
       this.stripe=this.stripeFactory.create(environment.stripe.stripePublicKey);
       this.stripeAmount = 100;
       this.pricingData = pricingData;
@@ -73,9 +71,11 @@ export class SettingsComponent {
       }
       this.params.prompts =  (this.locStor.getItem('prompts')!="undefined"?JSON.parse(this.locStor.getItem('prompts')):[]);
       this.params.profile = JSON.parse(this.locStor.getItem('currentUser'));
-      this.isLoading = false;
       
-    });
+      
+
+
+    //});
   }
   ///
   disablePops:boolean = false;
@@ -131,24 +131,36 @@ export class SettingsComponent {
     this.modalRef = this.modalService.show(content);
   }
   deletePrompt(prpt) {
-    console.log("deletePrompt",prpt);
-    const ask$ = this.http.post(environment.tradBotServer+"removePrompt",{ownerUID:this.params.chat.ownerUID,uid:prpt}).pipe(
-      map((result:any) => {
-        console.log("result",result);
-        for (var reliP = 0;reliP < this.params.prompts.length;reliP++) {
-          if (this.params.prompts[reliP].uid == prpt) {
-            this.params.prompts.splice(reliP,1);
-            break;
-          }
-        }
-        //this.disablePops = false;
-        //this.modalRef?.hide();
-        //this.fetchCategs();
-        
-      }), 
-        catchError(err => throwError(err))
-    )
-    ask$.subscribe();
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'You won\'t be able to revert this!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#34c38f',
+      cancelButtonColor: '#f46a6a',
+      confirmButtonText: 'Yes, delete it!'
+    }).then(result => {
+      if (result.value==true) {
+        const ask$ = this.http.post(environment.tradBotServer+"removePrompt",{ownerUID:this.params.chat.ownerUID,uid:prpt}).pipe(
+          map((result:any) => {
+            console.log("result",result);
+            for (var reliP = 0;reliP < this.params.prompts.length;reliP++) {
+              if (this.params.prompts[reliP].uid == prpt) {
+                this.params.prompts.splice(reliP,1);
+                break;
+              }
+            }
+            //this.disablePops = false;
+            //this.modalRef?.hide();
+            //this.fetchCategs();
+            
+          }), 
+            catchError(err => throwError(err))
+        )
+        ask$.subscribe();
+      }
+    });
+    
   }
 
   public onPopPromptChange(event: Event): void {
@@ -157,14 +169,26 @@ export class SettingsComponent {
   }
   //APPEL DU VIDAGE DE L'INDEX COTE SERVEUR
   cleanIndex() {
-    const ask$ = this.http.post(environment.tradBotServer+"cleanES",{ownerUID:this.params.chat.ownerUID}).pipe(
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'You won\'t be able to revert this!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#34c38f',
+      cancelButtonColor: '#f46a6a',
+      confirmButtonText: 'Yes, delete it!'
+    }).then(result => {
+      if (result.value==true) {
+        const ask$ = this.http.post(environment.tradBotServer+"cleanES",{ownerUID:this.params.chat.ownerUID}).pipe(
+          map((result:any) => {}), catchError(err => throwError(err))
+        )
+        ask$.subscribe();
+        const ask2$ = this.http.post(environment.tradBotServer+"cleanMDB",{ownerUID:this.params.chat.ownerUID}).pipe(
             map((result:any) => {}), catchError(err => throwError(err))
         )
-    ask$.subscribe();
-    const ask2$ = this.http.post(environment.tradBotServer+"cleanMDB",{ownerUID:this.params.chat.ownerUID}).pipe(
-      map((result:any) => {}), catchError(err => throwError(err))
-  )
-    ask2$.subscribe();
+        ask2$.subscribe();
+      }
+    });
   }
   //
   public stripe!: StripeInstance;

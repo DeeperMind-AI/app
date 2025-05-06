@@ -26,10 +26,8 @@ import { ImageCropperModule } from 'ngx-image-cropper';
 import { NgxMasonryModule } from 'ngx-masonry';
 
 import { UiRoutingModule } from './ui-routing.module';
-import { AlertsComponent } from './alerts/alerts.component';
 import { ButtonsComponent } from './buttons/buttons.component';
 import { CardsComponent } from './cards/cards.component';
-import { CarouselComponent } from './carousel/carousel.component';
 import { DropdownsComponent } from './dropdowns/dropdowns.component';
 import { GridComponent } from './grid/grid.component';
 import { ImagesComponent } from './images/images.component';
@@ -56,7 +54,7 @@ import { UtilitiesComponent } from './utilities/utilities.component';
 
 @NgModule({
   // tslint:disable-next-line: max-line-length
-  declarations: [AlertsComponent, ButtonsComponent, CardsComponent, CarouselComponent, DropdownsComponent, GridComponent, ImagesComponent, 
+  declarations: [ButtonsComponent, CardsComponent, DropdownsComponent, GridComponent, ImagesComponent, 
     ModalsComponent, ProgressbarComponent, TypographyComponent, GeneralComponent, ColorsComponent, VideoComponent, TabsComponent, SweetalertComponent, 
     RangesliderComponent, ImagecropperComponent, LightboxComponent, PlaceholderComponent, ToastsComponent, RatingComponent, NotificationComponent,
     // ToastsContainer,

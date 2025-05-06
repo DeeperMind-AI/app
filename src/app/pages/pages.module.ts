@@ -8,34 +8,16 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { CollapseModule } from 'ngx-bootstrap/collapse';
 
-import { NgApexchartsModule } from 'ng-apexcharts';
-import { FullCalendarModule } from '@fullcalendar/angular';
 import { SimplebarAngularModule } from 'simplebar-angular';
-import { LightboxModule } from 'ngx-lightbox';
-
 import { WidgetModule } from '../shared/widget/widget.module';
 import { UIModule } from '../shared/ui/ui.module';
-
-// Emoji Picker
-import { PickerModule } from '@ctrl/ngx-emoji-mart';
 
 import { PagesRoutingModule } from './pages-routing.module';
 
 import { DashboardsModule } from './dashboards/dashboards.module';
-import { CryptoModule } from './crypto/crypto.module';
-import { ProjectsModule } from './projects/projects.module';
-import { ContactsModule } from './contacts/contacts.module';
-import { UtilityModule } from './utility/utility.module';
-import { UiModule } from './ui/ui.module';
-import { FormModule } from './form/form.module';
-import { TablesModule } from './tables/tables.module';
-import { IconsModule } from './icons/icons.module';
-import { ChartModule } from './chart/chart.module';
-import { AccordionModule } from 'ngx-bootstrap/accordion';
 
 import { FilemanagerComponent } from './filemanager/filemanager.component';
 import { SettingsComponent } from './settings/settings.component';
-import { AlertModule } from 'ngx-bootstrap/alert';
 import { MarkdownModule } from 'ngx-markdown';
 
 import { TranslateModule } from '@ngx-translate/core';
@@ -44,9 +26,12 @@ import { SuggestionsComponent } from './filemanager/components/suggestions/sugge
 import { LeftlistitemComponent } from './filemanager/components/leftlistitem/leftlistitem/leftlistitem.component';
 import { LeftlistitemheaderComponent } from './filemanager/components/leftlistitem/leftlistitemheader/leftlistitemheader.component';
 import { CategListPathFilter } from './filemanager/pipes/categListPathFilter';
+import { HowtoComponent } from './howto/howto.component';
+import { AccordionModule } from 'ngx-bootstrap/accordion';
+import { FeedbackComponent } from './feedback/feedback.component';
 
 @NgModule({
-  declarations: [FilemanagerComponent, SettingsComponent, SuggestionsComponent, LeftlistitemComponent, LeftlistitemheaderComponent],
+  declarations: [FilemanagerComponent, SettingsComponent, SuggestionsComponent, LeftlistitemComponent, LeftlistitemheaderComponent, HowtoComponent, FeedbackComponent],
   imports: [
     CommonModule,
     FormsModule,
@@ -56,30 +41,16 @@ import { CategListPathFilter } from './filemanager/pipes/categListPathFilter';
     MarkdownModule.forRoot(),
     BsDropdownModule.forRoot(),
     ModalModule.forRoot(),
-    AlertModule.forRoot(),
     PagesRoutingModule,
-    NgApexchartsModule,
     ReactiveFormsModule,
     DashboardsModule,
-    CryptoModule,
-    ProjectsModule,
     UIModule,
-    AccordionModule,
-    ContactsModule,
-    UtilityModule,
-    UiModule,
-    FormModule,
-    TablesModule,
-    IconsModule,
-    ChartModule,
     WidgetModule,
-    FullCalendarModule,
+    AccordionModule.forRoot(),
     TabsModule.forRoot(),
     TooltipModule.forRoot(),
     CollapseModule.forRoot(),
     SimplebarAngularModule,
-    LightboxModule,
-    PickerModule
   ],
 })
 export class PagesModule { }

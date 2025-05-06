@@ -70,7 +70,7 @@ export class LoginComponent implements OnInit {
     // this.authenticationService.logout();
     // get return url from route parameters or default to '/'
     // tslint:disable-next-line: no-string-literal
-    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/filemanager';
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/dashboard';
   }
 
   onGoogleSignIn() {
@@ -145,9 +145,9 @@ export class LoginComponent implements OnInit {
     
     
     
-    if (this.returnUrl) { gotoRoute = this.returnUrl; } else { gotoRoute = '/filemanager' }
+    if (this.returnUrl) { gotoRoute = this.returnUrl; } else { gotoRoute = '/dashboard' }
     //HARDCODE
-    this.router.navigate(['/filemanager']);
+    this.router.navigate(['/dashboard']);
   }
 
 

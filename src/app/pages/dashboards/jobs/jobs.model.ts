@@ -1,4 +1,6 @@
 export interface ChartType {
+    name?:string;
+    count?:number;
     chart?: any;
     plotOptions?: any;
     colors?: any;
