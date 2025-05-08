@@ -10,7 +10,6 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
 import { ScrollToModule } from '@nicky-lenaers/ngx-scroll-to';
 
-
 import { LayoutsModule } from './layouts/layouts.module';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -28,8 +27,6 @@ import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { NgxStripeModule } from 'ngx-stripe';
 
 import { OAuthModule } from 'angular-oauth2-oidc';
-
-import { MarkdownModule } from 'ngx-markdown';
 
 if (environment.defaultauth === 'firebase') {
   initFirebaseBackend(environment.firebaseConfig);

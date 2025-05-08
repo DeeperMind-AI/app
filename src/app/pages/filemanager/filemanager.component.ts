@@ -640,8 +640,6 @@ export class FilemanagerComponent implements OnInit {
         ask$.subscribe();
       }
     });
-    
-    
   }
   
   onSelectSuggest($event) { 
@@ -658,14 +656,17 @@ export class FilemanagerComponent implements OnInit {
     this.aiResponse = result.answer;
     this.aiQuestions = result.questions;
     let found = false;
-    this.configService.aiResponseContexts = [];
+    this.configService.aiResponseContexts = result.context;
+    console.log(result.context);
+    this.configService.aiResponseFiles = [];
     for (var reliC = 0;reliC < result.context.length;reliC++)
     {
       found = false;
-      for (var reliC2 = 0;reliC2 < this.configService.aiResponseContexts.length;reliC2++)
+      console.log(result.context[reliC]);
+      for (var reliC2 = 0;reliC2 < this.configService.aiResponseFiles.length;reliC2++)
       {
         
-          if (result.context[reliC].metadata.fname == this.configService.aiResponseContexts[reliC2].metadata.fname) {
+          if (result.context[reliC].metadata.fname == this.configService.aiResponseFiles[reliC2].fname) {
             
             found = true;
             break;
@@ -676,16 +677,19 @@ export class FilemanagerComponent implements OnInit {
         result.context[reliC].occurs=0;
 
         //this.aiResponseContexts.push(result.context[reliC]);
-        this.configService.aiResponseContexts.push(result.context[reliC]);
+        //this.configService.aiResponseContexts.push(result.context[reliC]);
         this.configService.aiResponseFiles.push(result.context[reliC].metadata);
+        //this.configService.aiResponseFiles[this.configService.aiResponseFiles.length-1].contexts = [result.context[reliC]];
       }
       else {
-        for (var reliC2 = 0;reliC2 < this.configService.aiResponseContexts.length;reliC2++)
+        for (var reliC2 = 0;reliC2 < this.configService.aiResponseFiles.length;reliC2++)
           {
             
-              if (result.context[reliC].metadata.fname == this.configService.aiResponseContexts[reliC2].metadata.fname) {
+              if (result.context[reliC].metadata.fname == this.configService.aiResponseFiles[reliC2].fname) {
                 //this.aiResponseContexts[reliC2].occurs+=1;
-                this.configService.aiResponseContexts[reliC2].occurs+=1;
+
+                this.configService.aiResponseFiles[reliC2].occurs+=1;
+                //this.configService.aiResponseFiles[reliC2].contexts.push(result.context[reliC]);
                 break;
               }
           }
@@ -694,8 +698,9 @@ export class FilemanagerComponent implements OnInit {
     }
     //this.aiResponseContexts = result.context;
 
-    this.configService.aiResponseContexts.push(result.context[reliC]);
+    //this.configService.aiResponseContexts.push(result.context[reliC]);
 
+    //console.log("this.configService.aiResponseContexts",this.configService.aiResponseContexts);
 
     this.loading = false;
 
@@ -777,39 +782,33 @@ export class FilemanagerComponent implements OnInit {
 
 
   curFile:any;
+  curFileIsFromIA = false;
   loadingCurFile:boolean = false;
 
   showPreview(uri,f) {
     //LOAD FULL METAS    
     this.maintabSelected = 1;
     this.loadingCurFile = true;
+    
+
+    let requestUri;
+    let params = {};
     if (f._id) {
-      const ask$ = this.http.post(this.uri+"getDoc",{metaUID:f._id}).pipe(
-        map((result:any) => {
-          this.curFile = result.ret;
-          switch (this.curFile.source_type) {
-            case "image/png":
-              this.pdfPreviewURL = "https://medias.deepermind.ai/"+f.fname+".png";
-              break;
-            case "image/jpeg":
-              this.pdfPreviewURL = "https://medias.deepermind.ai/"+f.fname+".jpg";
-              break;
-            case "file/pdf":
-              this.pdfPreviewURL = "https://medias.deepermind.ai/"+f.fname+".pdf";
-              break;
-          }
-          
-          this.pdfMetas = JSON.stringify(result.ret); 
-          this.loadingCurFile = false;
-          this.maintabSelected = 2;
-        }), 
-          catchError(err => throwError(err))
-      )
-        
-      ask$.subscribe();
+      requestUri = this.uri+"getDoc";
+      params = {metaUID:f._id};
+      this.curFileIsFromIA = false;
     }
     else {
-      this.curFile = f;
+      requestUri = this.uri+"getDocFromfname";
+      params = {fname:f.fname};
+      this.curFileIsFromIA = true;
+    }
+
+
+    const ask$ = this.http.post(requestUri,params).pipe(
+      map((result:any) => {
+        this.curFile = result.ret;
+        console.log("this.curFile",this.curFile);
         switch (this.curFile.source_type) {
           case "image/png":
             this.pdfPreviewURL = "https://medias.deepermind.ai/"+f.fname+".png";
@@ -822,13 +821,14 @@ export class FilemanagerComponent implements OnInit {
             break;
         }
         
-        this.pdfMetas = JSON.stringify(f); 
+        this.pdfMetas = JSON.stringify(result.ret); 
         this.loadingCurFile = false;
         this.maintabSelected = 2;
-    }
-    
-    
-    //return;
+      }), 
+        catchError(err => throwError(err))
+    )
+      
+    ask$.subscribe();
     
   }
   /**

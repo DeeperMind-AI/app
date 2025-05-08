@@ -267,6 +267,7 @@
                             </ng-template>
                             <div class="previewMenu btn-group btn-group-sm" role="group" aria-label="Basic example">
                                 <button type="button" class="btn btn-secondary" (click)="docTabSelected=4" [ngClass]="{'active':docTabSelected==4}">Summary</button>
+                                <button   *ngIf="(curFileIsFromIA==true)" type="button" class="btn btn-secondary" (click)="docTabSelected=5" [ngClass]="{'active':docTabSelected==5}">Contextes</button>
                                 <button type="button" class="btn btn-secondary" (click)="docTabSelected=1" [ngClass]="{'active':docTabSelected==1}">Preview</button>
                                 <button type="button" class="btn btn-secondary" (click)="docTabSelected=2" [ngClass]="{'active':docTabSelected==2}">Métadatas</button>
                                 <button type="button" class="btn btn-secondary" (click)="docTabSelected=3" [ngClass]="{'active':docTabSelected==3}">Actions</button>
@@ -280,6 +281,14 @@
                                         mozallowfullscreen
                                         allowfullscreen></iframe>
                                     <img [src]="sanitizer.bypassSecurityTrustResourceUrl(pdfPreviewURL)" *ngIf="((curFile.source_type=='image/jpeg') || (curFile.source_type=='image/png')) && pdfPreviewURL"/>
+                                </div>
+                            </div>
+                            <div class="card docContent"  *ngIf="(docTabSelected==5) && (curFileIsFromIA==true)">
+                                <div class="card-body">
+                                    <div  *ngFor="let el of configService.aiResponseContexts  | contextFilter:curFile.fname">
+                                        <h6>{{el.metadata.original_fname}}</h6>
+                                        <p>{{el.pageContent}}</p>
+                                    </div>
                                 </div>
                             </div>
                             <div class="card docContent"  *ngIf="(docTabSelected==2) && pdfPreviewURL">

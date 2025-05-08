@@ -29,6 +29,7 @@ import { CategListPathFilter } from './filemanager/pipes/categListPathFilter';
 import { HowtoComponent } from './howto/howto.component';
 import { AccordionModule } from 'ngx-bootstrap/accordion';
 import { FeedbackComponent } from './feedback/feedback.component';
+import { ContextFilter } from './filemanager/pipes/contextesFilter';
 
 @NgModule({
   declarations: [FilemanagerComponent, SettingsComponent, SuggestionsComponent, LeftlistitemComponent, LeftlistitemheaderComponent, HowtoComponent, FeedbackComponent],
@@ -38,6 +39,7 @@ import { FeedbackComponent } from './feedback/feedback.component';
     TranslateModule,
     FileTextFilter,
     CategListPathFilter,
+    ContextFilter,
     MarkdownModule.forRoot(),
     BsDropdownModule.forRoot(),
     ModalModule.forRoot(),
