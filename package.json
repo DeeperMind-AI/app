@@ -37,7 +37,6 @@
     "@popperjs/core": "^2.11.6",
     "@stripe/stripe-js": "^6.1.0",
     "angular-archwizard": "^7.0.0",
-    "angular-oauth2-oidc": "^19.0.0",
     "angularx-flatpickr": "^7.0.0",
     "apexcharts": "^3.36.3",
     "bootstrap": "^5.2.0",
