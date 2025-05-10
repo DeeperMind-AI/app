@@ -52,7 +52,6 @@ export class JobsComponent implements OnInit {
 
     const ask$ = this.http.post(this.uri+"getDashboard",{ownerUID:JSON.parse(localStorage.getItem('currentUser'))["email"]}).pipe(
         map((result:any) => {
-          console.log(result);
           ressourcesChart.count = result.sumMetas;
           ressourcesChart.series[0].data = result.graphmetas;
           this.ressourcesChart = ressourcesChart;    
