@@ -97,7 +97,7 @@ export class FilemanagerComponent implements OnInit {
   filesList = [];
   loadingDocs = false;
 
-  pdfData;
+  
 
 
 
@@ -831,8 +831,6 @@ export class FilemanagerComponent implements OnInit {
     ask$.subscribe();
     
   }
-
-  
   /**
    * Open modal
    * @param content modal content
