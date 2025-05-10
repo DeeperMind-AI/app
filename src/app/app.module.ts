@@ -8,7 +8,6 @@ import { environment } from '../environments/environment';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
-import { ScrollToModule } from '@nicky-lenaers/ngx-scroll-to';
 
 import { LayoutsModule } from './layouts/layouts.module';
 import { AppRoutingModule } from './app-routing.module';
@@ -63,7 +62,6 @@ const config: SocketIoConfig = { url: environment.tradBotServer, options: {trans
     AppRoutingModule,
     TabsModule.forRoot(),
     TooltipModule.forRoot(),
-    ScrollToModule.forRoot(),
     ToastrModule.forRoot(),
     
   ],

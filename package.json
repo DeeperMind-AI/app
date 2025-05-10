@@ -34,7 +34,6 @@
     "@ng-select/ng-select": "^10.0.1",
     "@ngx-translate/core": "^14.0.0",
     "@ngx-translate/http-loader": "^7.0.0",
-    "@nicky-lenaers/ngx-scroll-to": "^14.0.0",
     "@popperjs/core": "^2.11.6",
     "@stripe/stripe-js": "^6.1.0",
     "angular-archwizard": "^7.0.0",
