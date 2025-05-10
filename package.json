@@ -69,6 +69,7 @@
     "ng2-charts": "^2.4.2",
     "ng2-completer": "^9.0.1",
     "ng2-search-filter": "^0.5.1",
+    "ng2-smart-table": "^1.7.2",
     "ng5-slider": "^1.2.6",
     "ngx-bootstrap": "^10.2.0",
     "ngx-chartist": "^1.0.3",
