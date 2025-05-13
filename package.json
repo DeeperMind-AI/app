@@ -12,17 +12,6 @@
   },
   "private": true,
   "dependencies": {
-<<<<<<< HEAD
-    "@angular/animations": "^16.2.12",
-    "@angular/common": "16.2.12",
-    "@angular/compiler": "16.2.12",
-    "@angular/core": "16.2.12",
-    "@angular/forms": "16.2.12",
-    "@angular/localize": "16.2.12",
-    "@angular/platform-browser": "16.2.12",
-    "@angular/platform-browser-dynamic": "16.2.12",
-    "@angular/router": "16.2.12",
-=======
     "@angular/animations": "^15.1.2",
     "@angular/common": "15.1.2",
     "@angular/compiler": "15.1.2",
@@ -32,7 +21,6 @@
     "@angular/platform-browser": "15.1.2",
     "@angular/platform-browser-dynamic": "15.1.2",
     "@angular/router": "15.1.2",
->>>>>>> parent of 90c5313 (up)
     "@asymmetrik/ngx-leaflet": "^15.0.1",
     "@ckeditor/ckeditor5-angular": "^4.0.0",
     "@ckeditor/ckeditor5-build-classic": "^35.4.0",

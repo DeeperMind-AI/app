@@ -51,32 +51,41 @@ export class JobsComponent implements OnInit {
     this.emailSentBarChart = fileTypePie;
 
     const ask$ = this.http.post(this.uri+"getDashboard",{ownerUID:JSON.parse(localStorage.getItem('currentUser'))["email"]}).pipe(
+      map((result:any) => {
+        ressourcesChart.count = result.sumMetas;
+        ressourcesChart.series[0].data = result.graphmetas;
+        this.ressourcesChart = ressourcesChart;    
+        //
+        QueriesChart.count = result.sumQueries;
+        QueriesChart.series[0].data = result.graphQueries;    
+        this.QueriesChart = QueriesChart;    
+        //
+        SizeOnDiskChart.count = result.fullDiskUsage;
+        SizeOnDiskChart.series[0].data = result.graphDiskUsage;    
+        this.SizeOnDiskChart = SizeOnDiskChart;    
+
+        fileTypePie.series = [];
+        fileTypePie.labels = [];
+
+        for(var reliStats=0;reliStats<result.graphFileType.length;reliStats++)
+        {
+          fileTypePie.series.push(result.graphFileType[reliStats].count);
+          fileTypePie.labels.push(result.graphFileType[reliStats]._id);
+        }
+
+      }), 
+        catchError(err => throwError(err))
+      )
+      ask$.subscribe();
+
+      const ask$2 = this.http.post(this.uri+"admin/getAllUsers",{}).pipe(
         map((result:any) => {
-          ressourcesChart.count = result.sumMetas;
-          ressourcesChart.series[0].data = result.graphmetas;
-          this.ressourcesChart = ressourcesChart;    
-          //
-          QueriesChart.count = result.sumQueries;
-          QueriesChart.series[0].data = result.graphQueries;    
-          this.QueriesChart = QueriesChart;    
-          //
-          SizeOnDiskChart.count = result.fullDiskUsage;
-          SizeOnDiskChart.series[0].data = result.graphDiskUsage;    
-          this.SizeOnDiskChart = SizeOnDiskChart;    
-
-          fileTypePie.series = [];
-          fileTypePie.labels = [];
-
-          for(var reliStats=0;reliStats<result.graphFileType.length;reliStats++)
-          {
-            fileTypePie.series.push(result.graphFileType[reliStats].count);
-            fileTypePie.labels.push(result.graphFileType[reliStats]._id);
-          }
-
+          
+  
         }), 
           catchError(err => throwError(err))
         )
-        ask$.subscribe();
+        ask$2.subscribe();
 
     
   }

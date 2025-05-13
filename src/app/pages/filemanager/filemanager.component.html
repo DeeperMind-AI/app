@@ -275,13 +275,13 @@
                             <div class="card docContent"  *ngIf="(docTabSelected==1)">
                                 <div class="card-body">
                                     
-                                    <!--<iframe [src]="sanitizer.bypassSecurityTrustResourceUrl(pdfPreviewURL)" *ngIf="(curFile.source_type=='file/pdf') && pdfPreviewURL"
+                                    <iframe [src]="sanitizer.bypassSecurityTrustResourceUrl(pdfPreviewURL)" *ngIf="(curFile.source_type=='file/pdf') && pdfPreviewURL"
                                         width="100%"
                                         height="500px"
                                         webkitallowfullscreen
                                         mozallowfullscreen
-                                        allowfullscreen></iframe>-->
-                                        
+                                        allowfullscreen></iframe>
+                                    <audio  *ngIf="(curFile.source_type=='audio/x-m4a')" controls><source  [src]="sanitizer.bypassSecurityTrustResourceUrl(pdfPreviewURL)" type="audio/x-m4a" /></audio> 
                                     <img [src]="sanitizer.bypassSecurityTrustResourceUrl(pdfPreviewURL)" *ngIf="((curFile.source_type=='image/jpeg') || (curFile.source_type=='image/png')) && pdfPreviewURL"/>
                                 </div>
                             </div>

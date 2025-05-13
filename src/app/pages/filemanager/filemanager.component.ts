@@ -675,23 +675,27 @@ export class FilemanagerComponent implements OnInit {
       if (!found) {
         
         result.context[reliC].occurs=0;
+        //result.context[reliC].contexts=[];
 
         //this.aiResponseContexts.push(result.context[reliC]);
         //this.configService.aiResponseContexts.push(result.context[reliC]);
+
         this.configService.aiResponseFiles.push(result.context[reliC].metadata);
+        this.configService.aiResponseFiles[0].contexts = [result.context[reliC]];
         //this.configService.aiResponseFiles[this.configService.aiResponseFiles.length-1].contexts = [result.context[reliC]];
       }
       else {
         for (var reliC2 = 0;reliC2 < this.configService.aiResponseFiles.length;reliC2++)
           {
-            
-              if (result.context[reliC].metadata.fname == this.configService.aiResponseFiles[reliC2].fname) {
-                //this.aiResponseContexts[reliC2].occurs+=1;
+          
+            if (result.context[reliC].metadata.fname == this.configService.aiResponseFiles[reliC2].fname) {
+              //this.aiResponseContexts[reliC2].occurs+=1;
 
-                this.configService.aiResponseFiles[reliC2].occurs+=1;
-                //this.configService.aiResponseFiles[reliC2].contexts.push(result.context[reliC]);
-                break;
-              }
+              this.configService.aiResponseFiles[reliC2].occurs+=1;
+              //this.configService.aiResponseFiles[reliC2].contexts.push(result.context[reliC]);
+              //this.configService.aiResponseFiles[reliC2].contexts.push(result.context[reliC]);
+              break;
+            }
           }
         
       }
@@ -818,6 +822,12 @@ export class FilemanagerComponent implements OnInit {
             break;
           case "file/pdf":
             this.pdfPreviewURL = "https://medias.deepermind.ai/"+f.fname+".pdf";
+            break;
+          case "text/plain":
+            this.pdfPreviewURL = "https://medias.deepermind.ai/"+f.fname+".jpg";
+            break;
+          case "audio/x-m4a":
+            this.pdfPreviewURL = "https://medias.deepermind.ai/"+f.fname+".m4a";
             break;
         }
         
