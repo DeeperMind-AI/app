@@ -51,7 +51,7 @@ export class FilemanagerComponent implements OnInit {
   aiResponse:string = "";
   aiQuestions:string[] = [];
   
-  chat_history = [];
+  chat_history = "";
   loading = false;
   chatMessagesData: ChatMessage[];
   pdfPreviewURL;
@@ -75,7 +75,7 @@ export class FilemanagerComponent implements OnInit {
   metas:any;
   //Paramètres des uploads/requetes
   params:any= {};
-  newSourcePop:any = {sourceType:"file"};
+  newSourcePop:any = {sourceType:"file",autoCat:false};
 
   tmpMetas = [];
 
@@ -420,7 +420,6 @@ export class FilemanagerComponent implements OnInit {
 
   saveFile() {
     let processUID = "p_"+this.helper.generateGuid();
-
     //CHECK CBO DATA TYPE
     switch (this.newSourcePop.sourceType) {
       case "file":
@@ -588,13 +587,17 @@ export class FilemanagerComponent implements OnInit {
           break;
       }
       
+      
+      
+
+
       const ask$ = this.http.post(this.uri+"askIASimilarity",{
         question:message,
-        chat_history:this.chat_history,
+        chat_history:"",
         ownerUID:JSON.parse(localStorage.getItem('currentUser')).email,
         prompt:this.selectedPrompt.customPrompt + this.params.chat.fixedPromptParams,
         k:this.params.chat.k,
-        metaUID:(this.filterOnFileUID?this.filterOnFileUID:null),
+        metaUID:(this.filterOnFileID.length>0?this.filterOnFileID:null),
         model:this.params.model,
       }).pipe(
         map((result:any) => {this.addMessage(result)}), catchError(err => throwError(err))
@@ -651,18 +654,18 @@ export class FilemanagerComponent implements OnInit {
 
   addMessage(result) {
     
-    this.chat_history.push({human:this.question,ai:result.answer});
+    //On stocke le dernier message
+    this.chat_history = result.answer;
     
+
     this.aiResponse = result.answer;
     this.aiQuestions = result.questions;
     let found = false;
     this.configService.aiResponseContexts = result.context;
-    console.log(result.context);
     this.configService.aiResponseFiles = [];
     for (var reliC = 0;reliC < result.context.length;reliC++)
     {
       found = false;
-      console.log(result.context[reliC]);
       for (var reliC2 = 0;reliC2 < this.configService.aiResponseFiles.length;reliC2++)
       {
         
@@ -760,24 +763,38 @@ export class FilemanagerComponent implements OnInit {
     return throwError(() => new Error('Something bad happened; please try again later.'));
   }
 
-  filterOnFileUID:string;
+  filterOnFileID:any = [];
   check(fil) {
-    for (var reliF = 0;reliF < this.filesList.length;reliF++)
-    {
-      if (this.filesList[reliF]._id == fil._id)
-      {
-        this.filesList[reliF].checked = !this.filesList[reliF].checked;
-        if (this.filesList[reliF].checked) {
-          this.filterOnFileUID = this.filesList[reliF].uid;
-        }else{
-          this.filterOnFileUID = "";
-        }        
-      }
-      else {
-        this.filesList[reliF].checked = false;
-      }
-        
+    switch (fil.type) {
+      case "file":
+        for (var reliF = 0;reliF < this.filesList.length;reliF++)
+        {
+          if (this.filesList[reliF]._id == fil.ev._id)
+          {
+            this.filesList[reliF].checked = !this.filesList[reliF].checked; 
+            break;
+          }  
+        }
+        this.filterOnFileID = [];
+        for (var reliF = 0;reliF < this.filesList.length;reliF++) {
+          if (this.filesList[reliF].checked) {
+            this.filterOnFileID.push(this.filesList[reliF].uid);
+          }
+        }
+        break;
+      case "categ":
+        fil.ev.checked = !fil.ev.checked;
+        //for (var reli = 0;reli< fil.ev.childs.length;reli++) {
+          //console.log(this.categsList[reli].path,fil.ev.path)
+          //if (fil.ev.childs[reli].path == fil.ev.path) {
+          //  alert("klm");
+          //  this.categsList[reli].selected = !this.categsList[reli].selected;
+          //  break;
+          //}
+        //}
+        break;
     }
+    
     //fil.checked = (fil.checked == true?false:true);
     
   }
@@ -793,8 +810,6 @@ export class FilemanagerComponent implements OnInit {
     //LOAD FULL METAS    
     this.maintabSelected = 1;
     this.loadingCurFile = true;
-    
-
     let requestUri;
     let params = {};
     if (f._id) {
@@ -807,7 +822,6 @@ export class FilemanagerComponent implements OnInit {
       params = {fname:f.fname};
       this.curFileIsFromIA = true;
     }
-
 
     const ask$ = this.http.post(requestUri,params).pipe(
       map((result:any) => {
@@ -829,6 +843,9 @@ export class FilemanagerComponent implements OnInit {
           case "audio/x-m4a":
             this.pdfPreviewURL = "https://medias.deepermind.ai/"+f.fname+".m4a";
             break;
+          case "free":
+              this.pdfPreviewURL = "free";
+              break;
         }
         
         this.pdfMetas = JSON.stringify(result.ret); 
@@ -863,7 +880,7 @@ export class FilemanagerComponent implements OnInit {
     this.tmpMetas = [];
     this.uploadStatus = "";
     this.categ = {};
-    this.newSourcePop = {sourceType:"file"};
+    this.newSourcePop = {sourceType:"file",autoCat:false};
   }
 
   

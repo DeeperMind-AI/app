@@ -84,22 +84,18 @@
                                             <div class="mb-3">
                                                 <label for="chunkMode">Data type
                                                     <i class="bx bx-info-circle" title="..."></i>
-
-
-
                                                 </label>
                                                 <select [disabled]="disablePops" class="form-select"  name="newSourcePop.sourceType" [(ngModel)]="newSourcePop.sourceType" >
                                                     <option value="file" selected>File</option>
                                                     <option value="free" >Free content</option>
                                                 </select>
                                             </div>
-
                                             <div class="mb-3" *ngIf="newSourcePop.sourceType==='file'">
                                                 <label for="fileinp">File
                                                     <i class="bx bx-info-circle" title="..."></i>
                                                 </label>
                                                 <!--.zip-->
-                                                <input  [disabled]="disablePops" type="file" class="form-control" accept=".pdf,.txt,.m4a,.jpg,.png"  name="fileinp" (change)="onFileSelected($event)"/>
+                                                <input  [disabled]="disablePops" type="file" class="form-control" accept=".pdf,.txt,.m4a,.jpg,.zip"  name="fileinp" (change)="onFileSelected($event)"/>
                                             </div>
                                             <div class="mb-3" *ngIf="newSourcePop.sourceType==='free'">
                                                 <label for="freeTitle">Title
@@ -157,7 +153,7 @@
                  <!-- filemanager-content -->
                 <div class="w-100 user-chat card">
                     <tabset class="nav-tabs nav-tabs-custom tab-container">
-                        <tab [active]="maintabSelected==1"  heading="{{ ('FILEMANAGER.TABSHEADERS.CHAT.MAIN' | translate)+ ' ' + (filterOnFileUID?'('+('FILEMANAGER.TABSHEADERS.CHAT.FILTERED' | translate)+')':'')}}">
+                        <tab [active]="maintabSelected==1"  heading="{{ ('FILEMANAGER.TABSHEADERS.CHAT.MAIN' | translate)+ ' ' + ((filterOnFileID.length>0)?'('+('FILEMANAGER.TABSHEADERS.CHAT.FILTERED' | translate)+')':'')}}">
                             <div>
                                 <div class="chat-conversation p-3">
                                     <ngx-simplebar style="height: 100%" #scrollRef>
@@ -213,7 +209,7 @@
 
                                     
                                     <div class="col-auto pr-0 promptsCol" >
-                                        <select #promptsList [disabled]="disablePops" class="form-select" (change)="selectPromptChange($event,promptsList.value)" >
+                                        <select #promptsList class="form-select" (change)="selectPromptChange($event,promptsList.value)" >
                                             <option  *ngFor="let prpt of params.prompts" [selected]="prpt.uid==selectedPrompt" [value]="prpt.uid">{{prpt.lib}}</option>
                                         </select>
                                     </div>
@@ -263,7 +259,9 @@
                         <tab [active]="maintabSelected==2" *ngIf="!loadingCurFile && pdfPreviewURL" class="disabled">
                             <ng-template tabHeading>
                                 <i [style.color]="(curFile.source_type === 'file/pdf'?'#da3c33':'#339dda')" [ngClass]="{'mdi-file-pdf-box': curFile.source_type === 'file/pdf','mdi-note-text': !curFile.source_type || (curFile.source_type=='free')}" class="mdi mdi-file-pdf-box font-size-16 me-2"></i>
-                                {{curFile.original_fname}}
+                                <a  title="{{curFile.original_fname}}">
+                                    {{curFile.original_fname.substring(0,60)}}
+                                </a>
                             </ng-template>
                             <div class="previewMenu btn-group btn-group-sm" role="group" aria-label="Basic example">
                                 <button type="button" class="btn btn-secondary" (click)="docTabSelected=4" [ngClass]="{'active':docTabSelected==4}">Summary</button>

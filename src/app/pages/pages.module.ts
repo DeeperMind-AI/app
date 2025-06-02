@@ -30,6 +30,7 @@ import { HowtoComponent } from './howto/howto.component';
 import { AccordionModule } from 'ngx-bootstrap/accordion';
 import { FeedbackComponent } from './feedback/feedback.component';
 import { ContextFilter } from './filemanager/pipes/contextesFilter';
+import {CdkDrag,CdkDropList, DragDropModule} from '@angular/cdk/drag-drop';
 
 @NgModule({
   declarations: [FilemanagerComponent, SettingsComponent, SuggestionsComponent, LeftlistitemComponent, LeftlistitemheaderComponent, HowtoComponent, FeedbackComponent],
@@ -38,6 +39,9 @@ import { ContextFilter } from './filemanager/pipes/contextesFilter';
     FormsModule,
     TranslateModule,
     FileTextFilter,
+    CdkDrag,
+    CdkDropList,
+    DragDropModule,
     CategListPathFilter,
     ContextFilter,
     MarkdownModule.forRoot(),

@@ -4,25 +4,26 @@
             [attr.aria-expanded]="iscollapse" (click)="iscollapse = !iscollapse" 
             data-toggle="collapse" href="javascript:void(0);" role="button"
             aria-expanded="false" aria-controls="categories-collapse" title="{{ 'FILEMANAGER.SIDEBARLEFT.ALL_DATAS.TITLE' | translate}}">
+            <i *ngIf="((element.uid==1) && (element.childs && element.childs.length>0)) || ((element.uid==1) && (configService.filesList && configService.filesList.length>0)) || ((element.uid==2) && (configService.aiResponseFiles && configService.aiResponseFiles.length>0))" [ngClass]="iscollapse?'mdi-chevron-up':'mdi-chevron-down'" 
+                class="mdi  accor-down-icon"></i>
             <i [style.color]="element.iconColor" [ngClass]="element.icon" class="mdi font-size-16 me-2"></i> {{element.title | translate}} {{!loading?"("+0+")":""}}
             <!--<i *ngIf="loading" style="color:#4682ad;margin-left:3px;"  class="bx bx-hourglass bx-spin font-size-14 align-middle"></i>-->
             <i class="mdi mdi-settings accor-down-icon ms-auto"></i>
-            <i *ngIf="((element.uid==1) && (element.childs && element.childs.length>0)) || ((element.uid==1) && (configService.filesList && configService.filesList.length>0)) || ((element.uid==2) && (configService.aiResponseFiles && configService.aiResponseFiles.length>0))" [ngClass]="iscollapse?'mdi-chevron-up':'mdi-chevron-down'" 
-                class="mdi  accor-down-icon ms-auto"></i>
+            
         </a>
         <div class="collapse" id="categories-collapse"
             [collapse]="iscollapse">
             <!--ALL FILES-->
             <div *ngIf="element.uid==1" class="card border-0 shadow-none ps-2 mb-0">
-                <ul class="list-unstyled mb-0">
-                    <app-leftlistitem (checkEmitter)="check($event)" (selectCategOutput)="selectCateg($event)" (showPreviewEmitter)="showPreview($event)" [type]="'categ'" *ngFor="let el of element.childs" [element]="el"></app-leftlistitem>
-                    <app-leftlistitem (checkEmitter)="check($event)" (showPreviewEmitter)="showPreview($event)" *ngFor="let el of configService.filesList  | categListPathFilter:'/' | filterTextFilter:configService.fileFilterTerm"  [type]="'file'" [element]="el"></app-leftlistitem>
+                <ul cdkDropList (cdkDropListDropped)="onDropToCategory($event, element)"  class="list-unstyled mb-0">
+                    <app-leftlistitem [showCheck]="true" (checkEmitter)="check($event)" (selectCategOutput)="selectCateg($event)" (showPreviewEmitter)="showPreview($event)" [type]="'categ'" *ngFor="let el of element.childs" [element]="el"></app-leftlistitem>
+                    <app-leftlistitem  [showCheck]="true" (checkEmitter)="check($event)" (showPreviewEmitter)="showPreview($event)" *ngFor="let el of configService.filesList  | categListPathFilter:'/' | filterTextFilter:configService.fileFilterTerm"  [type]="'file'" [element]="el"></app-leftlistitem>
                 </ul>
             </div>
             <!--AI PRESET-->
             <div *ngIf="element.uid==2" class="card border-0 shadow-none ps-2 mb-0">
                 <ul class="list-unstyled mb-0">
-                    <app-leftlistitem (checkEmitter)="check($event)" (showPreviewEmitter)="showPreview($event)" *ngFor="let el of configService.aiResponseFiles"  [type]="'file'" [element]="el"></app-leftlistitem>
+                    <app-leftlistitem cdkDrag [showCheck]="false"  (checkEmitter)="check($event)" (showPreviewEmitter)="showPreview($event)" *ngFor="let el of configService.aiResponseFiles"  [type]="'file'" [element]="el"></app-leftlistitem>
                 </ul>
             </div>
         </div>

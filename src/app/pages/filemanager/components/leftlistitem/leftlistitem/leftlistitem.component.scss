@@ -6,6 +6,10 @@ li.list-item-child  {
         span {
             white-space:nowrap;
         }
+        
+    }
+    a.categItem:hover {
+        border: 1px solid;
     }
     a:hover {
         font-weight: 600;
